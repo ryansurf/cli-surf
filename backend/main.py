@@ -1,23 +1,49 @@
-import ocean_data
-import location_to_cordinates
-import uv_index
-import output
-import wave_art
+import helper
+import sys
 
-location = input("Where are you?: ")
+#sys cli inputs
+#Defaults. 1 == Show, anything else == hide
+coordinates = helper.get_coordinates(sys.argv)
+lat = coordinates[0]
+long = coordinates[1]
+city = coordinates[2]
 
-cordinates = location_to_cordinates.get_cordinates(location)
-lat = cordinates[0]
-long = cordinates[1]
+show_art = 1
+show_uv = 1
+show_height = 1
+show_direction = 1
+show_period = 1
+show_city = 1
+decimal = helper.extract_decimal(sys.argv)
+
+if "hide_art" in sys.argv:
+    show_art = 0
+if "hide_uv" in sys.argv:
+    show_uv = 0
+if "hide_height" in sys.argv:
+    show_height = 0
+if "hide_direction" in sys.argv:
+    show_direction = 0
+if "hide_period" in sys.argv:
+    show_period = 0
+if "hide_location" in sys.argv:
+    show_city = 0
+
 
 # Calls APIs though python files 
-ocean_data = ocean_data.ocean_information(lat, long, 1)
-uv_index = uv_index.get_uv(lat, long, 1)
+ocean_data = helper.ocean_information(lat, long, decimal)
+uv_index = helper.get_uv(lat, long, decimal)
 
 def main():
     print("\n")
-    wave_art.print_blue_wave()
-    output.print_output(uv_index, ocean_data)
+    if coordinates == "No data":
+        print("No location found")
+    if ocean_data == "No data":
+        print("No ocean data at this location.")
+    else:
+        helper.print_location(city, show_city)
+        helper.print_blue_wave(show_art)
+        helper.print_output(uv_index, ocean_data, show_uv, show_height, show_direction, show_period)
     print("\n")
 
 main()
