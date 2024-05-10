@@ -1,0 +1,5 @@
+geopy==2.4.1
+openmeteo_requests==1.2.0
+Requests==2.31.0
+requests_cache==1.2.0
+retry_requests==2.0.0
