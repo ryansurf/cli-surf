@@ -10,6 +10,7 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 
         # Extract the arguments from the query parameters
         args = query_params.get('args', [])
+
         # Join the arguments into a single string separated by spaces
         args_string = " ".join(args)
 
