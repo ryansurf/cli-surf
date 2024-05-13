@@ -1,0 +1,7 @@
+Ocean API: https://open-meteo.com/en/docs/marine-weather-api
+    How to install/use: https://open-meteo.com/en/docs
+
+Converting location to cordinates: https://github.com/geopy/geopy
+
+Using flask and calling the function ex:
+ curl "http://localhost:8000?args=hide_height&args=hide_art&args=location=new_york"
