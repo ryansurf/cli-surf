@@ -50,7 +50,7 @@ Wave Period:  9.8
 * Arguments are seperated by commas.
 * `curl http://localhost:8000`
 * `curl http://localhost:8000?args=location=new_york,hide_height,hide_wave,show_large_wave`
-* `curl http://localhost:8000?args=loc=trestles,fc=3,hdate`
+* `curl http://localhost:8000?args=fc=3,hdate,loc=trestles,`
 
 
 
