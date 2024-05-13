@@ -1,7 +1,7 @@
 # <center>CLI Surf Report</center>
 
 <p align="center">
-  <img src="./images/wave.png">
+  <img src="./images/wave.png" height=100>
 </p>
 
 CLI Surf Report is a surf report and forecasting service used in the command line. It uses the [Open-Meteo](https://open-meteo.com/en/docs/marine-weather-api) weather API
@@ -87,5 +87,4 @@ Questions? Comments?
 * GitHub: [ryansurf](https://github.com/ryansurf)
 
 ## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
+[![License](https://img.shields.io/:license-mit-blue.svg?style=flat-square)](https://badges.mit-license.org)

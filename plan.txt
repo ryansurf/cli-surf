@@ -18,3 +18,4 @@ REQUIREMENTS.TXT:
     pip install -r requirements.txt
 
 Making requirements.txt
+    pipreqs ./
