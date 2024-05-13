@@ -12,14 +12,25 @@ Using your browser or CLI you can access the service
 
 ## Installation
 
+**Python dependencies**
+* geopy
+* openmeteo_requests
+* pandas
+* Requests
+* requests_cache
+* retry_requests
+* termcolor
+
 To run locally on your machine, I recommend using a [Python Virtual Environment](https://docs.python.org/3/library/venv.html)
-1. `python3 -m venv <myenvname>`
-2. `cd <myenvname>/bin/`
-3. `source activate `
-4. `cd ../..`
-5. `pip install -r requirements.txt`
-6.  `cd backend`
-7. `python3 main.py` **OR** `python3 server.py` if you would like to run a Flask server
+1. `git clone https://github.com/ryansurf/surf_report.git`
+2. `cd surf_report`
+3. `python3 -m venv <myenvname>`
+4. `cd <myenvname>/bin/`
+5. `source activate `
+6. `cd ../..`
+7. `pip install -r requirements.txt`
+8.  `cd backend`
+9. `python3 main.py` **OR** `python3 server.py` if you would like to run a Flask server
 
 
 ## Contributing
