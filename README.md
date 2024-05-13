@@ -52,8 +52,7 @@ Wave Period:  9.8
 
 ## Installation
 
-**NOTE**
-* Must run Python>=3.8.1
+**NOTE:** Must run Python>=3.8.1
 
 **Python Dependencies**
 * geopy
@@ -65,8 +64,8 @@ Wave Period:  9.8
 * termcolor
 
 To run locally on your machine, I recommend using a [Python Virtual Environment](https://docs.python.org/3/library/venv.html)
-1. `git clone https://github.com/ryansurf/surf_report.git`
-2. `cd surf_report`
+1. `git clone https://github.com/ryansurf/cli_surf_report.git`
+2. `cd cli_surf_report`
 3. `python3 -m venv <myenvname>`
 4. `cd <myenvname>/bin/`
 5. `source activate `
