@@ -13,12 +13,13 @@ def seperate_args(args):
         return new_args
     else:
         return []
+
 # Takes a location(city or address) and returns the coordinates: [lat, long]
 #If no location is specified, default_location() finds the users coordinates
 def get_coordinates(args):
     for arg in args:
         arg = str(arg)
-        if arg.startswith("location="):
+        if arg.startswith("location=") or arg.startswith("loc=") :
             address = arg.split('=')[1]
             geolocator = Nominatim(user_agent="surf_data")
             location = geolocator.geocode(address)
@@ -32,7 +33,7 @@ def get_coordinates(args):
 def get_forecast_days(args):
     for arg in args:
         arg = str(arg)
-        if arg.startswith("forecast="):
+        if arg.startswith("forecast=") or arg.startswith("fc="):
             forecast = int(arg.split('=')[1])
             if forecast < 0 or forecast > 7:
                 print("Must choose a non-negative number >= 7 in forecast!")
@@ -161,7 +162,7 @@ def print_forecast(forecast_list, uv_index, ocean_data, show_uv, show_height, sh
 #Default is 1
 def extract_decimal(args):
     for arg in args:
-        if arg.startswith("decimal="):
+        if arg.startswith("decimal=") or arg.startswith("dec="):
             try:
                 decimal_value = int(arg.split('=')[1])
                 return decimal_value

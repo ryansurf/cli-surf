@@ -33,18 +33,18 @@ Wave Period:  9.8
 **Arguments**
 | Argument    | Description|
 | -------- | ------- |
-| location  | Specify the location of your forecast. Ex: `location=new_york_city` **or** `location=nyc`.    |
-| forecast  | Number of forecast days. Max = 7, default = 0  |
-| hide_wave | Hide the default wave art    |
-| show_large_wave   | Show the large wave art   | 
-| hide_uv    | Hide uv index   | 
-| hide_height    | Hide surf height   | 
-| hide_direction    | Hide Swell direction    | 
-| hide_period   | Hide swell period    | 
-| hide_location    | Hide location   | 
-| hide_date   | Hide date in forecast   | 
-| metric   | Numbers in Metric units. Defaults to Imperial   | 
-| decimal   | Specify decimal points in output   | 
+| location / loc  | Specify the location of your forecast. Ex: `location=new_york_city` **or** `location=nyc`.    |
+| forecast / fc  | Number of forecast days. Max = 7, default = 0  |
+| hide_wave / hw | Hide the default wave art    |
+| show_large_wave / slw   | Show the large wave art   | 
+| hide_uv / huv    | Hide uv index   | 
+| hide_height / hh    | Hide surf height   | 
+| hide_direction / hdir    | Hide Swell direction    | 
+| hide_period / hp  | Hide swell period    | 
+| hide_location / hl    | Hide location   | 
+| hide_date / hdate  | Hide date in forecast   | 
+| metric / m  | Numbers in Metric units. Defaults to Imperial   | 
+| decimal / dec   | Specify decimal points in output   | 
 
 **Examples**
 * Arguments are seperated by commas.

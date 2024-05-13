@@ -21,23 +21,24 @@ unit = "imperial"
 decimal = helper.extract_decimal(args)
 forecast_days = helper.get_forecast_days(args)
 
-if "hide_wave" in args:
+print(args)
+if "hide_wave" in args or "hw" in args:
     show_wave = 0
-if "show_large_wave" in args:
+if "show_large_wave" in args or "slw" in args:
     show_large_wave = 1
-if "hide_uv" in args:
+if "hide_uv" in args or "huv" in args:
     show_uv = 0
-if "hide_height" in args:
+if "hide_height" in args or "hh" in args:
     show_height = 0
-if "hide_direction" in args:
+if "hide_direction" in args or "hdir" in args:
     show_direction = 0
-if "hide_period" in args:
+if "hide_period" in args or "hp" in args:
     show_period = 0
-if "hide_location" in args:
+if "hide_location" in args or "hl" in args:
     show_city = 0
-if "hide_date" in args:
+if "hide_date" in args or "hdate" in args:
     show_date = 0
-if "metric" in args:
+if "metric" in args or "m" in args:
     unit = "metric"
 
 # Calls APIs though python files 
