@@ -29,7 +29,7 @@ Wave Period:  9.8
 **Arguments**
 | Argument    | Description|
 | -------- | ------- |
-| location  | Specify the location of your forecast. Ex: location=new_york_city **or** location=nyc.    |
+| location  | Specify the location of your forecast. Ex: `location=new_york_city` **or** `location=nyc`.    |
 | forecast  | Number of forecast days. Max = 7, default = 0  |
 | hide_wave | Hide the default wave art    |
 | show_large_wave   | Show the large wave art   | 
