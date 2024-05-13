@@ -52,6 +52,9 @@ Wave Period:  9.8
 
 ## Installation
 
+**NOTE**
+Must run Python>=3.8.1
+
 **Python Dependencies**
 * geopy
 * openmeteo_requests
