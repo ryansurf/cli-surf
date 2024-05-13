@@ -5,3 +5,16 @@ Converting location to cordinates: https://github.com/geopy/geopy
 
 Using flask and calling the function ex:
  curl "http://localhost:8000?args=hide_height&args=hide_art&args=location=new_york"
+
+
+VIRTUAL ENV:
+    https://stackoverflow.com/questions/43069780/how-to-create-virtual-env-with-python3
+
+    /home/ryan/ryan/virtual_env/bin
+
+    source activate
+
+REQUIREMENTS.TXT:
+    pip install -r requirements.txt
+
+Making requirements.txt
