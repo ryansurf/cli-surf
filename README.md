@@ -50,7 +50,7 @@ Wave Period:  9.8
 * Arguments are seperated by commas.
 * `curl http://localhost:8000`
 * `curl http://localhost:8000?args=location=new_york,hide_height,hide_wave,show_large_wave`
-* `curl http://localhost:8000?args=fc=3,hdate,loc=trestles,`
+* `curl http://localhost:8000?args=fc=3,hdate,loc=trestles`
 
 
 
@@ -76,7 +76,7 @@ To run locally on your machine, I recommend using a [Python Virtual Environment]
 6. `cd ../..`
 7. `pip install -r requirements.txt`
 8.  `cd backend`
-9. `python3 main.py` **OR** `python3 server.py` if you would like to run a Flask server
+9. `python3 server.py`
 
 
 ## Contributing
