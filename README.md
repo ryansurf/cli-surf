@@ -70,13 +70,11 @@ Wave Period:  9.8
 To run locally on your machine, I recommend using a [Python Virtual Environment](https://docs.python.org/3/library/venv.html)
 1. `git clone https://github.com/ryansurf/cli_surf_report.git`
 2. `cd cli_surf_report`
-3. `python3 -m venv <myenvname>`
-4. `cd <myenvname>/bin/`
-5. `source activate `
-6. `cd ../..`
-7. `pip install -r requirements.txt`
-8.  `cd backend`
-9. `python3 server.py`
+3. `python3 -m venv venv`
+4. `source venv/bin/activate`
+5. `pip install -r requirements.txt`
+6.  `cd backend`
+7. `python3 server.py`
 
 
 ## Contributing
