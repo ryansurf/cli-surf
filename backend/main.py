@@ -21,7 +21,6 @@ unit = "imperial"
 decimal = helper.extract_decimal(args)
 forecast_days = helper.get_forecast_days(args)
 
-print(args)
 if "hide_wave" in args or "hw" in args:
     show_wave = 0
 if "show_large_wave" in args or "slw" in args:
