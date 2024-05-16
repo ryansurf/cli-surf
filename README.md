@@ -67,7 +67,9 @@ Wave Period:  9.8
 * retry_requests
 * termcolor
 
-To run locally on your machine, I recommend using a [Python Virtual Environment](https://docs.python.org/3/library/venv.html)
+To run locally on your machine, I recommend either:
+
+**Using a [Python Virtual Environment](https://docs.python.org/3/library/venv.html)** 
 1. `git clone https://github.com/ryansurf/cli_surf_report.git`
 2. `cd cli_surf_report`
 3. `python3 -m venv venv`
@@ -76,6 +78,9 @@ To run locally on your machine, I recommend using a [Python Virtual Environment]
 6.  `cd backend`
 7. `python3 server.py`
 
+**Or running the Dockerfile (remember to install [docker](https://docs.docker.com/engine/install/))**
+1. `docker build -t surf_cli .`
+2. `docker run -d -p 8000:8000 surf_cli`
 
 ## Contributing
 

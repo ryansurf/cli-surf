@@ -49,6 +49,7 @@ def main():
     if coordinates == "No data":
         print("No location found")
     if ocean_data == "No data":
+        print(coordinates)
         print("No ocean data at this location.")
     else:
         helper.print_location(city, show_city)
