@@ -78,7 +78,7 @@ To run locally on your machine, I recommend either:
 6. `cd src`
 7. `python3 server.py`
 
-**Or running the Dockerfile (remember to install [Docker](https://docs.docker.com/engine/install/))**
+**Or running the Dockerfile (install [Docker](https://docs.docker.com/engine/install/))**
 1. `git clone https://github.com/ryansurf/cli_surf_report.git`
 2. `cd cli_surf_report`
 1. `docker build -t surf_cli .`
