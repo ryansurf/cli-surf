@@ -4,9 +4,9 @@
   <img src="./images/wave.png" height=100>
 </p>
 
-CLI Surf Report is a surf report and forecasting service used in the command line. It uses the [Open-Meteo](https://open-meteo.com/en/docs/marine-weather-api) weather API
+Surfs up!
 
-You can see it running here: [TODO]()
+CLI Surf Report is a surf report and forecasting service used in the command line. 
 
 ## Usage
 
