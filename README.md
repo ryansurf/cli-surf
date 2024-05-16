@@ -48,9 +48,9 @@ Wave Period:  9.8
 
 **Examples**
 * Arguments are seperated by commas.
-* `curl http://localhost:8000`
-* `curl http://localhost:8000?args=location=new_york,hide_height,hide_wave,show_large_wave`
-* `curl http://localhost:8000?args=fc=3,hdate,loc=trestles`
+* `curl localhost:8000`
+* `curl localhost:8000?args=location=new_york,hide_height,hide_wave,show_large_wave`
+* `curl localhost:8000?args=fc=3,hdate,loc=trestles`
 
 
 
@@ -83,6 +83,7 @@ To run locally on your machine, I recommend either:
 2. `cd cli_surf_report`
 1. `docker build -t surf_cli .`
 2. `docker run -d -p 8000:8000 surf_cli`
+    * Add `--restart unless-stopped` for automatic start on reboot
 
 ## Contributing
 
