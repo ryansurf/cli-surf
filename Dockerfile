@@ -18,7 +18,7 @@ EXPOSE 8000
 # USER app
 
 # Set the working directory for running the application
-WORKDIR /app/backend
+WORKDIR /app/src
 
 # Command to run the Flask application
 CMD ["python3", "server.py"]
