@@ -6,7 +6,7 @@
 
 Surfs up!
 
-CLI Surf Report is a surf report and forecasting service used in the command line. 
+CLI Surf Report is a real time ocean data and forecasting service used in the command line. 
 
 ## Usage
 
