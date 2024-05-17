@@ -1,4 +1,4 @@
-# <center>CLI Surf Report</center>
+# <center>CLI Surf</center>
 
 <p align="center">
   <img src="./images/wave.png" height=100>
@@ -6,7 +6,7 @@
 
 Surfs up!
 
-CLI Surf Report is a real time ocean data and forecasting service used in the command line. 
+CLI Surf is a real time ocean data and forecasting service used in the command line. 
 
 ## Usage
 
@@ -56,9 +56,8 @@ Wave Period:  9.8
 
 ## Installation
 
-**NOTE:** Must run Python>=3.8.1
-
 **Python Dependencies**
+* python>=3.8.1
 * geopy
 * openmeteo_requests
 * pandas
@@ -70,8 +69,8 @@ Wave Period:  9.8
 To run locally on your machine, I recommend either:
 
 **Using a [Python Virtual Environment](https://docs.python.org/3/library/venv.html)** 
-1. `git clone https://github.com/ryansurf/cli_surf_report.git`
-2. `cd cli_surf_report`
+1. `git clone https://github.com/ryansurf/cli-surf.git`
+2. `cd cli_surf`
 3. `python3 -m venv venv`
 4. `source venv/bin/activate`
 5. `pip install -r requirements.txt`
@@ -79,10 +78,10 @@ To run locally on your machine, I recommend either:
 7. `python3 server.py`
 
 **Or running the Dockerfile (install [Docker](https://docs.docker.com/engine/install/))**
-1. `git clone https://github.com/ryansurf/cli_surf_report.git`
-2. `cd cli_surf_report`
-1. `docker build -t surf_cli .`
-2. `docker run -d -p 8000:8000 surf_cli`
+1. `git clone https://github.com/ryansurf/cli-surf.git`
+2. `cd cli_surf`
+1. `docker build -t cli_surf .`
+2. `docker run -d -p 8000:8000 cli_surf`
     * Add `--restart unless-stopped` for automatic start on reboot
 
 ## Contributing
