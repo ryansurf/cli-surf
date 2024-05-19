@@ -17,7 +17,6 @@ Using your browser or CLI you can access the service
 ```
 $ curl localhost:8000
 
-Some Markdown text with <span style="color:blue">some *blue* text</span>.
 Location:  San Diego
 
       .-``'.
