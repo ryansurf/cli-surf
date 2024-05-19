@@ -45,6 +45,7 @@ Wave Period:  9.8
 | hide_date / hdate  | Hide date in forecast   | 
 | metric / m  | Numbers in Metric units. Defaults to Imperial   | 
 | decimal / dec   | Specify decimal points in output   | 
+| color / c   | Choose color of wave art. Ex: `color=light_blue`   | 
 
 **Examples**
 * Arguments are seperated by commas.
@@ -77,7 +78,7 @@ To run locally on your machine, I recommend either:
 6. `cd src`
 7. `python3 server.py`
 
-**Or running the Dockerfile (install [Docker](https://docs.docker.com/engine/install/))**
+**Or running Docker (install [Docker](https://docs.docker.com/engine/install/))**
 1. `git clone https://github.com/ryansurf/cli-surf.git`
 2. `cd cli-surf`
 1. `docker build -t cli-surf .`

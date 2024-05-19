@@ -20,6 +20,7 @@ show_date = 1
 unit = "imperial"
 decimal = helper.extract_decimal(args)
 forecast_days = helper.get_forecast_days(args)
+color = helper.get_color(args)
 
 if "hide_wave" in args or "hw" in args:
     show_wave = 0
@@ -53,7 +54,7 @@ def main():
         print("No ocean data at this location.")
     else:
         helper.print_location(city, show_city)
-        helper.print_wave(show_wave, show_large_wave)
+        helper.print_wave(show_wave, show_large_wave, color)
         helper.print_output(uv_index, ocean_data, show_uv, show_height, show_direction, show_period)
     print("\n")
     forecast = helper.forecast(lat, long, decimal, forecast_days)

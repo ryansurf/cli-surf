@@ -3,8 +3,21 @@ import openmeteo_requests
 import requests_cache
 from retry_requests import retry    
 import requests
-from termcolor import colored
 import pandas as pd
+
+#ASCII text colors
+colors = {
+    "end": "\033[0m",
+    "default": "\033[39m",
+    "red": "\033[0;31m",
+    "green": "\033[0;32m",
+    "yellow": "\033[0;33m",
+    "blue": "\033[0;34m",
+    "purple": "\033[0;35m",
+    "teal": "\033[0;36m",
+    "light_blue": "\033[0;34m"
+}
+
 
 #Args are seperated by commas in input. Sereperat them and return list
 def seperate_args(args):
@@ -170,19 +183,32 @@ def extract_decimal(args):
                 print("Invalid value for decimal. Please provide an integer.")
     return 1
 
+def get_color(args):
+    for arg in args:
+        arg = str(arg)
+        if arg.startswith("color=") or arg.startswith("c=") :
+            color_name = arg.split('=')[1]
+            return color_name
+    return 'blue'
+
+
 #Prints Wave
-def print_wave(show_wave, show_large_wave):
+def print_wave(show_wave, show_large_wave, color):
+    if color != None and color.lower() not in colors.keys():
+        print("Not a valid color")
+        color = 'blue'
+    
     if int(show_wave) == 1:
 
 
-        print(colored("""
+        print(colors[color] + """
       .-``'.
     .`   .`
 _.-'     '._ 
-        """, "light_blue"))
+        """ + colors['end'])
     
     if int(show_large_wave) == 1:
-        print(colored(""" 
+        print(colors[color] + """ 
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣶⠾⠿⠿⠯⣷⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⣾⠛⠁⠀⠀⠀⠀⠀⠀⠈⢻⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⠿⠁⠀⠀⠀⢀⣤⣾⣟⣛⣛⣶⣬⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -192,7 +218,7 @@ _.-'     '._
 ⠀⠀⠀⠀⠀⣠⣼⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠷⣤⣤⣠⣤⣤⡤⡶⣶⢿⠟⠹⠿⠄⣿⣿⠏⠀⣀⣤⡦⠀⠀⠀⠀⣀⡄
 ⢀⣄⣠⣶⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠓⠚⠋⠉⠀⠀⠀⠀⠀⠀⠈⠛⡛⡻⠿⠿⠙⠓⢒⣺⡿⠋⠁
 ⠉⠉⠉⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠁⠀
-""", "light_blue"))
+""" + colors['end'])
 
 #Takes a list as input and rounds each of the elements to the decimal
 def round_decimal(round_list, decimal):
