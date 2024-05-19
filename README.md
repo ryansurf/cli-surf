@@ -65,7 +65,6 @@ Wave Period:  9.8
 * Requests
 * requests_cache
 * retry_requests
-* termcolor
 
 To run locally on your machine, I recommend either:
 
