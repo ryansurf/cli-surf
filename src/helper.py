@@ -21,7 +21,7 @@ def get_coordinates(args):
         arg = str(arg)
         if arg.startswith("location=") or arg.startswith("loc=") :
             address = arg.split('=')[1]
-            geolocator = Nominatim(user_agent="surf_data")
+            geolocator = Nominatim(user_agent="cli-surf")
             location = geolocator.geocode(address)
             if location != None:
                 return [location.latitude, location.longitude, location]

@@ -1,6 +1,12 @@
 import http.server
 import subprocess
 from urllib.parse import urlparse, parse_qs
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+port = int(os.getenv('PORT'))
 
 class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
@@ -30,4 +36,4 @@ def run(server_class=http.server.HTTPServer, handler_class=MyHTTPRequestHandler,
     httpd.serve_forever()
 
 if __name__ == '__main__':
-    run()
+    run(port=port)
