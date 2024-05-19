@@ -70,7 +70,7 @@ To run locally on your machine, I recommend either:
 
 **Using a [Python Virtual Environment](https://docs.python.org/3/library/venv.html)** 
 1. `git clone https://github.com/ryansurf/cli-surf.git`
-2. `cd cli_surf`
+2. `cd cli-surf`
 3. `python3 -m venv venv`
 4. `source venv/bin/activate`
 5. `pip install -r requirements.txt`
@@ -79,9 +79,9 @@ To run locally on your machine, I recommend either:
 
 **Or running the Dockerfile (install [Docker](https://docs.docker.com/engine/install/))**
 1. `git clone https://github.com/ryansurf/cli-surf.git`
-2. `cd cli_surf`
-1. `docker build -t cli_surf .`
-2. `docker run -d -p 8000:8000 cli_surf`
+2. `cd cli-surf`
+1. `docker build -t cli-surf .`
+2. `docker run -d -p 8000:8000 cli-surf`
     * Add `--restart unless-stopped` for automatic start on reboot
 
 ## Contributing
