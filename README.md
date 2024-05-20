@@ -12,8 +12,6 @@ CLI Surf is a real time ocean data and forecasting service used in the command l
 
 Using your browser or CLI you can access the service
 
-<put screenshot of service in use>
-
 ```
 $ curl localhost:8000
 
@@ -53,6 +51,9 @@ Wave Period:  9.8
 * `curl localhost:8000?args=location=new_york,hide_height,hide_wave,show_large_wave`
 * `curl localhost:8000?args=fc=3,hdate,loc=trestles`
 
+**For detailed information you can access the [help](https://github.com/ryansurf/cli-surf/blob/main/help.txt) page**
+
+* `curl localhost:8000?args=help`
 
 
 ## Installation
