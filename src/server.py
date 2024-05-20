@@ -17,17 +17,27 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         # Extract the arguments from the query parameters
         args = query_params.get('args', [])
 
-        # Join the arguments into a single string separated by spaces
-        args_string = " ".join(args)
-
-        # Call your script with the provided arguments
-        result = subprocess.run(['python3', 'main.py'] + args, capture_output=True, text=True)
-
-        # Send the result back to the client
-        self.send_response(200)
-        self.send_header('Content-type', 'text/plain')
-        self.end_headers()
-        self.wfile.write(result.stdout.encode())
+        if 'help' in args:
+            # If 'help' is in the args, read and return the content of help.txt
+            try:
+                with open('../help.txt', 'r') as file:
+                    help_text = file.read()
+                self.send_response(200)
+                self.send_header('Content-type', 'text/plain')
+                self.end_headers()
+                self.wfile.write(help_text.encode())
+            except FileNotFoundError:
+                self.send_response(404)
+                self.send_header('Content-type', 'text/plain')
+                self.end_headers()
+                self.wfile.write(b"help.txt not found")
+        else:
+            # Otherwise, run the main.py script with the provided arguments
+            result = subprocess.run(['python3', 'main.py'] + args, capture_output=True, text=True)
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
+            self.wfile.write(result.stdout.encode())
 
 def run(server_class=http.server.HTTPServer, handler_class=MyHTTPRequestHandler, port=8000):
     server_address = ('', port)
