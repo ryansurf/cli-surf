@@ -1,0 +1,41 @@
+Usage:
+
+    $ curl localhost:8000                     # current location
+    $ curl localhost:8000?args=loc=new_york   # surf report in New new_york
+
+Supported location types:
+
+    loc=santa_cruz                            # city
+    loc=santa_cruz_ca                         # city and state
+    loc=santa_cruz_steamer_lane               # surf spot
+    loc=700_w_cliff_dr_santa_cruz             # address
+    loc=95060                                 # zip code
+
+Units:
+
+    m                                         # metric
+    imperial                                  # default
+
+Arguments:
+
+    location / loc	                          #Specify the location of your forecast. Ex: location=new_york_city or location=nyc.
+    forecast / fc	                          # Number of forecast days. Max = 7, default = 0
+    hide_wave / hw	                          # Hide the default wave art
+    show_large_wave / slw	                  # Show the large wave art
+    hide_uv / huv	                          # Hide uv index
+    hide_height / hh	                      # Hide surf height
+    hide_direction / hdir	                  # Hide Swell direction
+    hide_period / hp	                      # Hide swell period
+    hide_location / hl	                      # Hide location
+    hide_date / hdate	                      # Hide date in forecast
+    metric / m	                              # Numbers in Metric units. Defaults to Imperial
+    decimal / dec	                          # Specify decimal points in output
+    color / c	                              # Choose color of wave art. Ex: color=light_blue
+
+Color Options:
+    defualt, red, green, yellow, blue, purple, teal, light_blue
+
+Examples:
+    curl localhost:8000
+    curl localhost:8000?args=location=new_york,hide_height,hide_wave,show_large_wave
+    curl localhost:8000?args=fc=3,hdate,loc=trestles,c=light_blue
