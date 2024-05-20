@@ -63,6 +63,7 @@ Wave Period:  9.8
 * geopy
 * openmeteo_requests
 * pandas
+* python-dotenv
 * Requests
 * requests_cache
 * retry_requests
