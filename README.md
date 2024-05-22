@@ -1,5 +1,3 @@
-# <center>CLI Surf</center>
-
 <p align="center">
   <img src="./images/wave.png" height=100>
 </p>
