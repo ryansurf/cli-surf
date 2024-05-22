@@ -88,6 +88,8 @@ To run locally on your machine, I recommend either:
 5. `docker run -d -p 8000:8000 cli-surf`
     * Add `--restart unless-stopped` for automatic start on reboot
 
+## Setup
+
 **Variables**
 
 Change `.env.example` to `.env`
