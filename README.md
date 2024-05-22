@@ -101,7 +101,7 @@ Change `.env.example` to `.env`
 
 Questions? Comments?
 
-* Email: [ryanfrederich@gmail.com](mailto:ryanfrederich@gmail.com)
+* [Discussions](https://github.com/ryansurf/cli-surf/discussions)
 * GitHub: [ryansurf](https://github.com/ryansurf)
 
 ## License
