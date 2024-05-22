@@ -2,7 +2,7 @@
 
 # Contributing to cli-surf
 
-First off, thanks for your interest in contributing to cli-surf! All contributors are welcome, from commenting issues to reviewing or sending Pull Requests.
+Thank you for your interest in contributing to cli-surf! All contributions are welcome, from commenting issues to reviewing or sending Pull Requests.
 
 ## How to contribute?
 
@@ -18,7 +18,7 @@ Please don't open an issue to ask a question or suggestion. Use the [GitHub Disc
 
 ## Issue reporting
 
-Feel free to [create a new issue](https://github.com/ryansurf/cli-surf/issues/new) if you have some issue to report! But first, make sure that the issue has not been reported yet.
+Feel free to [create a new issue](https://github.com/ryansurf/cli-surf/issues/new) if you have an issue to report! But first, make sure that the issue has not been reported yet.
 
 Be sure to explain in details the context and the outcome that you are lookign for. If reporting bugs, provide basic information like your OS version, whether using Docker, etc.
 
