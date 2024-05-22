@@ -96,6 +96,24 @@ Change `.env.example` to `.env`
 | -------- | ------- | 
 | `PORT=`  | The port you want to open to run the application. Default = 8000 |
 
+## Development
+
+Thank you for considering contributing to cli-surf!
+
+See [CONTRIBUTING.md](https://github.com/ryansurf/cli-surf/blob/main/CONTRIBUTING.md) to get an idea of how contributions work.
+
+**Code Style and Quality**
+
+The [PEP 8](https://realpython.com/python-pep8/) styling convention is used.
+
+To make sure you are following it, you can install [pylint](https://pypi.org/project/pylint/)
+
+`pip install pylint`
+
+To run pylint:
+
+`pylint ./src`
+
 
 ## Contributing
 
