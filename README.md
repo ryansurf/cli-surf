@@ -96,13 +96,13 @@ Change `.env.example` to `.env`
 
 | Variable    | Description|
 | -------- | ------- | 
-| `PORT=`  | The port you want to open to run the application. Default = 8000 |
-| `SMTP_SERVER=`  | The email server you are using. Default = smtp.gmail.com |
-| `EMAIL=`  | The email you will send the report from. |
-| `EMAIL_PW=`  | The sending email's password |
-| `EMAIL_RECEIVER=`  | The email that will receive the report (your personal email) |
-| `COMMAND=`  | The command that will be ran and shown in the email. Default = `localhost:8000` |
-| `SUBJECT=`  | The email's subject. Default = Surf Report |
+| `PORT`  | The port you want to open to run the application. Default = 8000 |
+| `SMTP_SERVER`  | The email server you are using. Default = smtp.gmail.com |
+| `EMAIL`  | The email you will send the report from. |
+| `EMAIL_PW`  | The sending email's password |
+| `EMAIL_RECEIVER`  | The email that will receive the report (your personal email) |
+| `COMMAND`  | The command that will be ran and shown in the email. Default = `localhost:8000` |
+| `SUBJECT`  | The email's subject. Default = Surf Report |
 
 **Email Server**
 
