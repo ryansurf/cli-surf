@@ -110,6 +110,8 @@ Optional, sends a surf report to a specified email.
 
 You will need to setup an email account that is able to utilize SMTP services. I used Gmail, following Method #1 outlined [here](https://www.cubebackup.com/blog/how-to-use-google-smtp-service-to-send-emails-for-free/). After doing this, change the variables in `.env`
 
+Execute by running `python3 send_email.py`. Running with cron is a good use case
+
 ## Development
 
 Thank you for considering contributing to cli-surf!
