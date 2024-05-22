@@ -14,7 +14,7 @@ Once you find an interesting issue let us know that you want to work on it by co
 
 ## Questions, suggestions or new ideas
 
-Please don't open an issue to ask a question or suggestion. Use the [GitHub Discussions](https://github.com/ryansurf/cli-surf/discussions) page. New ideas and enhacements are also welcome as discussion posts.
+Please don't open an issue to ask a question or suggestion. Instead, use the [GitHub Discussions](https://github.com/ryansurf/cli-surf/discussions) page. New ideas and enhacements are also welcome as discussion posts.
 
 ## Issue reporting
 
