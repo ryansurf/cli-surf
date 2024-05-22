@@ -1,10 +1,12 @@
 import helper
+import api
+import art
 import sys
 
 args = helper.seperate_args(sys.argv)
 #sys cli inputs
 #Defaults. 1 == Show, anything else == hide
-coordinates = helper.get_coordinates(args)
+coordinates = api.get_coordinates(args)
 lat = coordinates[0]
 long = coordinates[1]
 city = coordinates[2]
@@ -42,8 +44,8 @@ if "metric" in args or "m" in args:
     unit = "metric"
 
 # Calls APIs though python files 
-ocean_data = helper.ocean_information(lat, long, decimal, unit)
-uv_index = helper.get_uv(lat, long, decimal, unit)
+ocean_data = api.ocean_information(lat, long, decimal, unit)
+uv_index = api.get_uv(lat, long, decimal, unit)
 
 def main():
     print("\n")
@@ -54,10 +56,10 @@ def main():
         print("No ocean data at this location.")
     else:
         helper.print_location(city, show_city)
-        helper.print_wave(show_wave, show_large_wave, color)
+        art.print_wave(show_wave, show_large_wave, color)
         helper.print_output(uv_index, ocean_data, show_uv, show_height, show_direction, show_period)
     print("\n")
-    forecast = helper.forecast(lat, long, decimal, forecast_days)
+    forecast = api.forecast(lat, long, decimal, forecast_days)
     helper.print_forecast(forecast, uv_index, ocean_data, show_uv, show_height, show_direction, show_period, show_date)
 
 main()
