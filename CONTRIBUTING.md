@@ -10,7 +10,7 @@ If you are new to GitHub, visit the [first-contributions instructions](https://g
 
 To find issues you can help with, go though the list of [good first issues](https://github.com/ryansurf/cli-surf/labels/good%20first%20issue) or issues labeled with [help wanted](https://github.com/ryansurf/cli-surf/labels/help%20wanted).
 
-Once you find an interesting issue let us know that you want to work on it by commenting in the issue.
+Once you find an interesting issue let us know that you want to work on it by commenting on the issue.
 
 ## Questions, suggestions or new ideas
 
