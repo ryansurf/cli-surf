@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Email server configuration
-SMTP_SERVER = 'smtp.gmail.com'
+SMTP_SERVER = os.getenv('SMTP_SERVER')
 PORT = 587  # Port for TLS connection
 
 # Sender's email credentials
@@ -26,7 +26,7 @@ RECEIVER_EMAIL = os.getenv('EMAIL_RECEIVER')
 message = MIMEMultipart()
 message['From'] = SENDER_EMAIL
 message['To'] = RECEIVER_EMAIL
-message['Subject'] = 'Test Email'
+message['Subject'] = os.getenv('SUBJECT')
 
 # Execute the command to get output
 SURF = subprocess.run(['curl', os.getenv('COMMAND')], capture_output=True, text=True, check=True)
