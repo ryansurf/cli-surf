@@ -1,6 +1,11 @@
 name: Pylint
 
-on: [push]
+on:
+  push:
+    branches:
+      - main  # Adjust this branch name as needed
+  pull_request_target:
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
@@ -20,4 +25,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint $(git ls-files '*.py') || exit 1
