@@ -90,7 +90,7 @@ To run locally on your machine, I recommend either:
 
 **Variables**
 
-* Change `.env.example` to `.env`
+Change `.env.example` to `.env`
 
 | Variable    | Description|
 | -------- | ------- | 
