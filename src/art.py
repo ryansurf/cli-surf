@@ -1,4 +1,6 @@
-#All ASCII art in this file
+"""
+All ASCII art in this file
+"""
 
 #ASCII text colors
 colors = {
@@ -13,13 +15,13 @@ colors = {
     "light_blue": "\033[0;34m"
 }
 
-
-#Prints Wave
 def print_wave(show_wave, show_large_wave, color):
-    if color != None and color.lower() not in colors.keys():
+    """
+    Prints Wave
+    """
+    if color is not None and color.lower() not in colors:
         print("Not a valid color")
         color = 'blue'
-    
     if int(show_wave) == 1:
 
 
@@ -28,10 +30,9 @@ def print_wave(show_wave, show_large_wave, color):
     .`   .`
 _.-'     '._ 
         """ + colors['end'])
-    
     if int(show_large_wave) == 1:
-        print(colors[color] + """ 
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣶⠾⠿⠿⠯⣷⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        print(colors[color] + """
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣶⠾⠿⠿⠯⣷⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⣾⠛⠁⠀⠀⠀⠀⠀⠀⠈⢻⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⠿⠁⠀⠀⠀⢀⣤⣾⣟⣛⣛⣶⣬⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⠟⠃⠀⠀⠀⠀⠀⣾⣿⠟⠉⠉⠉⠉⠛⠿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
