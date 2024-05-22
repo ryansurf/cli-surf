@@ -90,7 +90,12 @@ To run locally on your machine, I recommend either:
 
 **Variables**
 
-Change variables in the `.env` file
+* Change `.env.example` to `.env`
+
+| Variable    | Description|
+| -------- | ------- | 
+| `PORT=`  | The port you want to open to run the application. Default = 8000 |
+
 
 ## Contributing
 
