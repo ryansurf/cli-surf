@@ -7,10 +7,20 @@ import sys
 sys.path.append("..")
 
 import unittest
-from helper import extract_decimal
 from unittest.mock import patch
 import io
+import threading
+import requests
+import time
+import subprocess
+import os
+from helper import extract_decimal
 from api import get_coordinates, get_uv, ocean_information
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+port = int(os.getenv("PORT"))
 
 
 class TestDecimal(unittest.TestCase):
