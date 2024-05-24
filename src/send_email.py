@@ -29,6 +29,7 @@ message["From"] = SENDER_EMAIL
 message["To"] = RECEIVER_EMAIL
 message["Subject"] = os.getenv("SUBJECT")
 
+
 def send_user_email():
     # Execute the command to get output
     SURF = subprocess.run(
@@ -47,5 +48,6 @@ def send_user_email():
         text = message.as_string()
         server.sendmail(SENDER_EMAIL, RECEIVER_EMAIL, text)
         print("Email sent successfully.")
+
 
 send_user_email()
