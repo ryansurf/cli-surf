@@ -29,9 +29,10 @@ message["From"] = SENDER_EMAIL
 message["To"] = RECEIVER_EMAIL
 message["Subject"] = os.getenv("SUBJECT")
 
-
 def send_user_email():
-    # Execute the command to get output
+    """
+    Sends user an email
+    """
     SURF = subprocess.run(
         ["curl", os.getenv("COMMAND")], capture_output=True, text=True, check=True
     )
