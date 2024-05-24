@@ -12,7 +12,6 @@ from dotenv import load_dotenv
 load_dotenv()
 port_env = int(os.getenv("PORT"))
 
-
 class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
     """
     Handles HTTP requests
@@ -69,6 +68,7 @@ def run(
     server_address = ("", port_env)
     httpd = server_class(server_address, handler_class)
     print(f"Server running on port {port}")
+
     httpd.serve_forever()
 
 
