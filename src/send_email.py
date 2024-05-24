@@ -29,20 +29,23 @@ message["From"] = SENDER_EMAIL
 message["To"] = RECEIVER_EMAIL
 message["Subject"] = os.getenv("SUBJECT")
 
-# Execute the command to get output
-SURF = subprocess.run(
-    ["curl", os.getenv("COMMAND")], capture_output=True, text=True, check=True
-)
-if SURF.returncode == 0:  # Check if command executed successfully
-    BODY = SURF.stdout
-else:
-    BODY = "Failed to execute curl command."
-message.attach(MIMEText(BODY, "plain"))
+def send_user_email():
+    # Execute the command to get output
+    SURF = subprocess.run(
+        ["curl", os.getenv("COMMAND")], capture_output=True, text=True, check=True
+    )
+    if SURF.returncode == 0:  # Check if command executed successfully
+        BODY = SURF.stdout
+    else:
+        BODY = "Failed to execute curl command."
+    message.attach(MIMEText(BODY, "plain"))
 
-# Connect to the SMTP server
-with smtplib.SMTP(SMTP_SERVER, PORT) as server:
-    server.starttls()  # Secure the connection
-    server.login(SENDER_EMAIL, PASSWORD)
-    text = message.as_string()
-    server.sendmail(SENDER_EMAIL, RECEIVER_EMAIL, text)
-    print("Email sent successfully.")
+    # Connect to the SMTP server
+    with smtplib.SMTP(SMTP_SERVER, PORT) as server:
+        server.starttls()  # Secure the connection
+        server.login(SENDER_EMAIL, PASSWORD)
+        text = message.as_string()
+        server.sendmail(SENDER_EMAIL, RECEIVER_EMAIL, text)
+        print("Email sent successfully.")
+
+send_user_email()
