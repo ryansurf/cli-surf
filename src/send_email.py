@@ -1,6 +1,7 @@
 """
 Module to send surf report emails
 """
+
 import os
 import subprocess
 import smtplib
@@ -12,29 +13,31 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Email server configuration
-SMTP_SERVER = os.getenv('SMTP_SERVER')
+SMTP_SERVER = os.getenv("SMTP_SERVER")
 PORT = 587  # Port for TLS connection
 
 # Sender's email credentials
-SENDER_EMAIL = os.getenv('EMAIL')
-PASSWORD = os.getenv('EMAIL_PW')
+SENDER_EMAIL = os.getenv("EMAIL")
+PASSWORD = os.getenv("EMAIL_PW")
 
 # Receiver's email
-RECEIVER_EMAIL = os.getenv('EMAIL_RECEIVER')
+RECEIVER_EMAIL = os.getenv("EMAIL_RECEIVER")
 
 # Create a multipart message and set headers
 message = MIMEMultipart()
-message['From'] = SENDER_EMAIL
-message['To'] = RECEIVER_EMAIL
-message['Subject'] = os.getenv('SUBJECT')
+message["From"] = SENDER_EMAIL
+message["To"] = RECEIVER_EMAIL
+message["Subject"] = os.getenv("SUBJECT")
 
 # Execute the command to get output
-SURF = subprocess.run(['curl', os.getenv('COMMAND')], capture_output=True, text=True, check=True)
+SURF = subprocess.run(
+    ["curl", os.getenv("COMMAND")], capture_output=True, text=True, check=True
+)
 if SURF.returncode == 0:  # Check if command executed successfully
     BODY = SURF.stdout
 else:
-    BODY = 'Failed to execute curl command.'
-message.attach(MIMEText(BODY, 'plain'))
+    BODY = "Failed to execute curl command."
+message.attach(MIMEText(BODY, "plain"))
 
 # Connect to the SMTP server
 with smtplib.SMTP(SMTP_SERVER, PORT) as server:
@@ -42,4 +45,4 @@ with smtplib.SMTP(SMTP_SERVER, PORT) as server:
     server.login(SENDER_EMAIL, PASSWORD)
     text = message.as_string()
     server.sendmail(SENDER_EMAIL, RECEIVER_EMAIL, text)
-    print('Email sent successfully.')
+    print("Email sent successfully.")
