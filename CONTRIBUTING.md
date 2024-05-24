@@ -12,6 +12,20 @@ To find issues you can help with, go though the list of [good first issues](http
 
 Once you find an interesting issue let us know that you want to work on it by commenting on the issue.
 
+## Development
+
+**Code Style and Quality**
+
+The [PEP 8](https://realpython.com/python-pep8/) styling convention is used.
+
+To make sure you are following it, you can install [pylint](https://pypi.org/project/pylint/)
+
+`pip install pylint`
+
+To run pylint:
+
+`pylint ./src`
+
 ## Questions, suggestions or new ideas
 
 Please don't open an issue to ask a question or suggestion. Instead, use the [GitHub Discussions](https://github.com/ryansurf/cli-surf/discussions) page. New ideas and enhacements are also welcome as discussion posts.
