@@ -2,7 +2,7 @@
 All ASCII art in this file
 """
 
-# ASCII text colors
+#ASCII text colors
 colors = {
     "end": "\033[0m",
     "default": "\033[39m",
@@ -12,9 +12,8 @@ colors = {
     "blue": "\033[0;34m",
     "purple": "\033[0;35m",
     "teal": "\033[0;36m",
-    "light_blue": "\033[0;34m",
+    "light_blue": "\033[0;34m"
 }
-
 
 def print_wave(show_wave, show_large_wave, color):
     """
@@ -22,22 +21,17 @@ def print_wave(show_wave, show_large_wave, color):
     """
     if color is not None and color.lower() not in colors:
         print("Not a valid color")
-        color = "blue"
+        color = 'blue'
     if int(show_wave) == 1:
 
-        print(
-            colors[color]
-            + """
+
+        print(colors[color] + """
       .-``'.
     .`   .`
 _.-'     '._ 
-        """
-            + colors["end"]
-        )
+        """ + colors['end'])
     if int(show_large_wave) == 1:
-        print(
-            colors[color]
-            + """
+        print(colors[color] + """
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣶⠾⠿⠿⠯⣷⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⣾⠛⠁⠀⠀⠀⠀⠀⠀⠈⢻⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⠿⠁⠀⠀⠀⢀⣤⣾⣟⣛⣛⣶⣬⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -47,6 +41,4 @@ _.-'     '._
 ⠀⠀⠀⠀⠀⣠⣼⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠷⣤⣤⣠⣤⣤⡤⡶⣶⢿⠟⠹⠿⠄⣿⣿⠏⠀⣀⣤⡦⠀⠀⠀⠀⣀⡄
 ⢀⣄⣠⣶⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠓⠚⠋⠉⠀⠀⠀⠀⠀⠀⠈⠛⡛⡻⠿⠿⠙⠓⢒⣺⡿⠋⠁
 ⠉⠉⠉⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠁⠀
-"""
-            + colors["end"]
-        )
+""" + colors['end'])

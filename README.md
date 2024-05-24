@@ -28,6 +28,8 @@ Wave Period:  9.8
 
 ```
 
+![cli-surf gif](images/surf.gif)
+
 **Arguments**
 | Argument    | Description|
 | -------- | ------- |
