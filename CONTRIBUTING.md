@@ -18,13 +18,13 @@ Once you find an interesting issue let us know that you want to work on it by co
 
 The [PEP 8](https://realpython.com/python-pep8/) styling convention is used.
 
-To make sure you are following it, you can install [pylint](https://pypi.org/project/pylint/)
+To make sure you are following it, you can install [black](https://pypi.org/project/black/)
 
-`pip install pylint`
+`pip install black`
 
-To run pylint:
+To run black:
 
-`pylint ./src`
+`black .`
 
 ## Questions, suggestions or new ideas
 
