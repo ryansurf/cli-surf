@@ -4,13 +4,13 @@
 
 Surfs up!
 
-CLI Surf is a real time ocean data and forecasting service used in the command line.
+cli-surf is a real time ocean data and forecasting service used in the command line.
 
 Inspired by [wttr.in](https://github.com/chubin/wttr.in)
 
 ## Usage
 
-Using your browser or CLI you can access the service
+Using your browser or command-line interface you can access the service.
 
 ```
 $ curl localhost:8000
