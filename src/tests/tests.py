@@ -3,6 +3,7 @@ QA tests
 """
 
 import sys
+
 sys.path.append("..")
 
 import unittest
@@ -15,14 +16,17 @@ from api import get_coordinates, get_uv, ocean_information
 class TestDecimal(unittest.TestCase):
 
     def test_invalid_input(self):
-        with patch('sys.stdout', new=io.StringIO()) as fake_stdout:
-            extract_decimal(['decimal=NotADecimal'])
+        with patch("sys.stdout", new=io.StringIO()) as fake_stdout:
+            extract_decimal(["decimal=NotADecimal"])
             printed_output = fake_stdout.getvalue().strip()
-            self.assertEqual(printed_output, "Invalid value for decimal. Please provide an integer.")
+            self.assertEqual(
+                printed_output, "Invalid value for decimal. Please provide an integer."
+            )
 
     def test_default_input(self):
         decimal = extract_decimal([])
         self.assertEqual(1, decimal)
+
 
 class TestApis(unittest.TestCase):
 
@@ -36,7 +40,7 @@ class TestApis(unittest.TestCase):
     def test_get_uv(self):
         uv = get_uv(37, 122, 2)
         self.assertIsInstance(uv, (int, float))
-    
+
     def test_ocean_information(self):
         ocean = ocean_information(37, 122, 2)
         self.assertIsInstance(ocean[0], (int, float))
@@ -44,11 +48,6 @@ class TestApis(unittest.TestCase):
         self.assertIsInstance(ocean[2], (int, float))
 
 
-
-
-
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     unittest.main()

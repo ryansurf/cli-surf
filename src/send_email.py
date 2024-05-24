@@ -29,6 +29,7 @@ message["From"] = SENDER_EMAIL
 message["To"] = RECEIVER_EMAIL
 message["Subject"] = os.getenv("SUBJECT")
 
+
 def send_user_email():
     """
     Sends user an email
