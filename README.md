@@ -28,7 +28,10 @@ Wave Period:  9.8
 
 ```
 
-![cli-surf gif](images/surf.gif)
+<div style="text-align: center;">
+    <img src="images/surf.gif" alt="cli-surf gif" style="width: 500px; height: auto;">
+</div>
+
 
 **Arguments**
 | Argument    | Description|
