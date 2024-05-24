@@ -28,9 +28,9 @@ Wave Period:  9.8
 
 ```
 
-<div style="text-align: center;">
+<p align="center">
     <img src="images/surf.gif" alt="cli-surf gif" style="width: 500px; height: auto;">
-</div>
+</p>
 
 
 **Arguments**
