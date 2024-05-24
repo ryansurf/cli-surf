@@ -4,7 +4,7 @@ QA tests
 
 import sys
 
-sys.path.append("..")
+sys.path.append("../backend")
 
 import unittest
 from unittest.mock import patch

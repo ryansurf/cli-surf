@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Itim&family=Poppins:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>cli-surf</title>
+    <style>
+      * {
+        font-family: "Poppins", sans-serif;
+      }
+    </style>
+  </head>
+
+
+  <body class="h-screen">
+    <div class="flex items-center justify-center h-screen bg-blue-900">
+      <!-- FORM START  -->
+      <form id="reportForm" class="w-full max-w-xl">
+        <div class="flex items-center border-b border-teal-500 py-2">
+          <input
+            id="curlInput"
+            class="appearance-none bg-transparent border-none w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
+            type="text"
+            placeholder="Enter curl command"
+            aria-label="curl command"
+          />
+          <button
+            id="getReportBtn"
+            class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
+            type="submit"
+          >
+            Get Report
+          </button>
+          <button
+            class="flex-shrink-0 border-transparent border-4 text-teal-500 hover:text-teal-800 text-sm py-1 px-2 rounded"
+            type="button"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+      <!-- FORM END  -->
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
