@@ -5,7 +5,6 @@ Run pytest: pytest
 """
 
 import sys
-import os
 
 sys.path.append("../backend")
 
@@ -23,6 +22,9 @@ from api import get_coordinates, get_uv, ocean_information
 
 
 def test_invalid_input():
+    """
+    Test if decimal input prints proper invalid input message
+    """
     with patch("sys.stdout", new=io.StringIO()) as fake_stdout:
         extract_decimal(["decimal=NotADecimal"])
         printed_output = fake_stdout.getvalue().strip()
