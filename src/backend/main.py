@@ -15,8 +15,8 @@ load_dotenv()
 website = bool(os.getenv("WEBSITE"))
 
 if website == True:
-     print("RUNNING WEBSITE")
-     subprocess.Popen(["python", "-m", "http.server", "9000"], cwd="../frontend")
+    print("RUNNING WEBSITE")
+    subprocess.Popen(["python", "-m", "http.server", "9000"], cwd="../frontend")
 
 args = helper.seperate_args(sys.argv)
 # sys cli inputs
