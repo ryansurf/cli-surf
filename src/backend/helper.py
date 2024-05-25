@@ -107,7 +107,3 @@ def round_decimal(round_list, decimal):
 
 
 
-
-
-
-
