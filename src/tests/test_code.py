@@ -5,6 +5,7 @@ Run pytest: pytest
 """
 
 import sys
+import os
 
 sys.path.append("../backend")
 
