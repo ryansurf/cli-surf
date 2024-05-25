@@ -120,6 +120,10 @@ Execute by running `python3 send_email.py`. Running with cron is a good use case
 
 **Frontend**
 
+<p align="center">
+    <img src="images/website.gif" alt="cli-surf_website gif" style="width: 700px; height: auto;">
+</p>
+
 Although this application was made with the cli in mind, there is a frontend.
 
 To enable this, set `WEBSITE=TRUE` in the `.env` file.
