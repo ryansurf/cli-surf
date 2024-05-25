@@ -32,6 +32,8 @@ To run tests, install pytest, `pip install pytest` and navigate to `src/test`.
 
 Run `pytest`
 
+On commit, git will run `pytest` for you to catch any errors.
+
 ## Questions, suggestions or new ideas
 
 Please don't open an issue to ask a question or suggestion. Instead, use the [GitHub Discussions](https://github.com/ryansurf/cli-surf/discussions) page. New ideas and enhacements are also welcome as discussion posts.
