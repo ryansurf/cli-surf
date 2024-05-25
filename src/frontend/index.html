@@ -21,6 +21,7 @@
         font-family: "Poppins", sans-serif;
       }
     </style>
+    <script src="https://code.jscharting.com/2.9.0/jscharting.js"></script>
   </head>
 
 
@@ -69,8 +70,12 @@
         </form>
       </div>
       <!-- FORM END  -->
-      <div id="serverResponse" class="h-[50vh] text-white">
-        
+      <div class="flex flex-col h-[50vh] max-w-xl min-w-96">
+        <div id="serverResponse" class="text-white flex flex-row justify-center pb-8">
+        </div>
+        <div id="plot">
+          <div id="chartDiv" style="margin:0 auto;"></div>
+        </div>
       </div>
     </div>
     <script src="script.js"></script>

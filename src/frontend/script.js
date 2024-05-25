@@ -1,4 +1,5 @@
-const ipAddress = 'localhost';
+// ipAddress = the ip of the machine that is hosting the server
+const ipAddress = '192.168.16.6';
 const port = 8000;
 
 document.getElementById("reportForm").addEventListener("submit", function(event) {
@@ -44,7 +45,7 @@ document.addEventListener("submit", function() {
             .then(response => response.text())
             .then(data => {
                 // Parse the response text to extract the desired information
-                const lines = data.split('\n'); // Split the response into lines
+                var lines = data.split('\n'); // Split the response into lines
                 let extractedData = ''; // Initialize an empty string to store extracted data
 
                 // Loop through each line and extract relevant information
@@ -65,7 +66,86 @@ document.addEventListener("submit", function() {
                 console.error('Error fetching data:', error);
             });
     }
+    function getPlotData() {
+        // Clear arrays before fetching new data
+        // Make the HTTP GET request
+        // Get the value of the location input field
+        var location = document.getElementById("curlInput").value;
+        fetch(`http://${ipAddress}:${port}?args=fc=7,=location=${encodeURIComponent(location)}`)
+            .then(response => response.text())
+            .then(data => {
+                // Parse the response text to extract the desired information
+                var lines = data.split('\n'); // Split the response into lines
+                let dates = []; // Initialize an empty array for dates
+                let heights = []; // Initialize an empty array for wave heights
+                let periods = []; // Initialize an empty array for wave periods
+                // Loop through each line and extract relevant information
+                lines.forEach(line => {
+                    if (line.startsWith('Date')) {
+                        var fullDate = line.split(':')[1].trim();
+                        var date = fullDate.split(' ')[0]; // Extract the date part only
+                        dates.push(date);
+                    } else if (line.startsWith('Wave Height')) {
+                        var height = parseFloat(line.split(':')[1].trim());
+                        heights.push(height);
+                    } else if (line.startsWith('Wave Period')) {
+                        var period = parseFloat(line.split(':')[1].trim());
+                        periods.push(period);
+                    }
+                });
+                // Log the arrays to verify
+                console.log('Dates:', dates);
+                console.log('Wave Heights:', heights);
+                console.log('Wave Periods:', periods);
+                plot_graph(dates, heights, periods);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
 
     // Call the function to fetch data and update HTML content when the form is submitted
     fetchDataAndUpdateHTML();
+    getPlotData();
 });
+
+function plot_graph(dates, heights, periods) {
+    var heightPoints = dates.map((date, index) => [date, heights[index]]);
+    var periodPoints = dates.map((date, index) => [date, periods[index]]);
+  
+    var chart = JSC.chart('chartDiv', { 
+      debug: true, 
+      type: 'line', 
+      legend_visible: false, 
+      xAxis: { 
+        crosshair_enabled: true, 
+        scale: { type: 'time' } 
+      }, 
+      yAxis: { 
+        orientation: 'opposite', 
+        formatString: 'n2'
+      }, 
+      defaultSeries: { 
+        firstPoint_label_text: '<b>%seriesName</b>', 
+        defaultPoint_marker: { 
+          type: 'circle', 
+          size: 8, 
+          fill: 'white', 
+          outline: { width: 2, color: 'currentColor' } 
+        } 
+      }, 
+      title_label_text: 'Surf Heights and Periods', 
+      series: [ 
+        { 
+          name: 'Heights', 
+          points: heightPoints
+        }, 
+        { 
+          name: 'Periods', 
+          points: periodPoints
+        } 
+      ] 
+    }); 
+
+  }
+  
