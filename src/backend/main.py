@@ -71,6 +71,14 @@ uv_index = api.get_uv(lat, long, ocean["decimal"], ocean["unit"])
 ocean["ocean_data"] = ocean_data
 ocean["uv_index"] = uv_index
 
+data_dict = {
+    "Location : ": city,
+    "Height: ": ocean_data[0],
+    "Direction: ": ocean_data[1],
+    "Period: ": ocean_data[2],
+    "UV Index: ": uv_index,
+}
+
 
 def main():
     """
@@ -89,6 +97,7 @@ def main():
     print("\n")
     forecast = api.forecast(lat, long, ocean["decimal"], ocean["forecast_days"])
     helper.print_forecast(ocean, forecast)
+    return data_dict
 
 
 main()
