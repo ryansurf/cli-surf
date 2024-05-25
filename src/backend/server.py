@@ -39,6 +39,7 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
                     help_text = file.read()
                 self.send_response(200)
                 self.send_header("Content-type", "text/plain")
+                self.send_header("Access-Control-Allow-Origin", "*")  # Allow requests from any origin
                 self.end_headers()
                 self.wfile.write(help_text.encode())
             except FileNotFoundError:
@@ -56,6 +57,7 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             )
             self.send_response(200)
             self.send_header("Content-type", "text/plain")
+            self.send_header("Access-Control-Allow-Origin", "*")  # Allow requests from any origin
             self.end_headers()
             self.wfile.write(result.stdout.encode())
 
