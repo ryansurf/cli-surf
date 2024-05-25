@@ -26,6 +26,12 @@ To run black:
 
 `black .`
 
+**Testing**
+
+To run tests, install pytest, `pip install pytest` and navigate to `src/test`.
+
+Run `pytest`
+
 ## Questions, suggestions or new ideas
 
 Please don't open an issue to ask a question or suggestion. Instead, use the [GitHub Discussions](https://github.com/ryansurf/cli-surf/discussions) page. New ideas and enhacements are also welcome as discussion posts.
