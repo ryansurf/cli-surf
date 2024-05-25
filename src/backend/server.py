@@ -38,7 +38,7 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             # If 'help' is in the args, read and return the content of help.txt
             try:
                 with open(
-                    "../help.txt", "r", encoding="utf-8", errors="ignore"
+                    "../../help.txt", "r", encoding="utf-8", errors="ignore"
                 ) as file:
                     help_text = file.read()
                 self.send_response(200)
