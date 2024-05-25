@@ -2,9 +2,6 @@
 General helper functions
 """
 
-import matplotlib.pyplot as plt, mpld3
-
-
 def seperate_args(args):
     """
     Args are seperated by commas in input. Sereperat them and return list
