@@ -11,6 +11,10 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 port_env = int(os.getenv("PORT"))
+website = bool(os.getenv("WEBSITE"))
+
+if website == True:
+     subprocess.Popen(["python", "-m", "http.server", "9000"], cwd="../frontend")
 
 
 class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
@@ -48,6 +52,7 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b"help.txt not found")
         else:
+            
             # Otherwise, run the main.py script with the provided arguments
             result = subprocess.run(
                 ["python3", "main.py"] + args,

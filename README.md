@@ -117,6 +117,25 @@ You will need to setup an email account that is able to utilize SMTP services. I
 
 Execute by running `python3 send_email.py`. Running with cron is a good use case
 
+**Frontend**
+
+Although this application was made with the cli in mind, there is a frontend.
+
+To access this, navigate to:
+
+`src/frontend/`
+
+Open `script.js`. There are two variables at the top:
+
+```
+const ipAddress = 'localhost';
+const port = 8000;
+```
+
+You may need to change `ipAddress`, depending on what machine is running the application.
+
+
+
 ## Contributing
 
 Thank you for considering contributing to cli-surf!
