@@ -2,6 +2,7 @@
 General helper functions
 """
 
+
 def seperate_args(args):
     """
     Args are seperated by commas in input. Sereperat them and return list
