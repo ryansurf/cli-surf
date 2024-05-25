@@ -64,26 +64,32 @@ if "hide_date" in args or "hdate" in args:
 if "metric" in args or "m" in args:
     ocean["unit"] = "metric"
 
-# Calls APIs though python files
-ocean_data = api.ocean_information(lat, long, ocean["decimal"], ocean["unit"])
-uv_index = api.get_uv(lat, long, ocean["decimal"], ocean["unit"])
+def gather_data(lat=lat, long=long):
+    # Calls APIs though python files
+    ocean_data = api.ocean_information(lat, long, ocean["decimal"], ocean["unit"])
+    uv_index = api.get_uv(lat, long, ocean["decimal"], ocean["unit"])
 
-ocean["ocean_data"] = ocean_data
-ocean["uv_index"] = uv_index
+    ocean["ocean_data"] = ocean_data
+    ocean["uv_index"] = uv_index
 
-data_dict = {
-    "Location : ": city,
-    "Height: ": ocean_data[0],
-    "Direction: ": ocean_data[1],
-    "Period: ": ocean_data[2],
-    "UV Index: ": uv_index,
-}
+    data_dict = {
+        "Location : ": city,
+        "Height: ": ocean_data[0],
+        "Direction: ": ocean_data[1],
+        "Period: ": ocean_data[2],
+        "UV Index: ": uv_index,
+    }
+    return ocean_data, uv_index, data_dict
 
 
-def main():
+def main(lat=lat, long=long):
     """
     Main function
     """
+    data = gather_data()
+    ocean_data = data[0]
+    uv_index = data[1]
+    data_dict = data[2]
     print("\n")
     if coordinates == "No data":
         print("No location found")
@@ -98,6 +104,5 @@ def main():
     forecast = api.forecast(lat, long, ocean["decimal"], ocean["forecast_days"])
     helper.print_forecast(ocean, forecast)
     return data_dict
-
 
 main()

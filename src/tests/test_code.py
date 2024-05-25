@@ -8,14 +8,9 @@ import sys
 
 sys.path.append("../backend")
 
-import unittest
 from unittest.mock import patch
 import io
-import threading
-import requests
 import time
-import subprocess
-import os
 from main import main
 from helper import extract_decimal
 from api import get_coordinates, get_uv, ocean_information
@@ -61,6 +56,6 @@ def test_main():
     Main() returns a dictionary of: location, height, period, etc.
     This functions checks if the dictionary is returned and is populated
     """
-    data_dict = main()
+    data_dict = main(36.95, -122.02)
     time.sleep(5)
     assert len(data_dict) >= 5
