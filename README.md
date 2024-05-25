@@ -90,7 +90,7 @@ To run locally on your machine, I recommend either:
 2. `cd cli-surf`
 3. `mv .env.example .env`
 4. `docker build -t cli-surf .`
-5. `docker run -d -p 8000:8000 cli-surf`
+5. `docker run -d -p 8000:8000 -p 9000:9000 cli-surf`
     * Add `--restart unless-stopped` for automatic start on reboot
 
 ## Setup
