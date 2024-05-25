@@ -82,7 +82,7 @@ To run locally on your machine, I recommend either:
 4. `python3 -m venv venv`
 5. `source venv/bin/activate`
 6. `pip install -r requirements.txt`
-7. `cd src`
+7. `cd src/backend`
 8. `python3 server.py`
 
 **Or running Docker (install [Docker](https://docs.docker.com/engine/install/))**
