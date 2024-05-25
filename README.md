@@ -108,6 +108,7 @@ Change `.env.example` to `.env`
 | `EMAIL_RECEIVER`  | The email that will receive the report (your personal email) |
 | `COMMAND`  | The command that will be ran and shown in the email. Default = `localhost:8000` |
 | `SUBJECT`  | The email's subject. Default = Surf Report |
+| `WEBSITE`  | Enable/disable the frontend. Default = False(disabled) |
 
 **Email Server**
 
@@ -121,7 +122,9 @@ Execute by running `python3 send_email.py`. Running with cron is a good use case
 
 Although this application was made with the cli in mind, there is a frontend.
 
-To access this, navigate to:
+To enable this, set `WEBSITE=TRUE` in the `.env` file.
+
+Then, navigate to:
 
 `src/frontend/`
 
@@ -132,8 +135,11 @@ const ipAddress = 'localhost';
 const port = 8000;
 ```
 
-You may need to change `ipAddress`, depending on what machine is running the application.
+You may need to change `ipAddress` and `port`, to match the machine running the application and which port is open(if you have changed from the default `8000`).
 
+The website will be accessible through `localhost:9000` **or** `<ip_of_host>:<port>` if the application is running on a different host or you have changed the default port.
+
+Now, running `python3 server.py` will launch the website!
 
 
 ## Contributing
