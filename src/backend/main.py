@@ -69,8 +69,6 @@ if "json" in args or "j" in args:
     ocean["json_output"] = 1
 
 
-
-
 def gather_data(lat=lat, long=long):
     # Calls APIs though python files
     ocean_data = api.ocean_information(lat, long, ocean["decimal"], ocean["unit"])
