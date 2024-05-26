@@ -93,7 +93,7 @@ def main(lat=lat, long=long):
     """
     Main function
     """
-    data = gather_data()
+    data = gather_data(lat, long)
     ocean_data = data[0]
     uv_index = data[1]
     data_dict = data[2]
