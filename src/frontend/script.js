@@ -7,6 +7,8 @@ document.getElementById("reportForm").addEventListener("submit", function(event)
 
     // Get the value of the location input field
     var location = document.getElementById("curlInput").value;
+    location = location.replace(/\s+/g, "_");
+    console.log("LOCATION: ", location)
 
     // Function to handle the response from the HTTP GET request
     function handleResponse(responseText) {
@@ -15,7 +17,7 @@ document.getElementById("reportForm").addEventListener("submit", function(event)
     }
 
     // Construct the URL with the location query parameter
-    var url = `http://${ipAddress}:${port}?args=location=${encodeURIComponent(location)}`;
+    var url = `http://${ipAddress}:${port}?location=${encodeURIComponent(location)}`;
     console.log(url);
 
     // Call httpGetAsync with the URL and the handleResponse function as parameters
@@ -41,7 +43,8 @@ document.addEventListener("submit", function() {
         // Make the HTTP GET request
         // Get the value of the location input field
         var location = document.getElementById("curlInput").value;
-        fetch(`http://${ipAddress}:${port}?args=location=${encodeURIComponent(location)}`)
+        location = location.replace(/\s+/g, "_");
+        fetch(`http://${ipAddress}:${port}?location=${encodeURIComponent(location)}`)
             .then(response => response.text())
             .then(data => {
                 // Parse the response text to extract the desired information

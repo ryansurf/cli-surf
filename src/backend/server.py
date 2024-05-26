@@ -5,6 +5,7 @@ HTTP Server Module
 import os
 import http.server
 import subprocess
+import helper
 from urllib.parse import urlparse, parse_qs
 from dotenv import load_dotenv
 from helper import query_to_args_list
@@ -14,8 +15,8 @@ load_dotenv(override=True)
 port_env = int(os.getenv("PORT"))
 website = bool(os.getenv("WEBSITE"))
 
-if website == True:
-    subprocess.Popen(["python", "-m", "http.server", "9000"], cwd="../frontend")
+#Starts website if website==True
+helper.start_website(website)
 
 
 class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):

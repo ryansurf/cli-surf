@@ -1,6 +1,34 @@
 """
 General helper functions
 """
+import subprocess
+import json
+import api
+import art
+
+def arguments_dictionary(lat, long, city, args):
+    """
+    Dictionary to keep cli argument values
+    """
+    arguments = {
+        "lat": lat,
+        "long": long,
+        "city": city,
+        "show_wave": 1,
+        "show_large_wave": 0,
+        "show_uv": 1,
+        "show_height": 1,
+        "show_direction": 1,
+        "show_period": 1,
+        "show_city": 1,
+        "show_date": 1,
+        "json_output" : 0,
+        "unit": "imperial",
+        "decimal": extract_decimal(args),
+        "forecast_days": get_forecast_days(args),
+        "color": get_color(args)
+    }
+    return arguments
 
 def query_to_args_list(query):
     """
@@ -110,3 +138,64 @@ def round_decimal(round_list, decimal):
     for num in round_list:
         rounded_list.append(round(num, decimal))
     return rounded_list
+
+def set_output_values(args, ocean):
+    """
+    Takes a list of command line arguments(args) and sets the appropritate values
+    in the ocean dictionary(show_wave = 1, etc)
+    """
+    if "hide_wave" in args or "hw" in args:
+        ocean["show_wave"] = 0
+    if "show_large_wave" in args or "slw" in args:
+        ocean["show_large_wave"] = 1
+    if "hide_uv" in args or "huv" in args:
+        ocean["show_uv"] = 0
+    if "hide_height" in args or "hh" in args:
+        ocean["show_height"] = 0
+    if "hide_direction" in args or "hdir" in args:
+        ocean["show_direction"] = 0
+    if "hide_period" in args or "hp" in args:
+        ocean["show_period"] = 0
+    if "hide_location" in args or "hl" in args:
+        ocean["show_city"] = 0
+    if "hide_date" in args or "hdate" in args:
+        ocean["show_date"] = 0
+    if "metric" in args or "m" in args:
+        ocean["unit"] = "metric"
+    if "json" in args or "j" in args:
+        ocean["json_output"] = 1
+    return ocean
+
+def start_website(website):
+    """
+    If the WEBSITE .env variable is true, the webserver is started
+    """
+    if website == True:
+        subprocess.Popen(["python", "-m", "http.server", "9000"], cwd="../frontend")
+
+def json_output(data_dict):
+    """
+    If JSON=TRUE in .args, we print and return the JSON data
+    """ 
+    json_output = json.dumps(data_dict, indent=4)
+    print(json_output)
+    return json_output
+
+def print_outputs(lat, long, coordinates, ocean_data, arguments):
+    """
+    Basically the main printing function, calls all the other printing functions
+    """
+    print("\n")
+    if coordinates == "No data":
+        print("No location found")
+    if ocean_data == "No data":
+        print(coordinates)
+        print("No ocean data at this location.")
+    else:
+        print_location(arguments["city"], arguments["show_city"])
+        art.print_wave(arguments["show_wave"], arguments["show_large_wave"], arguments["color"])
+        print_output(arguments)
+    print("\n")
+    forecast = api.forecast(lat, long, arguments["decimal"], arguments["forecast_days"])
+    print_forecast(arguments, forecast)
+

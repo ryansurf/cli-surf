@@ -8,7 +8,7 @@ import requests_cache
 from retry_requests import retry
 import requests
 import pandas as pd
-from helper import round_decimal
+import helper
 
 
 def get_coordinates(args):
@@ -134,13 +134,13 @@ def forecast(lat, long, decimal, days=0):
 
     response = responses[0]
 
-    daily_height_max = round_decimal(
+    daily_height_max = helper.round_decimal(
         response.Daily().Variables(0).ValuesAsNumpy(), decimal
     )
-    daily_direction_dominant = round_decimal(
+    daily_direction_dominant = helper.round_decimal(
         response.Daily().Variables(1).ValuesAsNumpy(), decimal
     )
-    daily_period_max = round_decimal(
+    daily_period_max = helper.round_decimal(
         response.Daily().Variables(2).ValuesAsNumpy(), decimal
     )
 
@@ -159,3 +159,36 @@ def forecast(lat, long, decimal, days=0):
         daily_period_max,
         daily_data["date"],
     ]
+
+def gather_data(lat, long, ocean):
+    """
+    Calls APIs though python files
+    """
+    ocean_data = ocean_information(lat, long, ocean["decimal"], ocean["unit"])
+    uv_index = get_uv(lat, long, ocean["decimal"], ocean["unit"])
+
+    ocean["ocean_data"] = ocean_data
+    ocean["uv_index"] = uv_index
+
+    data_dict = {
+        "Location : ": ocean["city"],
+        "Height: ": ocean_data[0],
+        "Direction: ": ocean_data[1],
+        "Period: ": ocean_data[2],
+        "UV Index: ": uv_index,
+    }
+    return ocean_data, uv_index, data_dict
+
+def seperate_args_and_get_location(args):
+    """
+    Gets user's coordinates from either the argument(location=) or, if none,
+    the default coordinates(default_location())
+    """
+    coordinates = get_coordinates(args)
+    location_data = {
+        "coordinates" : coordinates,
+        "lat" : coordinates[0],
+        "long" : coordinates[1],
+        "city" : coordinates[2]
+    }
+    return location_data
