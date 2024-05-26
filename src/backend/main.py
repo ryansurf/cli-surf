@@ -93,6 +93,8 @@ def main(lat=lat, long=long):
     """
     Main function
     """
+    lat = float(lat)
+    long = float(long)
     data = gather_data(lat, long)
     ocean_data = data[0]
     uv_index = data[1]
@@ -118,5 +120,5 @@ def main(lat=lat, long=long):
         print(json_output)
         return json_output
 
-
-main(lat, long)
+if __name__ == "__main__":
+    main(lat, long)
