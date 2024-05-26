@@ -49,6 +49,7 @@ Wave Period:  9.8
 | metric / m  | Numbers in Metric units. Defaults to Imperial   | 
 | decimal / dec   | Specify decimal points in output   | 
 | color / c   | Choose color of wave art. Ex: `color=light_blue`   | 
+| json / j   | Output the data in JSON format. Must be the only argument  | 
 
 **Examples**
 * Arguments are seperated by commas.
