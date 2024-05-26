@@ -119,4 +119,4 @@ def main(lat=lat, long=long):
         return json_output
 
 
-main()
+main(lat, long)
