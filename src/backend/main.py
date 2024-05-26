@@ -14,8 +14,6 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv(override=True)
 website = bool(os.getenv("WEBSITE"))
-json_show = bool(os.getenv("JSON"))
-print("JSON: ", json_show)
 
 if website == True:
     subprocess.Popen(["python", "-m", "http.server", "9000"], cwd="../frontend")
@@ -41,6 +39,7 @@ ocean = {
     "show_period": 1,
     "show_city": 1,
     "show_date": 1,
+    "json_output" : 0,
     "unit": "imperial",
     "decimal": helper.extract_decimal(args),
     "forecast_days": helper.get_forecast_days(args),
@@ -66,6 +65,10 @@ if "hide_date" in args or "hdate" in args:
     ocean["show_date"] = 0
 if "metric" in args or "m" in args:
     ocean["unit"] = "metric"
+if "json" in args or "j" in args:
+    ocean["json_output"] = 1
+
+
 
 
 def gather_data(lat=lat, long=long):
@@ -95,7 +98,7 @@ def main(lat=lat, long=long):
     uv_index = data[1]
     data_dict = data[2]
 
-    if not json_show:
+    if ocean["json_output"] == 0:
         print("\n")
         if coordinates == "No data":
             print("No location found")

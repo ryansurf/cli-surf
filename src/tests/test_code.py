@@ -5,6 +5,7 @@ Run pytest: pytest
 """
 
 import sys
+import json
 
 sys.path.append("../backend")
 
@@ -51,7 +52,7 @@ def test_ocean_information():
     assert isinstance(ocean[2], (int, float))
 
 
-def test_main():
+def test_main_output():
     """
     Main() returns a dictionary of: location, height, period, etc.
     This functions checks if the dictionary is returned and is populated
