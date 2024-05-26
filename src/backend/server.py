@@ -7,6 +7,7 @@ import http.server
 import subprocess
 from urllib.parse import urlparse, parse_qs
 from dotenv import load_dotenv
+from helper import query_to_args_list
 
 # Load environment variables from .env file
 load_dotenv(override=True)
@@ -29,10 +30,9 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         """
         # Parse the query parameters
         parsed_url = urlparse(self.path)
-        query_params = parse_qs(parsed_url.query)
 
         # Extract the arguments from the query parameters
-        args = query_params.get("args", [])
+        args = query_to_args_list(parsed_url.query)
 
         if "help" in args:
             # If 'help' is in the args, read and return the content of help.txt
