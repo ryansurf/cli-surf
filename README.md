@@ -54,12 +54,12 @@ Wave Period:  9.8
 **Examples**
 * Arguments are seperated by commas.
 * `curl localhost:8000`
-* `curl localhost:8000?args=location=new_york,hide_height,hide_wave,show_large_wave`
-* `curl localhost:8000?args=fc=3,hdate,loc=trestles`
+* `curl localhost:8000?location=new_york,hide_height,hide_wave,show_large_wave`
+* `curl localhost:8000?fc=3,hdate,loc=trestles`
 
 **For detailed information you can access the [help](https://github.com/ryansurf/cli-surf/blob/main/help.txt) page**
 
-* `curl localhost:8000?args=help`
+* `curl localhost:8000?help`
 
 
 ## Installation
