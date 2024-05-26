@@ -8,11 +8,14 @@ import api
 import art
 import os
 import subprocess
+import json
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(override=True)
 website = bool(os.getenv("WEBSITE"))
+json_show = bool(os.getenv("JSON"))
+print("JSON: ", json_show)
 
 if website == True:
     subprocess.Popen(["python", "-m", "http.server", "9000"], cwd="../frontend")
@@ -64,6 +67,7 @@ if "hide_date" in args or "hdate" in args:
 if "metric" in args or "m" in args:
     ocean["unit"] = "metric"
 
+
 def gather_data(lat=lat, long=long):
     # Calls APIs though python files
     ocean_data = api.ocean_information(lat, long, ocean["decimal"], ocean["unit"])
@@ -90,19 +94,25 @@ def main(lat=lat, long=long):
     ocean_data = data[0]
     uv_index = data[1]
     data_dict = data[2]
-    print("\n")
-    if coordinates == "No data":
-        print("No location found")
-    if ocean_data == "No data":
-        print(coordinates)
-        print("No ocean data at this location.")
+
+    if not json_show:
+        print("\n")
+        if coordinates == "No data":
+            print("No location found")
+        if ocean_data == "No data":
+            print(coordinates)
+            print("No ocean data at this location.")
+        else:
+            helper.print_location(ocean["city"], ocean["show_city"])
+            art.print_wave(ocean["show_wave"], ocean["show_large_wave"], ocean["color"])
+            helper.print_output(ocean)
+        print("\n")
+        forecast = api.forecast(lat, long, ocean["decimal"], ocean["forecast_days"])
+        helper.print_forecast(ocean, forecast)
+        return data_dict
     else:
-        helper.print_location(ocean["city"], ocean["show_city"])
-        art.print_wave(ocean["show_wave"], ocean["show_large_wave"], ocean["color"])
-        helper.print_output(ocean)
-    print("\n")
-    forecast = api.forecast(lat, long, ocean["decimal"], ocean["forecast_days"])
-    helper.print_forecast(ocean, forecast)
-    return data_dict
+        json_output = json.dumps(data_dict, indent=4)
+        print(json_output)
+        return json_output
 
 main()

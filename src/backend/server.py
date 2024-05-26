@@ -9,7 +9,7 @@ from urllib.parse import urlparse, parse_qs
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(override=True)
 port_env = int(os.getenv("PORT"))
 website = bool(os.getenv("WEBSITE"))
 

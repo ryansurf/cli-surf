@@ -10,7 +10,7 @@ from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(override=True)
 
 # Email server configuration
 SMTP_SERVER = os.getenv("SMTP_SERVER")

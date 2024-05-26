@@ -104,6 +104,3 @@ def round_decimal(round_list, decimal):
     for num in round_list:
         rounded_list.append(round(num, decimal))
     return rounded_list
-
-
-
