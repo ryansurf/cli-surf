@@ -2,6 +2,12 @@
 General helper functions
 """
 
+def query_to_args_list(query):
+    """
+    Convert query string to a list of arguments.
+    """
+    args = [query] if query else []
+    return args
 
 def seperate_args(args):
     """
