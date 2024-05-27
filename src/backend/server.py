@@ -3,6 +3,7 @@ Flask Server!
 """
 
 from flask import Flask, send_file, send_from_directory, request
+from flask_cors import CORS
 import subprocess
 import json
 import helper
@@ -11,6 +12,7 @@ import asyncio
 import urllib.parse
 
 app = Flask(__name__)
+CORS(app)
 
 with open('../../config.json') as f:
     json_config = json.load(f)
