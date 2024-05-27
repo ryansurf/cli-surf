@@ -1,5 +1,5 @@
 // ipAddress = the ip of the machine that is hosting the server
-const ipAddress = 'localhost';
+const ipAddress = '192.168.16.6';
 const port = 8000;
 
 document.getElementById("reportForm").addEventListener("submit", function(event) {
