@@ -5,7 +5,6 @@ Run pytest: pytest
 """
 
 import sys
-import json
 
 sys.path.append("../backend")
 
