@@ -5,6 +5,7 @@ import subprocess
 import json
 import api
 import art
+import pandas as pd
 
 def arguments_dictionary(lat, long, city, args):
     """
@@ -206,3 +207,25 @@ def set_location(location):
     coordinates, city = location["coordinates"], location["city"]
     lat, long = location["lat"], location["long"]
     return coordinates, city, lat, long
+
+def forecast_to_json(data):
+    """
+    Takes forecast() as input and returns it in JSON format
+    """
+    surf_height, swell_direction, swell_period, dates = data
+    
+    # Formatting into JSON
+    forecasts = []
+    for i in range(len(dates)):
+        forecast = {
+            "date": str(dates[i].date()),
+            "surf height": surf_height[i],
+            "swell direction": swell_direction[i],
+            "swell period": swell_period[i]
+        }
+        forecasts.append(forecast)
+
+    output = {"forecasts": forecasts}
+    # Converting to JSON string
+    output_json = json.dumps(str(output), indent=4)
+    return output_json
