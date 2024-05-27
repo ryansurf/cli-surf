@@ -50,13 +50,19 @@ def default_route():
     args = ','.join(parsed_parameters)
 
     async def run_subprocess():
-        result = subprocess.run(
-            ["python3", "main.py", args],
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        return result.stdout
+        try:
+            result = subprocess.run(
+                ["python3", "main.py", args],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return result.stdout
+        except subprocess.CalledProcessError as e:
+            # Print the error message from the subprocess
+            print("Error message from subprocess:", e.stderr)
+            # Raise the error again to propagate it
+            raise e
 
     # Run subprocess asynchronously
     loop = asyncio.new_event_loop()

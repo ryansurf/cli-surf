@@ -173,9 +173,9 @@ def json_output(data_dict):
     """
     If JSON=TRUE in .args, we print and return the JSON data
     """ 
-    json_output = json.dumps(data_dict, indent=4)
-    print(json_output)
-    return json_output
+    json_out = json.dumps(data_dict, indent=4)
+    print(json_out)
+    return data_dict
 
 def print_outputs(lat, long, coordinates, ocean_data, arguments):
     """
@@ -203,7 +203,7 @@ def set_location(location):
     lat, long = location["lat"], location["long"]
     return coordinates, city, lat, long
 
-def forecast_to_json(data):
+def forecast_to_json(data, decimal):
     """
     Takes forecast() as input and returns it in JSON format
     """
@@ -214,13 +214,10 @@ def forecast_to_json(data):
     for i in range(len(dates)):
         forecast = {
             "date": str(dates[i].date()),
-            "surf height": surf_height[i],
-            "swell direction": swell_direction[i],
-            "swell period": swell_period[i]
+            "surf height": round(float(surf_height[i]), decimal),
+            "swell direction": round(float(swell_direction[i]), decimal),
+            "swell period": round(float(swell_period[i]), decimal)
         }
         forecasts.append(forecast)
-
-    output = {"forecasts": forecasts}
-    # Converting to JSON string
-    output_json = json.dumps(str(output), indent=4)
-    return output_json
+    
+    return forecasts
