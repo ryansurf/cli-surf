@@ -199,3 +199,10 @@ def print_outputs(lat, long, coordinates, ocean_data, arguments):
     forecast = api.forecast(lat, long, arguments["decimal"], arguments["forecast_days"])
     print_forecast(arguments, forecast)
 
+def set_location(location):
+    """
+    Sets locations variables
+    """
+    coordinates, city = location["coordinates"], location["city"]
+    lat, long = location["lat"], location["long"]
+    return coordinates, city, lat, long
