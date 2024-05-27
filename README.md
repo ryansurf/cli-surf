@@ -157,7 +157,7 @@ Questions? Comments?
 
 * [Discord](https://discord.gg/He2UpxRuJP)
 * [Discussions](https://github.com/ryansurf/cli-surf/discussions)
-* GitHub: [ryansurf](https://github.com/ryansurf)
+* [GitHub](https://github.com/ryansurf)
 
 ## License
 [![License](https://img.shields.io/:license-mit-blue.svg?style=flat-square)](https://badges.mit-license.org)

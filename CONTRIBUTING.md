@@ -4,6 +4,8 @@
 
 Thank you for your interest in contributing to cli-surf! All contributions are welcome, from commenting issues to reviewing or sending Pull Requests.
 
+Join the [Discord](https://discord.gg/He2UpxRuJP)!
+
 ## How to contribute?
 
 If you are new to GitHub, visit the [first-contributions instructions](https://github.com/firstcontributions/first-contributions/blob/master/README.md) to learn how to contribute on GitHub.
