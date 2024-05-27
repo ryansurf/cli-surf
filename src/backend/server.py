@@ -1,89 +1,63 @@
-"""
-HTTP Server Module
-"""
-
-import os
-import http.server
+from flask import Flask, send_file, send_from_directory, request
 import subprocess
+import json
 import helper
-from urllib.parse import urlparse, parse_qs
-from dotenv import load_dotenv
-from helper import query_to_args_list
+import sys
+import asyncio
+import urllib.parse
 
-# Load environment variables from .env file
-load_dotenv(override=True)
-port_env = int(os.getenv("PORT"))
-website = bool(os.getenv("WEBSITE"))
+app = Flask(__name__)
 
-#Starts website if website==True
-helper.start_website(website)
+with open('../../config.json') as f:
+    json_config = json.load(f)
 
+port_json = int(json_config["server"]["port"])
+website = bool(json_config["frontend"]["website"])
 
-class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
-    """
-    Handles HTTP requests
-    """
+@app.route('/config.json')
+def serve_config():
+    return send_from_directory('../../', 'config.json')
 
-    # pylint: disable=C0103
-    def do_GET(self):
-        """
-        Function for GET requests
-        """
-        # Parse the query parameters
-        parsed_url = urlparse(self.path)
+@app.route('/help')
+def serve_help():
+    return send_from_directory('../../', 'help.txt')
 
-        # Extract the arguments from the query parameters
-        args = query_to_args_list(parsed_url.query)
+@app.route('/home')
+def serve_index():
+    return send_file('../frontend/index.html')
 
-        if "help" in args:
-            # If 'help' is in the args, read and return the content of help.txt
-            try:
-                with open(
-                    "../../help.txt", "r", encoding="utf-8", errors="ignore"
-                ) as file:
-                    help_text = file.read()
-                self.send_response(200)
-                self.send_header("Content-type", "text/plain")
-                self.send_header(
-                    "Access-Control-Allow-Origin", "*"
-                )  # Allow requests from any origin
-                self.end_headers()
-                self.wfile.write(help_text.encode())
-            except FileNotFoundError:
-                self.send_response(404)
-                self.send_header("Content-type", "text/plain")
-                self.end_headers()
-                self.wfile.write(b"help.txt not found")
+@app.route('/script.js')
+def serve_script():
+    return send_file('../frontend/script.js')
+
+@app.route('/')
+def default_route():
+    query_parameters = urllib.parse.parse_qsl(request.query_string.decode(), keep_blank_values=True)
+    parsed_parameters = []
+
+    for key, value in query_parameters:
+        if value:
+            parsed_parameters.append(f"{key}={value}")
         else:
+            parsed_parameters.append(key)
 
-            # Otherwise, run the main.py script with the provided arguments
-            result = subprocess.run(
-                ["python3", "main.py"] + args,
-                capture_output=True,
-                text=True,
-                check=True,
-            )
-            self.send_response(200)
-            self.send_header("Content-type", "text/plain")
-            self.send_header(
-                "Access-Control-Allow-Origin", "*"
-            )  # Allow requests from any origin
-            self.end_headers()
-            self.wfile.write(result.stdout.encode())
+    # Join the parsed parameters list into a single string
+    args = ','.join(parsed_parameters)
 
+    async def run_subprocess():
+        result = subprocess.run(
+            ["python3", "main.py", args],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        return result.stdout
 
-def run(
-    server_class=http.server.HTTPServer, handler_class=MyHTTPRequestHandler, port=8000
-):
-    """
-    Run the server!
-    """
-    server_address = ("", port_env)
-    httpd = server_class(server_address, handler_class)
-    print(f"Server running on port {port}")
+    # Run subprocess asynchronously
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    result = loop.run_until_complete(run_subprocess())
+    return result
 
-    httpd.serve_forever()
-
-
-if __name__ == "__main__":
-    run(port=port_env)
+if __name__ == '__main__':
+    app.run(port=port_json)

@@ -1,6 +1,29 @@
 // ipAddress = the ip of the machine that is hosting the server
-const ipAddress = 'localhost';
-const port = 8000;
+
+let port;
+let ipAddress;
+
+fetch('/config.json', {
+    method: 'GET',
+    mode: 'no-cors',  // Add the 'no-cors' mode
+  })
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  return response.json();
+})
+.then(config => {
+  // Pass the config to another function if needed
+  useConfig(config);
+})
+.catch(error => console.error('Error loading config:', error));
+
+function useConfig(config) {
+    port = config["server"]["port"];
+    ipAddress = config["server"]["ip_address"];
+}
+
 
 document.getElementById("reportForm").addEventListener("submit", function(event) {
     event.preventDefault(); // Prevent default form submission
