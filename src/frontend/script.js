@@ -24,6 +24,11 @@ function useConfig(config) {
     ipAddress = config["server"]["ip_address"];
 }
 
+const cancelbutton = document.getElementById("cancel");
+cancelbutton.addEventListener("click",function(){
+    document.getElementById("curlInput").value =""; 
+});
+
 
 document.getElementById("reportForm").addEventListener("submit", function(event) {
     event.preventDefault(); // Prevent default form submission
