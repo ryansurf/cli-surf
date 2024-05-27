@@ -155,6 +155,7 @@ See [CONTRIBUTING.md](https://github.com/ryansurf/cli-surf/blob/main/CONTRIBUTIN
 
 Questions? Comments?
 
+* [Discord](https://discord.gg/He2UpxRuJP)
 * [Discussions](https://github.com/ryansurf/cli-surf/discussions)
 * GitHub: [ryansurf](https://github.com/ryansurf)
 
