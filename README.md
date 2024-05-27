@@ -111,6 +111,8 @@ Change `.env.example` to `.env`
 
 **config.json**
 
+| Variable    | Description|
+| -------- | ------- | 
 | `port`  | The port you want to open to run the application. Default = `8000` |
 | `ip_address`  | The ip your server is running on. Default = `localhost` |
 
@@ -131,7 +133,7 @@ Execute by running `python3 send_email.py`. Running with cron is a good use case
 
 Although this application was made with the cli in mind, there is a frontend.
 
-`http://localhost:8000/home` **or** `<ip_of_host>:<port>` if the application is running on a different host or you have changed the default port.
+`http://localhost:8000/home` **or** `<ip_of_host>:<port>/home` if the application is running on a different host or you have changed the default port.
 
 You may need to change `ip_address` in `config.json` to match the ip of the host running the machine.
 
