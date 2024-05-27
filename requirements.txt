@@ -1,3 +1,4 @@
+Flask==3.0.3
 geopy==2.4.1
 openmeteo_requests==1.2.0
 pandas==2.2.2
