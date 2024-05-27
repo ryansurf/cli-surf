@@ -59,7 +59,7 @@ Wave Period:  9.8
 
 **For detailed information you can access the [help](https://github.com/ryansurf/cli-surf/blob/main/help.txt) page**
 
-* `curl localhost:8000?help`
+* `curl localhost:8000/help`
 
 
 ## Installation
