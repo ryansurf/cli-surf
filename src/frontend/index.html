@@ -22,6 +22,8 @@
       }
     </style>
     <script src="https://code.jscharting.com/2.9.0/jscharting.js"></script>
+      <script src="script.js"></script>
+
   </head>
 
 
@@ -62,10 +64,24 @@
             </button>
             <button
               class="flex-shrink-0 border-transparent border-4 text-blue-500 hover:text-blue-800 text-sm py-1 px-2 rounded"
-              type="button"
+              type="button" id ="cancel"
             >
               Cancel
+                
             </button>
+              
+              <script>
+                  const cancelbutton = document.getElementById("cancel");
+                  
+                  cancelbutton.addEventListener("click",function(){
+                      document.getElementById("curlInput").value ="";
+                                                 
+                                                 
+                  });
+                  
+                   </script>
+              
+              
           </div>
         </form>
       </div>

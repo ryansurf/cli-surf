@@ -27,6 +27,7 @@ function useConfig(config) {
 
 document.getElementById("reportForm").addEventListener("submit", function(event) {
     event.preventDefault(); // Prevent default form submission
+    
 
     // Get the value of the location input field
     var location = document.getElementById("curlInput").value;
@@ -95,3 +96,7 @@ document.addEventListener("submit", function() {
     // Call the function to fetch data and update HTML content when the form is submitted
     fetchDataAndUpdateHTML();
 });
+
+
+
+
