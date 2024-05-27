@@ -174,44 +174,6 @@ def set_output_values(args, ocean):
         ocean["json_output"] = 1
     return ocean
 
-# def start_website(website):
-#     """
-#     If the WEBSITE .env variable is true, the webserver is started
-#     """
-#     if website == True:
-#         subprocess.Popen(["python", "-m", "http.server", str(website_port)], cwd="../frontend")
-
-# def start_website(website, config_file_path="../../config.json"):
-#     """
-#     If the WEBSITE json variable is true, the web server is started
-#     """
-#     if website:
-#         try:
-#             # Set the directory where the files to be served are located
-#             os.chdir("../frontend")
-
-#             # Custom handler to serve config.json
-#             class CustomHandler(SimpleHTTPRequestHandler):
-#                 def do_GET(self):
-#                     if self.path == '/config.json':
-#                         with open(config_file_path, 'rb') as f:
-#                             self.send_response(200)
-#                             self.send_header('Content-type', 'application/json')
-#                             self.end_headers()
-#                             self.wfile.write(f.read())
-#                     else:
-#                         super().do_GET()
-
-#             # Create a custom HTTP server
-#             httpd = HTTPServer(("", website_port), CustomHandler)
-#             print(f"Website started on port {website_port}...")
-
-#             # Serve files indefinitely
-#             httpd.serve_forever()
-#         except Exception as e:
-#             print("Error starting the server:", e)
-
-
 def json_output(data_dict):
     """
     If JSON=TRUE in .args, we print and return the JSON data
