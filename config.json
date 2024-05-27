@@ -2,9 +2,5 @@
     "server": {
         "port" : 8000,
         "ip_address" : "localhost"
-    },
-    "frontend": {
-        "website" : "True",
-        "port": 9000
     }
 }

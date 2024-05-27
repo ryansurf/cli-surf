@@ -1,3 +1,7 @@
+"""
+Flask Server!
+"""
+
 from flask import Flask, send_file, send_from_directory, request
 import subprocess
 import json
@@ -12,7 +16,6 @@ with open('../../config.json') as f:
     json_config = json.load(f)
 
 port_json = int(json_config["server"]["port"])
-website = bool(json_config["frontend"]["website"])
 
 @app.route('/config.json')
 def serve_config():

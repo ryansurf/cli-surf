@@ -9,11 +9,6 @@ import os
 import pandas as pd
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 
-with open('../../config.json') as f:
-  json_config = json.load(f)
-
-website_port = int(json_config["frontend"]["port"])
-
 def arguments_dictionary(lat, long, city, args):
     """
     Dictionary to keep cli argument values
