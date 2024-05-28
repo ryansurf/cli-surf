@@ -160,6 +160,7 @@ def forecast(lat, long, decimal, days=0):
         daily_data["date"],
     ]
 
+
 def gather_data(lat, long, ocean):
     """
     Calls APIs though python files
@@ -178,9 +179,10 @@ def gather_data(lat, long, ocean):
         "Direction": ocean_data[1],
         "Period": ocean_data[2],
         "UV Index": uv_index,
-        "Forecast": json_forecast
+        "Forecast": json_forecast,
     }
     return ocean_data, uv_index, data_dict
+
 
 def seperate_args_and_get_location(args):
     """
@@ -189,9 +191,9 @@ def seperate_args_and_get_location(args):
     """
     coordinates = get_coordinates(args)
     location_data = {
-        "coordinates" : coordinates,
-        "lat" : coordinates[0],
-        "long" : coordinates[1],
-        "city" : coordinates[2]
+        "coordinates": coordinates,
+        "lat": coordinates[0],
+        "long": coordinates[1],
+        "city": coordinates[2],
     }
     return location_data

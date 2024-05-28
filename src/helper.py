@@ -1,13 +1,12 @@
 """
 General helper functions
 """
-import subprocess
+
 import json
 import api
 import art
-import os
 import pandas as pd
-from http.server import SimpleHTTPRequestHandler, HTTPServer
+
 
 def arguments_dictionary(lat, long, city, args):
     """
@@ -25,11 +24,11 @@ def arguments_dictionary(lat, long, city, args):
         "show_period": 1,
         "show_city": 1,
         "show_date": 1,
-        "json_output" : 0,
+        "json_output": 0,
         "unit": "imperial",
         "decimal": extract_decimal(args),
         "forecast_days": get_forecast_days(args),
-        "color": get_color(args)
+        "color": get_color(args),
     }
     return arguments
 
@@ -136,6 +135,7 @@ def round_decimal(round_list, decimal):
         rounded_list.append(round(num, decimal))
     return rounded_list
 
+
 def set_output_values(args, ocean):
     """
     Takes a list of command line arguments(args) and sets the appropritate values
@@ -163,13 +163,15 @@ def set_output_values(args, ocean):
         ocean["json_output"] = 1
     return ocean
 
+
 def json_output(data_dict):
     """
     If JSON=TRUE in .args, we print and return the JSON data
-    """ 
+    """
     json_out = json.dumps(data_dict, indent=4)
     print(json_out)
     return data_dict
+
 
 def print_outputs(lat, long, coordinates, ocean_data, arguments):
     """
@@ -183,11 +185,14 @@ def print_outputs(lat, long, coordinates, ocean_data, arguments):
         print("No ocean data at this location.")
     else:
         print_location(arguments["city"], arguments["show_city"])
-        art.print_wave(arguments["show_wave"], arguments["show_large_wave"], arguments["color"])
+        art.print_wave(
+            arguments["show_wave"], arguments["show_large_wave"], arguments["color"]
+        )
         print_output(arguments)
     print("\n")
     forecast = api.forecast(lat, long, arguments["decimal"], arguments["forecast_days"])
     print_forecast(arguments, forecast)
+
 
 def set_location(location):
     """
@@ -197,12 +202,13 @@ def set_location(location):
     lat, long = location["lat"], location["long"]
     return coordinates, city, lat, long
 
+
 def forecast_to_json(data, decimal):
     """
     Takes forecast() as input and returns it in JSON format
     """
     surf_height, swell_direction, swell_period, dates = data
-    
+
     # Formatting into JSON
     forecasts = []
     for i in range(len(dates)):
@@ -210,8 +216,8 @@ def forecast_to_json(data, decimal):
             "date": str(dates[i].date()),
             "surf height": round(float(surf_height[i]), decimal),
             "swell direction": round(float(swell_direction[i]), decimal),
-            "swell period": round(float(swell_period[i]), decimal)
+            "swell period": round(float(swell_period[i]), decimal),
         }
         forecasts.append(forecast)
-    
+
     return forecasts
