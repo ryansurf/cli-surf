@@ -20,5 +20,5 @@ jobs:
         pip install pytest
     - name: Test with pytest
       run: |
-        cd src/tests
+        cd src
         pytest

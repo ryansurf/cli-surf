@@ -6,14 +6,14 @@ Run pytest: pytest
 
 import sys
 
-sys.path.append("../backend")
+sys.path.append("../src")
 
 from unittest.mock import patch
 import io
 import time
-from main import main
-from helper import extract_decimal
-from api import get_coordinates, get_uv, ocean_information
+from src import cli
+from src.helper import extract_decimal
+from src.api import get_coordinates, get_uv, ocean_information
 
 
 def test_invalid_input():
@@ -56,9 +56,9 @@ def test_main_output():
     Main() returns a dictionary of: location, height, period, etc.
     This functions checks if the dictionary is returned and is populated
     """
-    #Hardcode lat and long for location. If not, when test are ran in Github Actions
-    #We get an error(because server probably isn't near ocean)
-    data_dict = main(36.95, -121.97)
+    # Hardcode lat and long for location. If not, when test are ran in Github Actions
+    # We get an error(because server probably isn't near ocean)
+    data_dict = cli.run(36.95, -121.97)
     print(data_dict)
     time.sleep(5)
     assert len(data_dict) >= 5
