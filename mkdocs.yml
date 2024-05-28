@@ -1,0 +1,4 @@
+site_name: cli-surf Docs
+site_url: https://ryansurf.github.io/cli-surf
+theme:
+  name: material
