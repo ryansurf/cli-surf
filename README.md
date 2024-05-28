@@ -83,7 +83,7 @@ To run locally on your machine, I recommend either:
 4. `python3 -m venv venv`
 5. `source venv/bin/activate`
 6. `pip install -r requirements.txt`
-7. `cd src/backend`
+7. `cd src`
 8. `python3 server.py`
 
 **Or running Docker (install [Docker](https://docs.docker.com/engine/install/))**
@@ -102,19 +102,14 @@ Change `.env.example` to `.env`
 
 | Variable    | Description|
 | -------- | ------- | 
+| `PORT`  | The port you want to open to run the application. Default = `8000` |
+| `IP_ADDRESS`  | The ip your server is running on. Default = `localhost` |
 | `SMTP_SERVER`  | The email server you are using. Default = smtp.gmail.com |
 | `EMAIL`  | The email you will send the report from. |
 | `EMAIL_PW`  | The sending email's password |
 | `EMAIL_RECEIVER`  | The email that will receive the report (your personal email) |
 | `COMMAND`  | The command that will be ran and shown in the email. Default = `localhost:8000` |
 | `SUBJECT`  | The email's subject. Default = Surf Report |
-
-**config.json**
-
-| Variable    | Description|
-| -------- | ------- | 
-| `port`  | The port you want to open to run the application. Default = `8000` |
-| `ip_address`  | The ip your server is running on. Default = `localhost` |
 
 
 **Email Server**
@@ -135,7 +130,7 @@ Although this application was made with the cli in mind, there is a frontend.
 
 `http://localhost:8000/home` **or** `<ip_of_host>:<port>/home` if the application is running on a different host or you have changed the default port.
 
-You may need to change `ip_address` in `config.json` to match the ip of the host running the machine.
+You may need to change `IP_ADDRESS` in `.env` to match the ip of the host running the machine.
 
 Now, running `python3 server.py` will launch the website!
 
