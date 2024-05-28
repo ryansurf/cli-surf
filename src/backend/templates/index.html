@@ -76,6 +76,11 @@
         </div>
       </div>
     </div>
-    <script src="script.js"></script>
+    <script>
+      // variables
+      const ipAddress = '{{ ip_address }}';
+      const port = '{{ port }}';
+    </script>
+    <script src="{{ url_for('serve_script') }}"></script>
   </body>
 </html>
