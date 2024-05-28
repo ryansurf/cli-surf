@@ -7,7 +7,6 @@ from flask_cors import CORS
 from dotenv import load_dotenv, dotenv_values
 import os
 import subprocess
-import json
 import asyncio
 import urllib.parse
 
@@ -20,7 +19,7 @@ CORS(app)
 
 @app.route("/help")
 def serve_help():
-    return send_from_directory("../../", "help.txt")
+    return send_from_directory("../", "help.txt")
 
 
 @app.route("/home")
@@ -30,7 +29,7 @@ def serve_index():
 
 @app.route("/script.js")
 def serve_script():
-    return send_file("../frontend/script.js")
+    return send_file("static/script.js")
 
 
 @app.route("/")
@@ -52,7 +51,7 @@ def default_route():
     async def run_subprocess():
         try:
             result = subprocess.run(
-                ["python3", "main.py", args],
+                ["python3", "cli.py", args],
                 capture_output=True,
                 text=True,
                 check=True,
@@ -72,4 +71,4 @@ def default_route():
 
 
 if __name__ == "__main__":
-    app.run(port=os.getenv("PORT"))
+    app.run(host="0.0.0.0", port=os.getenv("PORT"))
