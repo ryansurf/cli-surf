@@ -1,4 +1,13 @@
 site_name: cli-surf Docs
 site_url: https://ryansurf.github.io/cli-surf
+site_description: Documentation for cli-surf
+site_author: ryansurf
+
+repo_url: https://github.com/ryansurf/cli-surf
+repo_name: cli-surf
+
 theme:
-  name: material
+  name: mkdocs
+
+nav:
+    - Home: index.md
