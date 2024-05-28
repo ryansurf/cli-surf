@@ -7,7 +7,7 @@ repo_url: https://github.com/ryansurf/cli-surf
 repo_name: cli-surf
 
 theme:
-  name: mkdocs
+  name: material
 
 nav:
     - Home: index.md
