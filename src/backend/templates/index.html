@@ -76,6 +76,10 @@
         </div>
       </div>
     </div>
-    <script src="script.js"></script>
+    <script>
+      // load .env variables from Flask server
+      const env = {{ env_vars|tojson }};
+    </script>
+    <script src="{{ url_for('serve_script') }}"></script>
   </body>
 </html>
