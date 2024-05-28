@@ -12,24 +12,8 @@ from unittest.mock import patch
 import io
 import time
 from main import main
-from helper import extract_decimal, query_to_args_list
+from helper import extract_decimal
 from api import get_coordinates, get_uv, ocean_information
-
-
-def test_query_to_args_list_with_non_empty_params():
-    """
-    Test if query_to_args_list function correctly converts non-empty query parameters to a list.
-    """
-    args = query_to_args_list("location=new_york,hide_height,show_large_wave")
-    assert args == ["location=new_york,hide_height,show_large_wave"]
-
-
-def test_query_to_args_list_with_empty_params():
-    """
-    Test if query_to_args_list function correctly handles empty query parameters and returns an empty list.
-    """
-    args = query_to_args_list("")
-    assert args == []
 
 
 def test_invalid_input():
