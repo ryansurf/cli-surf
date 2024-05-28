@@ -77,9 +77,8 @@
       </div>
     </div>
     <script>
-      // variables
-      const ipAddress = '{{ ip_address }}';
-      const port = '{{ port }}';
+      // load .env variables from Flask server
+      const env = {{ env_vars|tojson }};
     </script>
     <script src="{{ url_for('serve_script') }}"></script>
   </body>

@@ -4,7 +4,7 @@ Flask Server!
 
 from flask import Flask, send_file, send_from_directory, request, render_template
 from flask_cors import CORS
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 import os
 import subprocess
 import json
@@ -25,9 +25,7 @@ def serve_help():
 
 @app.route("/home")
 def serve_index():
-    return render_template(
-        "index.html", port=os.getenv("PORT"), ip_address=os.getenv("IP_ADDRESS")
-    )
+    return render_template("index.html", env_vars=dict(dotenv_values()))
 
 
 @app.route("/script.js")
