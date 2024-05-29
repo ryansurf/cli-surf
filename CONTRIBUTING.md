@@ -30,7 +30,7 @@ To run black:
 
 **Testing**
 
-To run tests, install pytest, `pip install pytest` and navigate to `src/test`.
+To run tests, install pytest, `pip install pytest` and navigate to `/test`.
 
 Run `pytest`
 
