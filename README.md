@@ -8,6 +8,8 @@ cli-surf is a real time ocean data and forecasting service used in the command l
 
 Inspired by [wttr.in](https://github.com/chubin/wttr.in)
 
+[Documentation](https://ryansurf.github.io/cli-surf/) | [Discord](https://discord.gg/He2UpxRuJP)
+
 ## Usage
 
 Using your browser or command-line interface you can access the service.
