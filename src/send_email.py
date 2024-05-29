@@ -2,33 +2,21 @@
 Module to send surf report emails
 """
 
-import os
 import smtplib
 import subprocess
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from dotenv import load_dotenv
+from settings import EmailSettings
 
 # Load environment variables from .env file
-load_dotenv(override=True)
-
-# Email server configuration
-SMTP_SERVER = os.getenv("SMTP_SERVER")
-PORT = 587  # Port for TLS connection
-
-# Sender's email credentials
-SENDER_EMAIL = os.getenv("EMAIL")
-PASSWORD = os.getenv("EMAIL_PW")
-
-# Receiver's email
-RECEIVER_EMAIL = os.getenv("EMAIL_RECEIVER")
+env = EmailSettings()
 
 # Create a multipart message and set headers
 message = MIMEMultipart()
-message["From"] = SENDER_EMAIL
-message["To"] = RECEIVER_EMAIL
-message["Subject"] = os.getenv("SUBJECT")
+message["From"] = env.EMAIL
+message["To"] = env.EMAIL_RECEIVER
+message["Subject"] = env.SUBJECT
 
 
 def send_user_email():
@@ -36,7 +24,7 @@ def send_user_email():
     Sends user an email
     """
     SURF = subprocess.run(
-        ["curl", os.getenv("COMMAND")],
+        ["curl", env.COMMAND],
         capture_output=True,
         text=True,
         check=True,
@@ -48,12 +36,13 @@ def send_user_email():
     message.attach(MIMEText(BODY, "plain"))
 
     # Connect to the SMTP server
-    with smtplib.SMTP(SMTP_SERVER, PORT) as server:
+    with smtplib.SMTP(env.SMTP_SERVER, env.SMTP_PORT) as server:
         server.starttls()  # Secure the connection
-        server.login(SENDER_EMAIL, PASSWORD)
+        server.login(env.EMAIL, env.EMAIL_PW)
         text = message.as_string()
-        server.sendmail(SENDER_EMAIL, RECEIVER_EMAIL, text)
+        server.sendmail(env.EMAIL, env.EMAIL_RECEIVER, text)
         print("Email sent successfully.")
 
 
-send_user_email()
+if __name__ == "__main__":
+    send_user_email()
