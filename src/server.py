@@ -3,11 +3,10 @@ Flask Server!
 """
 
 import asyncio
-import os
 import subprocess
 import urllib.parse
 
-from dotenv import dotenv_values, load_dotenv
+from pathlib import Path
 from flask import (
     Flask,
     render_template,
@@ -17,8 +16,10 @@ from flask import (
 )
 from flask_cors import CORS
 
+from settings import ServerSettings
+
 # Load environment variables from .env file
-load_dotenv(override=True)
+env = ServerSettings()
 
 app = Flask(__name__)
 CORS(app)
@@ -26,12 +27,14 @@ CORS(app)
 
 @app.route("/help")
 def serve_help():
-    return send_from_directory("../", "help.txt")
+    return send_from_directory(
+        f"{str(Path(__file__).parent)}/", "help.txt"
+    )
 
 
 @app.route("/home")
 def serve_index():
-    return render_template("index.html", env_vars=dict(dotenv_values()))
+    return render_template("index.html", env_vars=env.model_dump())
 
 
 @app.route("/script.js")
@@ -78,4 +81,4 @@ def default_route():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=os.getenv("PORT"))
+    app.run(host="0.0.0.0", port=env.PORT)

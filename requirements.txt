@@ -7,3 +7,6 @@ python-dotenv==1.0.1
 Requests==2.32.2
 requests_cache==1.2.0
 retry_requests==2.0.0
+pydantic==2.7.1
+pydantic-settings==2.2.1
+email-validator==2.1.1
