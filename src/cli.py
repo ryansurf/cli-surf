@@ -2,14 +2,12 @@
 Main module
 """
 
-import sys
 import os
+import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src import helper
-from src import api
-from src import art
+from src import api, helper
 
 
 def run(lat=0, long=0):
@@ -39,7 +37,7 @@ def run(lat=0, long=0):
     # Makes calls to the apis(ocean, UV) and returns the values
     data = api.gather_data(lat, long, arguments)
     ocean_data = data[0]
-    uv_index = data[1]
+    # uv_index = data[1]
     data_dict = data[2]
 
     # Non-JSON output

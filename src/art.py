@@ -24,13 +24,12 @@ def print_wave(show_wave, show_large_wave, color):
         print("Not a valid color")
         color = "blue"
     if int(show_wave) == 1:
-
         print(
             colors[color]
             + """
       .-``'.
     .`   .`
-_.-'     '._ 
+_.-'     '._
         """
             + colors["end"]
         )

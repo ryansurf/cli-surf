@@ -2,13 +2,20 @@
 Flask Server!
 """
 
-from flask import Flask, send_file, send_from_directory, request, render_template
-from flask_cors import CORS
-from dotenv import load_dotenv, dotenv_values
+import asyncio
 import os
 import subprocess
-import asyncio
 import urllib.parse
+
+from dotenv import dotenv_values, load_dotenv
+from flask import (
+    Flask,
+    render_template,
+    request,
+    send_file,
+    send_from_directory,
+)
+from flask_cors import CORS
 
 # Load environment variables from .env file
 load_dotenv(override=True)

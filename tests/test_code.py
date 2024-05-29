@@ -4,13 +4,13 @@ Make sure pytest is installed: pip install pytest
 Run pytest: pytest
 """
 
-import sys
-from unittest.mock import patch
 import io
 import time
+from unittest.mock import patch
+
 from src import cli
-from src.helper import extract_decimal
 from src.api import get_coordinates, get_uv, ocean_information
+from src.helper import extract_decimal
 
 
 def test_invalid_input():
@@ -20,7 +20,8 @@ def test_invalid_input():
     with patch("sys.stdout", new=io.StringIO()) as fake_stdout:
         extract_decimal(["decimal=NotADecimal"])
         printed_output = fake_stdout.getvalue().strip()
-        assert printed_output == "Invalid value for decimal. Please provide an integer."
+        expected = "Invalid value for decimal. Please provide an integer."
+        assert printed_output == expected
 
 
 def test_default_input():
@@ -53,9 +54,11 @@ def test_main_output():
     Main() returns a dictionary of: location, height, period, etc.
     This functions checks if the dictionary is returned and is populated
     """
-    # Hardcode lat and long for location. If not, when test are ran in Github Actions
+    # Hardcode lat and long for location.
+    # If not, when test are ran in Github Actions
     # We get an error(because server probably isn't near ocean)
+    expected = 5
     data_dict = cli.run(36.95, -121.97)
     print(data_dict)
     time.sleep(5)
-    assert len(data_dict) >= 5
+    assert len(data_dict) >= expected

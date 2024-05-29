@@ -2,12 +2,15 @@
 Functions that make API calls stored here
 """
 
-from geopy.geocoders import Nominatim
+from http import HTTPStatus
+
 import openmeteo_requests
-import requests_cache
-from retry_requests import retry
-import requests
 import pandas as pd
+import requests
+import requests_cache
+from geopy.geocoders import Nominatim
+from retry_requests import retry
+
 from src import helper
 
 
@@ -17,8 +20,8 @@ def get_coordinates(args):
     If no location is specified, default_location() finds the users coordinates
     """
     for arg in args:
-        arg = str(arg)
-        if arg.startswith("location=") or arg.startswith("loc="):
+        arg_str = str(arg)
+        if arg_str.startswith("location=") or arg_str.startswith("loc="):
             address = arg.split("=")[1]
             geolocator = Nominatim(user_agent="cli-surf")
             location = geolocator.geocode(address)
@@ -35,7 +38,7 @@ def default_location():
     """
     response = requests.get("https://ipinfo.io/json", timeout=10)
 
-    if response.status_code == 200:
+    if response.status_code == HTTPStatus.OK:
         data = response.json()
         location = data["loc"].split(",")
         lat = location[0]
@@ -98,7 +101,8 @@ def ocean_information(lat, long, decimal, unit="imperial"):
     except ValueError:
         return "No data"
 
-    # Process first location. Add a for-loop for multiple locations or weather models
+    # Process first location.
+    # Add a for-loop for multiple locations or weather models
     response = responses[0]
 
     # Current values. The order of variables needs to be the same as requested.
@@ -125,7 +129,11 @@ def forecast(lat, long, decimal, days=0):
     params = {
         "latitude": lat,
         "longitude": long,
-        "daily": ["wave_height_max", "wave_direction_dominant", "wave_period_max"],
+        "daily": [
+            "wave_height_max",
+            "wave_direction_dominant",
+            "wave_period_max",
+        ],
         "length_unit": "imperial",
         "timezone": "auto",
         "forecast_days": days,
