@@ -8,7 +8,7 @@ import requests_cache
 from retry_requests import retry
 import requests
 import pandas as pd
-import helper
+from src import helper
 
 
 def get_coordinates(args):

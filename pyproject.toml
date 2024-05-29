@@ -1,0 +1,4 @@
+# pytest settings
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = '-p no:warnings'  # disable pytest warnings

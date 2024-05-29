@@ -3,8 +3,8 @@ General helper functions
 """
 
 import json
-import api
-import art
+from src import api
+from src import art
 import pandas as pd
 
 
