@@ -6,9 +6,10 @@ The basic structure of the project is:
 ├── docs
 ├── images
 ├── src
-    ├── static
-    ├── templates
-    └── tests
+│   ├── __pycache__
+│   ├── static
+│   └── templates
+├── tests
 ```
 
 - `docs`: Contains markdown for the documentation (this website!)
@@ -16,7 +17,7 @@ The basic structure of the project is:
 - `src`: Source code!
     - `src/static`: JavaScript
     - `src/templates`: HTML
-    - `src/tests`: Testing files
+- `tests`: Testing files
 
 
 
@@ -30,6 +31,7 @@ More in-depth structure:
 │   ├── index.md
 │   ├── install.md
 │   ├── setup.md
+│   ├── structure.md
 │   ├── styling.md
 │   └── tests.md
 ├── help.txt
@@ -39,6 +41,7 @@ More in-depth structure:
 │   ├── wave.png
 │   └── website.gif
 ├── mkdocs.yml
+├── pyproject.toml
 ├── README.md
 ├── requirements.txt
 ├── src
@@ -47,15 +50,14 @@ More in-depth structure:
 │   ├── cli.py
 │   ├── helper.py
 │   ├── __init__.py
+│   ├── __pycache__
 │   ├── send_email.py
 │   ├── server.py
 │   ├── static
-│   │   └── script.js
-│   ├── templates
-│   │   └── index.html
-│   └── tests
-│       ├── __init__.py
-│       └── test_code.py
+│   └── templates
 ├── start_venv.sh
-└── venv
+├── tests
+    ├── __init__.py
+    └── test_code.py
 ```
+
