@@ -43,5 +43,6 @@ def send_user_email():
         server.sendmail(env.EMAIL, env.EMAIL_RECEIVER, text)
         print("Email sent successfully.")
 
+
 if __name__ == "__main__":
     send_user_email()

@@ -11,6 +11,7 @@ class CommonSettings(BaseSettings):
     model_config (SettingsConfigDict)Configuration dictionary
     for specifying the settings file and encoding.
     """
+
     model_config = SettingsConfigDict(
         env_file=f"{Path(__file__).parent.parent}/.env",
         env_file_encoding="utf-8",

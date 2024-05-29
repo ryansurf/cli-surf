@@ -5,8 +5,8 @@ Flask Server!
 import asyncio
 import subprocess
 import urllib.parse
-
 from pathlib import Path
+
 from flask import (
     Flask,
     render_template,
@@ -15,7 +15,6 @@ from flask import (
     send_from_directory,
 )
 from flask_cors import CORS
-
 from settings import ServerSettings
 
 # Load environment variables from .env file
@@ -27,9 +26,7 @@ CORS(app)
 
 @app.route("/help")
 def serve_help():
-    return send_from_directory(
-        f"{str(Path(__file__).parent)}/", "help.txt"
-    )
+    return send_from_directory(f"{str(Path(__file__).parent)}/", "help.txt")
 
 
 @app.route("/home")
