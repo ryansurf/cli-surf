@@ -30,6 +30,7 @@ jobs:
         python -m pytest --junitxml=pytest.xml --cov-report=term-missing --cov=src tests/ | tee pytest-coverage.txt
 
     - name: Pytest coverage comment
+      continue-on-error: true
       uses: MishaKav/pytest-coverage-comment@v1.1.47
       with:
         pytest-coverage-path: ./pytest-coverage.txt
