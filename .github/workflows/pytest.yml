@@ -1,8 +1,6 @@
 name: Pytest
 
-permissions:
-  contents: read
-  pull-requests: write
+permissions: write-all
 
 on: [push, pull_request]
 
