@@ -5,9 +5,6 @@ Run pytest: pytest
 """
 
 import sys
-
-sys.path.append("../src")
-
 from unittest.mock import patch
 import io
 import time
