@@ -10,4 +10,13 @@ theme:
   name: material
 
 nav:
-    - Home: index.md
+    - index.md
+    - General:
+      - FAQ: faq.md
+    - Developers:
+      - Installation: install.md
+      - Setup: setup.md
+    - Contributing:
+      - Styling: styling.md
+      - Tests: tests.md
+      - Structure: structure.md
