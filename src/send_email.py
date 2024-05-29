@@ -3,10 +3,11 @@ Module to send surf report emails
 """
 
 import os
-import subprocess
 import smtplib
-from email.mime.text import MIMEText
+import subprocess
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -35,7 +36,10 @@ def send_user_email():
     Sends user an email
     """
     SURF = subprocess.run(
-        ["curl", os.getenv("COMMAND")], capture_output=True, text=True, check=True
+        ["curl", os.getenv("COMMAND")],
+        capture_output=True,
+        text=True,
+        check=True,
     )
     if SURF.returncode == 0:  # Check if command executed successfully
         BODY = SURF.stdout

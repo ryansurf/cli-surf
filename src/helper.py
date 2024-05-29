@@ -3,9 +3,8 @@ General helper functions
 """
 
 import json
-from src import api
-from src import art
-import pandas as pd
+
+from src import api, art
 
 
 def arguments_dictionary(lat, long, city, args):
@@ -47,11 +46,12 @@ def get_forecast_days(args):
     """
     Checks to see if forecast in cli args. Defaults to 0
     """
+    MAX_VALUE = 7
     for arg in args:
-        arg = str(arg)
-        if arg.startswith("forecast=") or arg.startswith("fc="):
-            forecast = int(arg.split("=")[1])
-            if forecast < 0 or forecast > 7:
+        arg_str = str(arg)
+        if arg_str.startswith("forecast=") or arg_str.startswith("fc="):
+            forecast = int(arg_str.split("=")[1])
+            if forecast < 0 or forecast > MAX_VALUE:
                 print("Must choose a non-negative number >= 7 in forecast!")
                 break
             return forecast
@@ -67,7 +67,6 @@ def print_location(city, show_city):
         print("\n")
 
 
-# def print_output(uv_index, ocean_data, show_uv, show_height, show_direction, show_period):
 def print_output(ocean_data_dict):
     """
     Prints output
@@ -119,9 +118,9 @@ def get_color(args):
     Gets the color in the cli args
     """
     for arg in args:
-        arg = str(arg)
-        if arg.startswith("color=") or arg.startswith("c="):
-            color_name = arg.split("=")[1]
+        arg_str = str(arg)
+        if arg_str.startswith("color=") or arg_str.startswith("c="):
+            color_name = arg_str.split("=")[1]
             return color_name
     return "blue"
 
@@ -138,7 +137,8 @@ def round_decimal(round_list, decimal):
 
 def set_output_values(args, ocean):
     """
-    Takes a list of command line arguments(args) and sets the appropritate values
+    Takes a list of command line arguments(args)
+    and sets the appropritate values
     in the ocean dictionary(show_wave = 1, etc)
     """
     if "hide_wave" in args or "hw" in args:
@@ -175,7 +175,8 @@ def json_output(data_dict):
 
 def print_outputs(lat, long, coordinates, ocean_data, arguments):
     """
-    Basically the main printing function, calls all the other printing functions
+    Basically the main printing function,
+    calls all the other printing functions
     """
     print("\n")
     if coordinates == "No data":
@@ -186,11 +187,15 @@ def print_outputs(lat, long, coordinates, ocean_data, arguments):
     else:
         print_location(arguments["city"], arguments["show_city"])
         art.print_wave(
-            arguments["show_wave"], arguments["show_large_wave"], arguments["color"]
+            arguments["show_wave"],
+            arguments["show_large_wave"],
+            arguments["color"],
         )
         print_output(arguments)
     print("\n")
-    forecast = api.forecast(lat, long, arguments["decimal"], arguments["forecast_days"])
+    forecast = api.forecast(
+        lat, long, arguments["decimal"], arguments["forecast_days"]
+    )
     print_forecast(arguments, forecast)
 
 

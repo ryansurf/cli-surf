@@ -2,3 +2,23 @@
 [tool.pytest.ini_options]
 pythonpath = "."
 addopts = '-p no:warnings'  # disable pytest warnings
+
+# ruff global settings
+[tool.ruff]
+line-length = 79
+
+# linter
+[tool.ruff.lint]
+# I: isort
+# F: Pyflakes
+# E: Pycodestyle Error
+# W: Pycodestyle Warning
+# P: Pylint
+# PT: flake8-pytest-style
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+# formatter
+[tool.ruff.format]
+preview = true
+quote-style = 'double'
