@@ -9,6 +9,13 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from src import api, helper
 
+from settings import GPTSettings
+
+# Load environment variables from .env file
+env = GPTSettings()
+gpt_prompt = env.GPT_PROMPT
+
+
 
 def run(lat=0, long=0):
     """
@@ -42,7 +49,7 @@ def run(lat=0, long=0):
 
     # Non-JSON output
     if arguments["json_output"] == 0:
-        helper.print_outputs(lat, long, coordinates, ocean_data, arguments)
+        helper.print_outputs(lat, long, coordinates, ocean_data, arguments, data_dict, gpt_prompt)
         return data_dict
     # JSON Output
     else:

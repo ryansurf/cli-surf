@@ -44,3 +44,14 @@ class EmailSettings(ServerSettings):
         default_factory=lambda cls: f"{cls.IP_ADDRESS}:{cls.PORT}"
     )
     SUBJECT: str = Field(default="Surf Report")
+
+
+class GPTSettings(CommonSettings):
+    """
+    Class for defining server env settings.
+    """
+
+    GPT_PROMPT: str = Field(default="""
+        With this surf data, give me a short estimate on how the surf might be at the specified location
+        with the given data. 
+    """)

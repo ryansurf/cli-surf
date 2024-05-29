@@ -3,8 +3,12 @@ General helper functions
 """
 
 import json
+import sys
+from pathlib import Path
 
-from src import api, art
+sys.path.append(str(Path(__file__).parent.parent))
+
+from src import api, art, gpt
 
 
 def arguments_dictionary(lat, long, city, args):
@@ -28,6 +32,7 @@ def arguments_dictionary(lat, long, city, args):
         "decimal": extract_decimal(args),
         "forecast_days": get_forecast_days(args),
         "color": get_color(args),
+        "gpt": 1
     }
     return arguments
 
@@ -161,6 +166,8 @@ def set_output_values(args, ocean):
         ocean["unit"] = "metric"
     if "json" in args or "j" in args:
         ocean["json_output"] = 1
+    if "hide_gpt" in args or "hgpt" in args:
+        ocean["gpt"] = 0
     return ocean
 
 
@@ -173,7 +180,7 @@ def json_output(data_dict):
     return data_dict
 
 
-def print_outputs(lat, long, coordinates, ocean_data, arguments):
+def print_outputs(lat, long, coordinates, ocean_data, arguments, data_dict, gpt_prompt):
     """
     Basically the main printing function,
     calls all the other printing functions
@@ -197,6 +204,9 @@ def print_outputs(lat, long, coordinates, ocean_data, arguments):
         lat, long, arguments["decimal"], arguments["forecast_days"]
     )
     print_forecast(arguments, forecast)
+    if arguments["gpt"] == 1:
+        gpt_response = print_gpt(data_dict, gpt_prompt)
+        print(gpt_response)
 
 
 def set_location(location):
@@ -226,3 +236,27 @@ def forecast_to_json(data, decimal):
         forecasts.append(forecast)
 
     return forecasts
+
+def surf_summary(surf_data):
+    """
+    Outputs a simple summary of the surf data.
+    Useful for the GPT
+    """
+    location = surf_data['Location']
+    height = surf_data['Height']
+    direction = surf_data['Direction']
+    period = surf_data['Period']
+    report = f"""
+    Today at {location}, the surf height is {height}, the direction of the 
+    swell is {direction} degrees and the swell period is {period} seconds.
+    """
+    return report
+
+
+def print_gpt(surf_data, gpt_prompt):
+    """
+    Returns the GPT response
+    """
+    summary = surf_summary(surf_data)
+    gpt_response = gpt.simple_gpt(summary, gpt_prompt)
+    return gpt_response
