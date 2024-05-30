@@ -1,24 +1,33 @@
 
 FROM python:3.12.3-slim
 
-#this instruction specifies the "working directory" 
+# install apt packages (curl command)
+RUN apt-get update && \
+    apt-get install -y curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+#this instruction specifies the "working directory"
 #or the path in the image where files will be copied and commands will be executed.
 WORKDIR /app
 
-# Install the application dependencies
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-
 # Copy in the source code
 COPY . .
+
+# Copy in the .env file
+COPY .env.example .env
+
+# Install the application dependencies
+RUN pip install poetry
+RUN poetry config installer.max-workers 10
+RUN poetry install --no-interaction --no-ansi
 
 # # Setup an app user so the container doesn't run as the root user
 # RUN useradd app
 # USER app
 
 # Set the working directory for running the application
-WORKDIR /app/src
 EXPOSE 8000
 
 # Command to run the Flask application
-CMD ["python3", "server.py"]
+CMD ["poetry", "run", "python", "src/server.py"]

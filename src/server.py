@@ -15,7 +15,8 @@ from flask import (
     send_from_directory,
 )
 from flask_cors import CORS
-from settings import ServerSettings
+
+from src.settings import ServerSettings
 
 # Load environment variables from .env file
 env = ServerSettings()
@@ -58,7 +59,7 @@ def default_route():
     async def run_subprocess():
         try:
             result = subprocess.run(
-                ["python3", "cli.py", args],
+                ["python3", "src/cli.py", args],
                 capture_output=True,
                 text=True,
                 check=True,

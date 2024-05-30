@@ -16,15 +16,12 @@ Once you find an interesting issue let us know that you want to work on it by co
 
 ## Development
 ### Install our development environment
-Install the development dependencies:
-```
-pip install -r requirements.txt -r dev-requirements.txt
-```
+1. Please set up your development environment by referring to the `Setup` section in the `README.md`.
 
-Install the `pre-commit`:
-```
-pre-commit install
-```
+2. Install the `pre-commit`:
+    ```
+    pre-commit install
+    ```
 
 ### Code Style and Quality
 - The [PEP 8](https://realpython.com/python-pep8/) styling convention is used.
@@ -37,12 +34,20 @@ pre-commit install
 > This project uses `Makefile` as a task runner. You need to set up your environment to be able to run the `make` command.
 
 Run the following command in the project's root directory:
-```
+```bash
+# Run tests locally using Poetry
 make test
+
+# Run tests Docker container
+make test_docker
 ```
 You can generate a coverage report with the following command:
-```
-make post_test
+```bash
+# Generate a coverage report locally using Poetry
+make output_coverage
+
+# Generate a coverage report in a Docker container
+make output_coverage_docker
 ```
 Additionally, when a PR is raised, pytest will be executed by the GitHub Actions CI.
 

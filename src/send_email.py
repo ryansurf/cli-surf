@@ -7,7 +7,7 @@ import subprocess
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from settings import EmailSettings
+from src.settings import EmailSettings
 
 # Load environment variables from .env file
 env = EmailSettings()

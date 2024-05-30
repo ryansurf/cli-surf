@@ -20,14 +20,16 @@ jobs:
 
     - name: Install dependencies
       run: |
+        mv .env.example .env
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install -r dev-requirements.txt
+        pip install poetry
+        poetry config installer.max-workers 10
+        poetry install --no-interaction --no-ansi
 
     - name: Test with pytest
       run: |
         set -o pipefail
-        python -m pytest --junitxml=pytest.xml --cov-report=term-missing --cov=src tests/ | tee pytest-coverage.txt
+        poetry run python -m pytest --junitxml=pytest.xml --cov-report=term-missing --cov=src tests/ | tee pytest-coverage.txt
 
     - name: Pytest coverage comment
       continue-on-error: true
