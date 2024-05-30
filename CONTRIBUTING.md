@@ -15,26 +15,37 @@ To find issues you can help with, go though the list of [good first issues](http
 Once you find an interesting issue let us know that you want to work on it by commenting on the issue.
 
 ## Development
+### Install our development environment
+Install the development dependencies:
+```
+pip install -r requirements.txt -r dev-requirements.txt
+```
 
-**Code Style and Quality**
+Install the `pre-commit`:
+```
+pre-commit install
+```
 
-The [PEP 8](https://realpython.com/python-pep8/) styling convention is used.
+### Code Style and Quality
+- The [PEP 8](https://realpython.com/python-pep8/) styling convention is used.
+- This is achieved using the `ruff` Linter and Formatter.
+- The Linter and Formatter are automatically executed before committing via pre-commit.
+  - If you want to run the Linter and Formatter at any time, execute `pre-commit run --all-files`.
 
-To make sure you are following it, you can install [black](https://pypi.org/project/black/)
+### Testing
+> [!NOTE]
+> This project uses `Makefile` as a task runner. You need to set up your environment to be able to run the `make` command.
 
-`pip install black`
+Run the following command in the project's root directory:
+```
+make test
+```
+You can generate a coverage report with the following command:
+```
+make post_test
+```
+Additionally, when a PR is raised, pytest will be executed by the GitHub Actions CI.
 
-To run black:
-
-`black .`
-
-**Testing**
-
-To run tests, install pytest, `pip install pytest` and navigate to `/test`.
-
-Run `pytest`
-
-On commit, git will run `pytest` for you to catch any errors.
 
 ## Questions, suggestions or new ideas
 
