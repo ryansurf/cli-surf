@@ -65,43 +65,66 @@ Wave Period:  9.8
 * `curl localhost:8000/help`
 
 
-## Installation
-
-**Python Dependencies**
-* python>=3.8.1
-* geopy
-* openmeteo_requests
-* pandas
-* python-dotenv
-* Requests
-* requests_cache
-* retry_requests
-
-To run locally on your machine, I recommend either:
-
-**Using a [Python Virtual Environment](https://docs.python.org/3/library/venv.html)** 
-1. `git clone https://github.com/ryansurf/cli-surf.git`
-2. `cd cli-surf`
-3. `cp .env.example .env`
-4. `python3 -m venv venv`
-5. `source venv/bin/activate`
-6. `pip install -r requirements.txt`
-7. `cd src`
-8. `python3 server.py`
-
-**Or running Docker (install [Docker](https://docs.docker.com/engine/install/))**
-1. `git clone https://github.com/ryansurf/cli-surf.git`
-2. `cd cli-surf`
-3. `cp .env.example .env`
-4. `docker build -t cli-surf .`
-5. `docker run -d -p 8000:8000 cli-surf`
-    * Add `--restart unless-stopped` for automatic start on reboot
-
 ## Setup
+### How to Start Locally with `Poetry`
+To use cli-surf, clone the project locally and install the necessary dependencies via `poetry`.
 
-**Variables**
+1. Install [Poetry](https://python-poetry.org/docs/#installation).
 
-Change `.env.example` to `.env`
+2. Clone the repository.
+    ```bash
+    git clone https://github.com/ryansurf/cli-surf.git
+    cd cli-surf
+    ```
+
+3. Install dependencies using Poetry.
+    ```bash
+    poetry install
+    ```
+
+4. Activate the virtual environment.
+    ```bash
+    poetry shell
+    ```
+
+5. Run the project. For example, if the entry point is `server.py`, use the following command.
+    ```bash
+    python src/server.py
+
+    # Alternatively, you can run the project using `Makefile`
+    make run
+    ```
+
+### How to Start with `Docker`
+If you do not have Poetry installed or do not want to pollute your local environment, you can also start the project using Docker Compose.
+
+1. Install [Docker](https://docs.docker.com/engine/install/).
+2. Install [Docker Compose](https://docs.docker.com/compose/install/).
+
+3. Clone the repository.
+    ```bash
+    git clone https://github.com/ryansurf/cli-surf.git
+    cd cli-surf
+    ```
+
+4. Docker compose up.
+    ```bash
+    docker compose up -d
+
+    # Alternatively, you can run the project using `Makefile`
+    make run_docker
+    ```
+
+
+### Variables
+
+When running locally with Poetry, create a `.env` file from the `.env.example` file.
+```bash
+cp .env.example .env
+```
+
+Note that when starting with Docker, the `.env` file will be automatically created from `.env.example` during the image build.
+
 
 | Variable    | Description|
 | -------- | ------- | 
@@ -117,15 +140,23 @@ Change `.env.example` to `.env`
 | `GPT_PROMPT`  | Given the surf data (height, swell direction, etc.), you can tell the GPT what kind of report you would like. For example: `With this data, recommend what size board I should ride.` |
 
 
-**Email Server**
+### Email Server
 
 Optional, sends a surf report to a specified email.
 
 You will need to setup an email account that is able to utilize SMTP services. I used Gmail, following Method #1 outlined [here](https://www.cubebackup.com/blog/how-to-use-google-smtp-service-to-send-emails-for-free/). After doing this, change the variables in `.env`
 
-Execute by running `python3 send_email.py`. Running with cron is a good use case
+The Email Server can be executed using one of the following methods.
+```bash
+# Send Email locally using Poetry
+make send_email
 
-**Frontend**
+# Send Email in a Docker container
+make send_email_docker
+```
+Note that the Flask server must be running in order to send emails.
+
+### Frontend
 
 <p align="center">
     <img src="images/website.gif" alt="cli-surf_website gif" style="width: 700px; height: auto;">
