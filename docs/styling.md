@@ -1,15 +1,10 @@
 # Styling
 
 ## Code Style and Quality
-
 The [PEP 8](https://realpython.com/python-pep8/) styling convention is used.
 
-To make sure you are following it, you can install [black](https://pypi.org/project/black/)
+This is achieved using the ruff Linter and Formatter.
 
-`pip install black`
+The Linter and Formatter are automatically executed before committing via pre-commit.
 
-To run black:
-
-`black .`
-
-On a push/pull request, git will run `black .` for you!
+If you want to run the Linter and Formatter at any time, execute `pre-commit run --all-files`.

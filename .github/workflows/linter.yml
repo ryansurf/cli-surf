@@ -15,7 +15,5 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r dev-requirements.txt
-    - name: Lint with ruff
-      run: |
-        make lint
-        make format
+    - name: Run pre-commit
+      run: pre-commit run --all-files

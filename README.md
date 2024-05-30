@@ -108,6 +108,7 @@ Change `.env.example` to `.env`
 | `PORT`  | The port you want to open to run the application. Default = `8000` |
 | `IP_ADDRESS`  | The ip your server is running on. Default = `localhost` |
 | `SMTP_SERVER`  | The email server you are using. Default = smtp.gmail.com |
+| `SMTP_PORT`  | The email server port you are using. Default = `587` |
 | `EMAIL`  | The email you will send the report from. |
 | `EMAIL_PW`  | The sending email's password |
 | `EMAIL_RECEIVER`  | The email that will receive the report (your personal email) |

@@ -1,10 +1,7 @@
-.PHONY: lint format
+.PHONY: run test post_test
 
-lint:
-	ruff check . && ruff check . --diff
-
-format:
-	ruff check . --fix && ruff format .
+run:
+	cd src && python3 server.py
 
 test:
 	pytest -s -x --cov=src -vv
