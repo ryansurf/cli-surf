@@ -9,6 +9,7 @@ from unittest.mock import patch
 
 from src.helper import extract_decimal
 
+
 def test_invalid_input():
     """
     Test if decimal input prints proper invalid input message
@@ -18,6 +19,7 @@ def test_invalid_input():
         printed_output = fake_stdout.getvalue().strip()
         expected = "Invalid value for decimal. Please provide an integer."
         assert printed_output == expected
+
 
 def test_default_input():
     """

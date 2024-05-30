@@ -3,8 +3,10 @@ QA tests for cli.py
 Make sure pytest is installed: pip install pytest
 Run pytest: pytest
 """
-from src import cli
+
 import time
+
+from src import cli
 
 
 def test_cli_output():
