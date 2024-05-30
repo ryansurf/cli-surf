@@ -1,0 +1,10 @@
+services:
+  flask:
+    build: .
+    container_name: cli-surf
+    hostname: cli-surf
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+    - .:/app
