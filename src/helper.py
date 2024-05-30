@@ -176,7 +176,7 @@ def json_output(data_dict):
     If JSON=TRUE in .args, we print and return the JSON data
     """
     json_out = json.dumps(data_dict, indent=4)
-    print(json_out)
+    # print(json_out)
     return data_dict
 
 
