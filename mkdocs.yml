@@ -8,7 +8,7 @@ repo_name: cli-surf
 
 theme:
   name: material
-  pallette:
+  palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default 
       toggle:
