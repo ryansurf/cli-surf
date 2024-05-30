@@ -52,6 +52,7 @@ Wave Period:  9.8
 | decimal / dec   | Specify decimal points in output   | 
 | color / c   | Choose color of wave art. Ex: `color=light_blue`   | 
 | json / j   | Output the data in JSON format. Must be the only argument  | 
+| gpt / g   | Activates the GPT surf report. Change the `GPT_PROMPT` variable in `.env` to customize responses. Default = off  |
 
 **Examples**
 * Arguments are seperated by commas.
@@ -112,6 +113,7 @@ Change `.env.example` to `.env`
 | `EMAIL_RECEIVER`  | The email that will receive the report (your personal email) |
 | `COMMAND`  | The command that will be ran and shown in the email. Default = `localhost:8000` |
 | `SUBJECT`  | The email's subject. Default = Surf Report |
+| `GPT_PROMPT`  | Given the surf data (height, swell direction, etc.), you can tell the GPT what kind of report you would like. For example: `With this data, recommend what size board I should ride.` |
 
 
 **Email Server**

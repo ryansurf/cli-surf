@@ -51,7 +51,10 @@ class GPTSettings(CommonSettings):
     Class for defining server env settings.
     """
 
-    GPT_PROMPT: str = Field(default="""
-        With this surf data, give me a short estimate on how the surf might be at the specified location
-        with the given data. Recommend another nearby spot to surf at if you think it may be better.
-    """)
+    GPT_PROMPT: str = Field(
+        default="""
+        With this surf data, give me a short estimate on how the surf
+        might be at the specified location with the given data.
+        Recommend another nearby spot to surf at if you think it may be better.
+    """
+    )

@@ -32,7 +32,7 @@ def arguments_dictionary(lat, long, city, args):
         "decimal": extract_decimal(args),
         "forecast_days": get_forecast_days(args),
         "color": get_color(args),
-        "gpt": 1
+        "gpt": 0,
     }
     return arguments
 
@@ -166,8 +166,8 @@ def set_output_values(args, ocean):
         ocean["unit"] = "metric"
     if "json" in args or "j" in args:
         ocean["json_output"] = 1
-    if "hide_gpt" in args or "hgpt" in args:
-        ocean["gpt"] = 0
+    if "gpt" in args or "g" in args:
+        ocean["gpt"] = 1
     return ocean
 
 
@@ -180,16 +180,16 @@ def json_output(data_dict):
     return data_dict
 
 
-def print_outputs(lat, long, coordinates, ocean_data, arguments, data_dict, gpt_prompt):
+def print_outputs(city, data_dict, arguments, gpt_prompt):
     """
     Basically the main printing function,
     calls all the other printing functions
     """
     print("\n")
-    if coordinates == "No data":
+    if city == "No data":
         print("No location found")
-    if ocean_data == "No data":
-        print(coordinates)
+    if data_dict["Height"] == "No data":
+        print(data_dict["Lat"], data_dict["Long"])
         print("No ocean data at this location.")
     else:
         print_location(arguments["city"], arguments["show_city"])
@@ -201,7 +201,10 @@ def print_outputs(lat, long, coordinates, ocean_data, arguments, data_dict, gpt_
         print_output(arguments)
     print("\n")
     forecast = api.forecast(
-        lat, long, arguments["decimal"], arguments["forecast_days"]
+        data_dict["Lat"],
+        data_dict["Long"],
+        arguments["decimal"],
+        arguments["forecast_days"],
     )
     print_forecast(arguments, forecast)
     if arguments["gpt"] == 1:
@@ -213,9 +216,9 @@ def set_location(location):
     """
     Sets locations variables
     """
-    coordinates, city = location["coordinates"], location["city"]
+    city = location["city"]
     lat, long = location["lat"], location["long"]
-    return coordinates, city, lat, long
+    return city, lat, long
 
 
 def forecast_to_json(data, decimal):
@@ -237,17 +240,18 @@ def forecast_to_json(data, decimal):
 
     return forecasts
 
+
 def surf_summary(surf_data):
     """
     Outputs a simple summary of the surf data.
     Useful for the GPT
     """
-    location = surf_data['Location']
-    height = surf_data['Height']
-    direction = surf_data['Direction']
-    period = surf_data['Period']
+    location = surf_data["Location"]
+    height = surf_data["Height"]
+    direction = surf_data["Direction"]
+    period = surf_data["Period"]
     report = f"""
-    Today at {location}, the surf height is {height}, the direction of the 
+    Today at {location}, the surf height is {height}, the direction of the
     swell is {direction} degrees and the swell period is {period} seconds.
     """
     return report

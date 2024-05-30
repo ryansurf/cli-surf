@@ -182,6 +182,8 @@ def gather_data(lat, long, ocean):
     json_forecast = helper.forecast_to_json(spot_forecast, ocean["decimal"])
 
     data_dict = {
+        "Lat": lat,
+        "Long": long,
         "Location": ocean["city"],
         "Height": ocean_data[0],
         "Direction": ocean_data[1],
@@ -189,7 +191,7 @@ def gather_data(lat, long, ocean):
         "UV Index": uv_index,
         "Forecast": json_forecast,
     }
-    return ocean_data, uv_index, data_dict
+    return data_dict
 
 
 def seperate_args_and_get_location(args):
