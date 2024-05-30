@@ -7,12 +7,11 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent))
 
-from src import api, helper
+from src import api, helper, settings
 
-from settings import GPTSettings
 
 # Load environment variables from .env file
-env = GPTSettings()
+env = settings.GPTSettings()
 gpt_prompt = env.GPT_PROMPT
 
 
