@@ -79,4 +79,4 @@ def default_route():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=env.PORT)
+    app.run(host="0.0.0.0", port=env.PORT, debug=env.DEBUG)
