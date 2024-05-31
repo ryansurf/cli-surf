@@ -59,5 +59,5 @@ class GPTSettings(CommonSettings):
     """
     )
 
-    API_KEY: str
+    API_KEY: str = Field(default="")
     GPT_MODEL: str = Field(default="gpt-3.5-turbo")
