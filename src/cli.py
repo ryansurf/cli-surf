@@ -44,9 +44,11 @@ def run(lat=0, long=0):
         helper.print_outputs(
             city, ocean_data_dict, arguments, gpt_prompt, gpt_info
         )
+        return ocean_data_dict
     else:
         # print the output in json format!
-        helper.json_output(ocean_data_dict)
+        json_output = helper.json_output(ocean_data_dict)
+        return json_output
 
 
 if __name__ == "__main__":
