@@ -32,7 +32,7 @@ def arguments_dictionary(lat, long, city, args):
         "decimal": extract_decimal(args),
         "forecast_days": get_forecast_days(args),
         "color": get_color(args),
-        "gpt": 1,
+        "gpt": 0,
     }
     return arguments
 
