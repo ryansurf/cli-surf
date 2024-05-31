@@ -3,6 +3,7 @@ GPT Functions stored here
 """
 
 from g4f.client import Client
+from openai import OpenAI
 
 
 def simple_gpt(surf_summary, gpt_prompt):
@@ -17,3 +18,23 @@ def simple_gpt(surf_summary, gpt_prompt):
         messages=[{"role": "user", "content": surf_summary + gpt_prompt}],
     )
     return response.choices[0].message.content
+
+
+def openai_gpt(surf_summary, gpt_prompt, api_key, model):
+    """
+    Uses openai's GPT, needs an API key
+    """
+    client = OpenAI(
+        # This is the default and can be omitted
+        api_key=api_key,
+    )
+    chat_completion = client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": surf_summary + gpt_prompt,
+            }
+        ],
+        model=model,
+    )
+    return chat_completion.choices[0].message.content

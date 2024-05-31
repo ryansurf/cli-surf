@@ -58,3 +58,6 @@ class GPTSettings(CommonSettings):
         Recommend another nearby spot to surf at if you think it may be better.
     """
     )
+
+    API_KEY: str
+    GPT_MODEL: str = Field(default="gpt-3.5-turbo")

@@ -32,7 +32,7 @@ def arguments_dictionary(lat, long, city, args):
         "decimal": extract_decimal(args),
         "forecast_days": get_forecast_days(args),
         "color": get_color(args),
-        "gpt": 0,
+        "gpt": 1,
     }
     return arguments
 
@@ -180,7 +180,7 @@ def json_output(data_dict):
     return data_dict
 
 
-def print_outputs(city, data_dict, arguments, gpt_prompt):
+def print_outputs(city, data_dict, arguments, gpt_prompt, gpt_info):
     """
     Basically the main printing function,
     calls all the other printing functions
@@ -208,7 +208,7 @@ def print_outputs(city, data_dict, arguments, gpt_prompt):
     )
     print_forecast(arguments, forecast)
     if arguments["gpt"] == 1:
-        gpt_response = print_gpt(data_dict, gpt_prompt)
+        gpt_response = print_gpt(data_dict, gpt_prompt, gpt_info)
         print(gpt_response)
 
 
@@ -250,17 +250,25 @@ def surf_summary(surf_data):
     height = surf_data["Height"]
     direction = surf_data["Direction"]
     period = surf_data["Period"]
+    unit = surf_data["Unit"]
     report = f"""
-    Today at {location}, the surf height is {height}, the direction of the
-    swell is {direction} degrees and the swell period is {period} seconds.
+    Today at {location}, the surf height is {height} {unit}, the direction
+    of the swell is {direction} degrees and the swell period is {period}
+    seconds.
     """
     return report
 
 
-def print_gpt(surf_data, gpt_prompt):
+def print_gpt(surf_data, gpt_prompt, gpt_info):
     """
     Returns the GPT response
     """
     summary = surf_summary(surf_data)
-    gpt_response = gpt.simple_gpt(summary, gpt_prompt)
+    api_key = gpt_info[0]
+    gpt_model = gpt_info[1]
+    minumum_key_length = 5
+    if api_key is None or not api_key or len(api_key) < minumum_key_length:
+        gpt_response = gpt.simple_gpt(summary, gpt_prompt)
+    else:
+        gpt_response = gpt.openai_gpt(summary, gpt_prompt, api_key, gpt_model)
     return gpt_response

@@ -9,6 +9,10 @@ from src import api, helper, settings
 # Load environment variables from .env file
 env = settings.GPTSettings()
 gpt_prompt = env.GPT_PROMPT
+api_key = env.API_KEY
+model = env.GPT_MODEL
+
+gpt_info = [api_key, model]
 
 
 def run(lat=0, long=0):
@@ -40,7 +44,7 @@ def run(lat=0, long=0):
 
     # Non-JSON output
     if arguments["json_output"] == 0:
-        helper.print_outputs(city, data_dict, arguments, gpt_prompt)
+        helper.print_outputs(city, data_dict, arguments, gpt_prompt, gpt_info)
         return data_dict
     # JSON Output
     else:

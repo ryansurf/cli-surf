@@ -190,6 +190,7 @@ def gather_data(lat, long, ocean):
         "Period": ocean_data[2],
         "UV Index": uv_index,
         "Forecast": json_forecast,
+        "Unit": ocean["unit"],
     }
     return data_dict
 

@@ -10,7 +10,7 @@ Inspired by [wttr.in](https://github.com/chubin/wttr.in)
 
 [Documentation](https://ryansurf.github.io/cli-surf/) | [Discord](https://discord.gg/He2UpxRuJP)
 
-## Usage
+## 💻 Usage
 
 Using your browser or command-line interface you can access the service.
 
@@ -65,7 +65,7 @@ Wave Period:  9.8
 * `curl localhost:8000/help`
 
 
-## Setup
+## 🛠️ Setup
 ### How to Start Locally with `Poetry`
 To use cli-surf, clone the project locally and install the necessary dependencies via `poetry`.
 
@@ -137,7 +137,9 @@ Note that when starting with Docker, the `.env` file will be automatically creat
 | `EMAIL_RECEIVER`  | The email that will receive the report (your personal email) |
 | `COMMAND`  | The command that will be ran and shown in the email. Default = `localhost:8000` |
 | `SUBJECT`  | The email's subject. Default = Surf Report |
-| `GPT_PROMPT`  | Given the surf data (height, swell direction, etc.), you can tell the GPT what kind of report you would like. For example: `With this data, recommend what size board I should ride.` |
+| `GPT_PROMPT`  | Given the surf data (height, swell direction, etc.), you can tell the GPT what kind of report you would like. For example: `With this data, recommend what size board I should ride and nearby surf spots that may be better with the given conditions.` |
+| `API_KEY`  | Your OpenAI API key. Optional, the default GPT does not need an API key (and has slighly worse performance). Create one [here](https://platform.openai.com/api-keys) |
+| `GPT_MODEL`  | The OpenAI GPT model. Default = `gpt-3.5-turbo` (if possible, using `gpt-4o` is recommended.) Explore other models [here](https://platform.openai.com/docs/overview|
 
 
 ### Email Server
@@ -171,7 +173,7 @@ You may need to change `IP_ADDRESS` in `.env` to match the ip of the host runnin
 Now, running `python3 server.py` will launch the website!
 
 
-## Contributing
+## 📈 Contributing
 
 Thank you for considering contributing to cli-surf!
 
