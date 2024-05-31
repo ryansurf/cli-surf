@@ -34,6 +34,40 @@ def arguments_dictionary(lat, long, city, args):
         "color": get_color(args),
         "gpt": 0,
     }
+    # Updates the arguments dict with the values from the CLI args
+    arguments = set_output_values(args, arguments)
+    return arguments
+
+
+def set_output_values(args, arguments):
+    """
+    Takes a list of command line arguments(args)
+    and sets the appropritate values
+    in the arguments dictionary(show_wave = 1, etc).
+    Returns the arguments dict with the updated CLI args
+    """
+    if "hide_wave" in args or "hw" in args:
+        arguments["show_wave"] = 0
+    if "show_large_wave" in args or "slw" in args:
+        arguments["show_large_wave"] = 1
+    if "hide_uv" in args or "huv" in args:
+        arguments["show_uv"] = 0
+    if "hide_height" in args or "hh" in args:
+        arguments["show_height"] = 0
+    if "hide_direction" in args or "hdir" in args:
+        arguments["show_direction"] = 0
+    if "hide_period" in args or "hp" in args:
+        arguments["show_period"] = 0
+    if "hide_location" in args or "hl" in args:
+        arguments["show_city"] = 0
+    if "hide_date" in args or "hdate" in args:
+        arguments["show_date"] = 0
+    if "metric" in args or "m" in args:
+        arguments["unit"] = "metric"
+    if "json" in args or "j" in args:
+        arguments["json_output"] = 1
+    if "gpt" in args or "g" in args:
+        arguments["gpt"] = 1
     return arguments
 
 
@@ -72,9 +106,9 @@ def print_location(city, show_city):
         print("\n")
 
 
-def print_output(ocean_data_dict):
+def print_ocean_data(ocean_data_dict):
     """
-    Prints output
+    Prints ocean data(height, wave direction, period, etc)
     """
     if int(ocean_data_dict["show_uv"]) == 1:
         print("UV index: ", ocean_data_dict["uv_index"])
@@ -140,37 +174,6 @@ def round_decimal(round_list, decimal):
     return rounded_list
 
 
-def set_output_values(args, ocean):
-    """
-    Takes a list of command line arguments(args)
-    and sets the appropritate values
-    in the ocean dictionary(show_wave = 1, etc)
-    """
-    if "hide_wave" in args or "hw" in args:
-        ocean["show_wave"] = 0
-    if "show_large_wave" in args or "slw" in args:
-        ocean["show_large_wave"] = 1
-    if "hide_uv" in args or "huv" in args:
-        ocean["show_uv"] = 0
-    if "hide_height" in args or "hh" in args:
-        ocean["show_height"] = 0
-    if "hide_direction" in args or "hdir" in args:
-        ocean["show_direction"] = 0
-    if "hide_period" in args or "hp" in args:
-        ocean["show_period"] = 0
-    if "hide_location" in args or "hl" in args:
-        ocean["show_city"] = 0
-    if "hide_date" in args or "hdate" in args:
-        ocean["show_date"] = 0
-    if "metric" in args or "m" in args:
-        ocean["unit"] = "metric"
-    if "json" in args or "j" in args:
-        ocean["json_output"] = 1
-    if "gpt" in args or "g" in args:
-        ocean["gpt"] = 1
-    return ocean
-
-
 def json_output(data_dict):
     """
     If JSON=TRUE in .args, we print and return the JSON data
@@ -192,13 +195,15 @@ def print_outputs(city, data_dict, arguments, gpt_prompt, gpt_info):
         print(data_dict["Lat"], data_dict["Long"])
         print("No ocean data at this location.")
     else:
+        # Location is found, print details
         print_location(arguments["city"], arguments["show_city"])
         art.print_wave(
             arguments["show_wave"],
             arguments["show_large_wave"],
             arguments["color"],
         )
-        print_output(arguments)
+        # Prints(Height: <>, Period: <>, etc.)
+        print_ocean_data(arguments)
     print("\n")
     forecast = api.forecast(
         data_dict["Lat"],
@@ -206,7 +211,9 @@ def print_outputs(city, data_dict, arguments, gpt_prompt, gpt_info):
         arguments["decimal"],
         arguments["forecast_days"],
     )
+    # Prints the forecast(if activated in CLI args)
     print_forecast(arguments, forecast)
+    # Checks if GPT in args, prints GPT response if True
     if arguments["gpt"] == 1:
         gpt_response = print_gpt(data_dict, gpt_prompt, gpt_info)
         print(gpt_response)
@@ -244,7 +251,7 @@ def forecast_to_json(data, decimal):
 def surf_summary(surf_data):
     """
     Outputs a simple summary of the surf data.
-    Useful for the GPT
+    Useed by the GPT as input
     """
     location = surf_data["Location"]
     height = surf_data["Height"]

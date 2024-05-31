@@ -25,6 +25,7 @@ def run(lat=0, long=0):
     #  return coordinates, lat, long, city
     location = api.seperate_args_and_get_location(args)
 
+    # Set location returns: city, lat, long
     set_location = helper.set_location(location)
     city = set_location[0]
 
@@ -32,24 +33,20 @@ def run(lat=0, long=0):
     if lat == 0 and long == 0:
         lat, long = set_location[1], set_location[2]
 
-    # Sets ocean = dictionary with
+    # Sets arguments = dictionary with all the CLI args(show_wave, city, ect.)
     arguments = helper.arguments_dictionary(lat, long, city, args)
-    # Updates the ocean dict with the valeus from the arguments
-    arguments = helper.set_output_values(args, arguments)
 
-    lat = float(lat)
-    long = float(long)
-    # Makes calls to the apis(ocean, UV) and returns the values
-    data_dict = api.gather_data(lat, long, arguments)
+    # Makes calls to the apis(ocean, UV) and returns the values in a dictionary
+    ocean_data_dict = api.gather_data(lat, long, arguments)
 
     # Non-JSON output
     if arguments["json_output"] == 0:
-        helper.print_outputs(city, data_dict, arguments, gpt_prompt, gpt_info)
-        return data_dict
-    # JSON Output
+        helper.print_outputs(
+            city, ocean_data_dict, arguments, gpt_prompt, gpt_info
+        )
     else:
-        json_output = helper.json_output(data_dict)
-        return json_output
+        # print the output in json format!
+        helper.json_output(ocean_data_dict)
 
 
 if __name__ == "__main__":

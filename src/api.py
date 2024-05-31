@@ -50,7 +50,8 @@ def default_location():
 
 def get_uv(lat, long, decimal, unit="imperial"):
     """
-    Get UV at coordinates
+    Get UV at coordinates (lat, long)
+    Calling the API here: https://open-meteo.com/en/docs
     """
     # Setup the Open-Meteo API client with cache and retry on error
     cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
@@ -81,6 +82,7 @@ def get_uv(lat, long, decimal, unit="imperial"):
 def ocean_information(lat, long, decimal, unit="imperial"):
     """
     Get Ocean Data at coordinates
+    API: https://open-meteo.com/en/docs/marine-weather-api
     """
     # Setup the Open-Meteo API client with cache and retry on error
     cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
@@ -119,6 +121,7 @@ def ocean_information(lat, long, decimal, unit="imperial"):
 def forecast(lat, long, decimal, days=0):
     """
     Number of forecast days. Max is 7
+    API: https://open-meteo.com/en/docs/marine-weather-api
     """
     # Setup the Open-Meteo API client with cache and retry on error
     cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
@@ -169,35 +172,43 @@ def forecast(lat, long, decimal, days=0):
     ]
 
 
-def gather_data(lat, long, ocean):
+def gather_data(lat, long, arguments):
     """
-    Calls APIs though python files
+    Calls APIs though python files,
+    returns all the ocean data(height, period...)
+    in a dictionary (ocean_data_dict)
     """
-    ocean_data = ocean_information(lat, long, ocean["decimal"], ocean["unit"])
-    uv_index = get_uv(lat, long, ocean["decimal"], ocean["unit"])
+    lat, long = float(lat), float(long)
+    ocean_data = ocean_information(
+        lat, long, arguments["decimal"], arguments["unit"]
+    )
+    uv_index = get_uv(lat, long, arguments["decimal"], arguments["unit"])
 
-    ocean["ocean_data"] = ocean_data
-    ocean["uv_index"] = uv_index
-    spot_forecast = forecast(lat, long, ocean["decimal"], 7)
-    json_forecast = helper.forecast_to_json(spot_forecast, ocean["decimal"])
+    arguments["ocean_data"] = ocean_data
+    arguments["uv_index"] = uv_index
+    spot_forecast = forecast(lat, long, arguments["decimal"], 7)
+    json_forecast = helper.forecast_to_json(
+        spot_forecast, arguments["decimal"]
+    )
 
-    data_dict = {
+    ocean_data_dict = {
         "Lat": lat,
         "Long": long,
-        "Location": ocean["city"],
+        "Location": arguments["city"],
         "Height": ocean_data[0],
         "Direction": ocean_data[1],
         "Period": ocean_data[2],
         "UV Index": uv_index,
         "Forecast": json_forecast,
-        "Unit": ocean["unit"],
+        "Unit": arguments["unit"],
     }
-    return data_dict
+    return ocean_data_dict
 
 
 def seperate_args_and_get_location(args):
     """
-    Gets user's coordinates from either the argument(location=) or, if none,
+    Gets user's coordinates from either
+    the argument(location=) or, if none,
     the default coordinates(default_location())
     """
     coordinates = get_coordinates(args)
