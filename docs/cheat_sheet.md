@@ -17,7 +17,7 @@ When developing, these commands may come in handy:
 | `poetry shell`  |  Activate the virtual environment |
 |  `poetry add <package-name>` |  Add a new dependency to Poetry |
 | `poetry add --group dev <package-name>`  |  Add a new developer dependency to Poetry |
-| `poetry show`  |  List all available packages with descriptions |
+| `poetry show`  |  List all available dependencies with descriptions |
 
 ## [Mkdocs Commands](https://www.mkdocs.org/user-guide/)
 
@@ -35,3 +35,18 @@ When developing, these commands may come in handy:
 | `make test_docker`  |  Runs pytest on Docker |
 | `make output_coverage`  |  Outputs the coverage of the tests |
 | `make send_email`  |  Runs `send_email.py` |
+
+
+## [Git](https://education.github.com/git-cheat-sheet-education.pdf)
+
+| Argument    | Description|
+| -------- | ------- |
+| `git clone <repo URL>`  |  Clones git repository to your local machine|
+| `git add <file>`  |  Adds file to your next commit |
+| `git commit -m <message>`  |  Commit your staged content (from `git add <file>`) |
+| `git push`  |  Pushes lcoal changes to remote repo branch |
+| `git status`  |  Shows modified files |
+| `git branch`  |  Shows the branches |
+| `git checkout -b <branch>`  |  Creates a new branch, `branch`, and switches into it |
+| `git branch -d <branch>`  |  Delete a local branch |
+| `git push -u origin <branch-name>`  |  Pushes a local branch to the upstream remote repo |
