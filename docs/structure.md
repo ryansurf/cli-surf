@@ -25,7 +25,7 @@ More in-depth structure:
 
 <!-- STRUCTURE START -->
 .
-├── compose.yaml
+├── composes.yaml
 ├── CONTRIBUTING.md
 ├── Dockerfile
 ├── docs
