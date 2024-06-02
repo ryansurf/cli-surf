@@ -24,9 +24,12 @@ The basic structure of the project is:
 More in-depth structure:
 
 ```
+.
+├── compose.yaml
 ├── CONTRIBUTING.md
 ├── Dockerfile
 ├── docs
+│   ├── cheat_sheet.md
 │   ├── faq.md
 │   ├── index.md
 │   ├── install.md
@@ -36,28 +39,38 @@ More in-depth structure:
 │   └── tests.md
 ├── help.txt
 ├── images
+│   ├── cli.gif
+│   ├── coverage_report.PNG
 │   ├── ocean.gif
-│   ├── surf.gif
+│   ├── old_cli.gif
 │   ├── wave.png
 │   └── website.gif
+├── makefile
 ├── mkdocs.yml
+├── poetry.lock
 ├── pyproject.toml
 ├── README.md
-├── requirements.txt
 ├── src
 │   ├── api.py
 │   ├── art.py
 │   ├── cli.py
+│   ├── gpt.py
 │   ├── helper.py
 │   ├── __init__.py
 │   ├── __pycache__
 │   ├── send_email.py
 │   ├── server.py
+│   ├── settings.py
 │   ├── static
 │   └── templates
 ├── start_venv.sh
-├── tests
+└── tests
     ├── __init__.py
-    └── test_code.py
+    ├── __pycache__
+    ├── test_api.py
+    ├── test_cli.py
+    ├── test_gpt.py
+    ├── test_helper.py
+    └── test_server.py
 ```
 
