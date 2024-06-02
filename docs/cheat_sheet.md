@@ -44,9 +44,10 @@ When developing, these commands may come in handy:
 | `git clone <repo URL>`  |  Clones git repository to your local machine|
 | `git add <file>`  |  Adds file to your next commit |
 | `git commit -m <message>`  |  Commit your staged content (from `git add <file>`) |
-| `git push`  |  Pushes lcoal changes to remote repo branch |
+| `git push`  |  Pushes local changes to remote repo branch |
 | `git status`  |  Shows modified files |
 | `git branch`  |  Shows the branches |
 | `git checkout -b <branch>`  |  Creates a new branch, `branch`, and switches into it |
 | `git branch -d <branch>`  |  Delete a local branch |
 | `git push -u origin <branch-name>`  |  Pushes a local branch to the upstream remote repo |
+| `git log --branches --not --remotes`  |  View commits that have not yet been pushed |
