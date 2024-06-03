@@ -239,9 +239,9 @@ def forecast_to_json(data, decimal):
     for i in range(len(dates)):
         forecast = {
             "date": str(dates[i].date()),
-            "surf height": round(float(surf_height[i]), decimal),
-            "swell direction": round(float(swell_direction[i]), decimal),
-            "swell period": round(float(swell_period[i]), decimal),
+            "height": round(float(surf_height[i]), decimal),
+            "direction": round(float(swell_direction[i]), decimal),
+            "period": round(float(swell_period[i]), decimal),
         }
         forecasts.append(forecast)
 
