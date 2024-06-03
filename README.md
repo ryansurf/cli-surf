@@ -185,5 +185,12 @@ Questions? Comments?
 * [Discussions](https://github.com/ryansurf/cli-surf/discussions)
 * [GitHub](https://github.com/ryansurf)
 
+## Contributors ✨
+
+<a href="https://github.com/ryansurf/cli-surf/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ryansurf/cli-surf" />
+</a>
+
+
 ## License
 [![License](https://img.shields.io/:license-mit-blue.svg?style=flat-square)](https://badges.mit-license.org)
