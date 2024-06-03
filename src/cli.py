@@ -15,12 +15,15 @@ model = env.GPT_MODEL
 gpt_info = [api_key, model]
 
 
-def run(lat=0, long=0):
+def run(lat=0, long=0, args=None):
     """
     Main function
     """
     # Seperates the cli args into a list
-    args = helper.seperate_args(sys.argv)
+    if args is None:
+        args = helper.seperate_args(sys.argv)
+    else:
+        args = helper.seperate_args(args)
 
     #  return coordinates, lat, long, city
     location = api.seperate_args_and_get_location(args)
