@@ -185,7 +185,7 @@ Questions? Comments?
 * [Discussions](https://github.com/ryansurf/cli-surf/discussions)
 * [GitHub](https://github.com/ryansurf)
 
-## Contributors ✨
+## ✨ Contributors
 
 <a href="https://github.com/ryansurf/cli-surf/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=ryansurf/cli-surf" />
