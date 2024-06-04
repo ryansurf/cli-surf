@@ -5,10 +5,8 @@ Helper functions for the streamlit frontent
 import sys
 from pathlib import Path
 
-import numpy as np
-import pandas as pd
 import folium
-from streamlit_folium import st_folium
+import pandas as pd
 
 sys.path.append(str(Path(__file__).parent.parent))
 
