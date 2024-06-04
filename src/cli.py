@@ -44,10 +44,12 @@ def run(lat=0, long=0, args=None):
 
     # Non-JSON output
     if arguments["json_output"] == 0:
-        helper.print_outputs(
+        # Response prints all the outputs & returns the GPT response
+        response = helper.print_outputs(
             city, ocean_data_dict, arguments, gpt_prompt, gpt_info
         )
-        return ocean_data_dict
+        # Returns ocean data, GPT response
+        return ocean_data_dict, response
     else:
         # print the output in json format!
         json_output = helper.json_output(ocean_data_dict)

@@ -1,15 +1,12 @@
-import time
-
-import numpy as np
-import pandas as pd
 import sys
+import time
 from pathlib import Path
+
 import streamlit as st
-import pydeck as pdk
 
 sys.path.append(str(Path(__file__).parent.parent))
 
-from src import api, cli
+from src import streamlit_helper as sl_help
 
 # NOTE: This file is for testing purposes. Do not use it in production.
 
@@ -36,9 +33,6 @@ st.sidebar.markdown(
     unsafe_allow_html=True,
 )
 
-# progress bar
-# st.write("Loading...")
-
 latest_iteration = st.empty()
 bar = st.progress(0)
 
@@ -47,85 +41,38 @@ for i in range(100):
     bar.progress(i + 1)
     time.sleep(0.01)
 
-# st.write("...and now we're done!")
-
-# Map
-# st.title("Surf Spot")
-
 st.caption("Enter a surf spot to see the map and forecast!")
+
+
+# Toggles in a horizontal line
+col1, col2 = st.columns(2)
+
+with col1:
+    gpt = st.toggle("Activate GPT")
+with col2:
+    map = st.toggle("Show Map", value=True)
+
+extra_args = sl_help.extra_args(gpt)
 
 # User input location
 location = st.text_input("Surf Spot", placeholder="Enter surf spot!")
 
-# Checks if location has been entered. 
+# Checks if location has been entered.
 # If True, gathers surf report and displays map
 if location:
-    location = "location=" + location
-    surf_report = cli.run(args=["placeholder",f"{location}"])
-    lat, long = surf_report["Lat"], surf_report["Long"]
-    map_data = pd.DataFrame(
-        np.random.randn(500, 2) / [50, 50] + [lat, long], columns=["lat", "lon"]
-    )
-    st.map(map_data)
-    forecasted_dates = [forecast['date'] for forecast in surf_report['Forecast']]
-    forecasted_heights = [forecast['height'] for forecast in surf_report['Forecast']]
-    forecasted_periods = [forecast['period'] for forecast in surf_report['Forecast']]
-    
+    get_report = sl_help.get_report(location, extra_args)
+    report_dict, gpt_response, lat, long = get_report
 
+    # Displays the map
+    if map:
+        map_data = sl_help.map_data(lat, long)
+        st.map(map_data, color="#FFFFFF")
 
+    # Writes the GPT response
+    if gpt_response is not None:
+        st.write(gpt_response)
 
-st.write("# Surf Conditions")
-
-# Checks if location has been inputted. Loads map if True 
-if location: 
-    # table
-    df = pd.DataFrame({
-
-    'date': forecasted_dates,
-    'heights': forecasted_heights,
-    'periods': forecasted_periods
-    })
-
-    df
-
-    st.line_chart(df.rename(columns={'date':'index'}).set_index('index'))
-
-
-
-
-# DEFAULTS
-# # input text
-# name = st.text_input("name")
-
-# # integer input
-# age = st.number_input("age", step=1)
-
-# st.write(f"name: {name}")
-# st.write(f"age: {age}")
-
-# # button
-# if st.button("Push"):
-#     st.write("Pushed")
-
-# # pulldown
-# select = st.selectbox("Fruits", options=["apple", "banana", "strawberry"])
-# st.write(select)
-
-# # pulldown multiple
-# multi_select = st.multiselect("Color", options=["red", "blue", "yellow"])
-# st.write(multi_select)
-
-# # checkbox
-# if st.checkbox("Show dataframe"):
-#     chart_data = pd.DataFrame(np.random.randn(20, 3), columns=["a", "b", "c"])
-#     st.line_chart(chart_data)
-
-# # radio button
-# radio = st.radio("Select", ["cat", "dog"])
-# st.write(f"radio: {radio}")
-
-# # file upload
-# uploaded_file = st.file_uploader("Upload", type=["csv"])
-# if uploaded_file:
-#     dataframe = pd.read_csv(uploaded_file)
-#     st.write(dataframe)
+    # Displays the line graph
+    st.write("# Surf Conditions")
+    df = sl_help.graph_data(report_dict)
+    st.line_chart(df.rename(columns={"date": "index"}).set_index("index"))
