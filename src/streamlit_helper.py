@@ -7,6 +7,8 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import folium
+from streamlit_folium import st_folium
 
 sys.path.append(str(Path(__file__).parent.parent))
 
@@ -47,12 +49,14 @@ def get_report(location, extra_args):
 def map_data(lat, long):
     """
     Gathers data for the map
+    Docs: https://folium.streamlit.app/
     """
-    map_data = pd.DataFrame(
-        np.random.randn(500, 2) / [50, 50] + [lat, long],
-        columns=["lat", "lon"],
-    )
-    return map_data
+    m = folium.Map(location=[lat, long], zoom_start=16)
+    folium.Marker(
+        [lat, long], popup="Surf Spot!", tooltip="Get out there!"
+    ).add_to(m)
+
+    return m
 
 
 def graph_data(report_dict):

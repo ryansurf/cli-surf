@@ -3,6 +3,7 @@ import time
 from pathlib import Path
 
 import streamlit as st
+from streamlit_folium import st_folium
 
 sys.path.append(str(Path(__file__).parent.parent))
 
@@ -66,7 +67,7 @@ if location:
     # Displays the map
     if map:
         map_data = sl_help.map_data(lat, long)
-        st.map(map_data, color="#FFFFFF")
+        st_folium(map_data, width=725)
 
     # Writes the GPT response
     if gpt_response is not None:
