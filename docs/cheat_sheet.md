@@ -8,6 +8,7 @@ When developing, these commands may come in handy:
 | -------- | ------- |
 | `sudo ss -lptn 'sport = :<port>'`  |  List the processes running on port `<port>`. |
 | `sudo kill -9 <pid>`  |  Kill the process with with id `<pid>` |
+| `pre-commit run --all-files`  |  Run the Linter & Formatter |
 
 ## [Poetry Commands](https://python-poetry.org/docs/basic-usage/)
 
