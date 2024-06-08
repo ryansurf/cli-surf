@@ -57,7 +57,7 @@ def map_data(lat, long):
     return m
 
 
-def graph_data(report_dict):
+def graph_data(report_dict, graph_type="Height/Period :ocean:"):
     """
     Gathers the forecasted dates, heights, period and stores them in a pandas
     dataframe. Will be used to display the line chart
@@ -71,11 +71,23 @@ def graph_data(report_dict):
     forecasted_periods = [
         forecast["period"] for forecast in report_dict["Forecast"]
     ]
+    forecasted_directions = [
+        forecast["direction"] for forecast in report_dict["Forecast"]
+    ]
     # table
-    df = pd.DataFrame({
-        "date": forecasted_dates,
-        "heights": forecasted_heights,
-        "periods": forecasted_periods,
-    })
+    if graph_type == "Height/Period :ocean:" or graph_type == None:
+        df = pd.DataFrame({
+            "date": forecasted_dates,
+            "heights": forecasted_heights,
+            "periods": forecasted_periods,
+        })
+    else:
+        df = pd.DataFrame({
+            "date": forecasted_dates,
+            "directions": forecasted_directions
+        })
 
     return df
+
+
+

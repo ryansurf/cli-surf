@@ -58,6 +58,12 @@ extra_args = sl_help.extra_args(gpt)
 # User input location
 location = st.text_input("Surf Spot", placeholder="Enter surf spot!")
 
+graph_type = st.radio(
+    "Choose graph type",
+    ["Height/Period :ocean:", "Direction :world_map:"],
+    index=None,
+)
+
 # Checks if location has been entered.
 # If True, gathers surf report and displays map
 if location:
@@ -72,8 +78,8 @@ if location:
     # Writes the GPT response
     if gpt_response is not None:
         st.write(gpt_response)
-
+    
     # Displays the line graph
     st.write("# Surf Conditions")
-    df = sl_help.graph_data(report_dict)
+    df = sl_help.graph_data(report_dict, graph_type)
     st.line_chart(df.rename(columns={"date": "index"}).set_index("index"))
