@@ -117,17 +117,16 @@ def ocean_information(lat, long, decimal, unit="imperial"):
 
     return [current_wave_height, current_wave_direction, current_wave_period]
 
+
 def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
     """
     Gathers the wind and temperature data
     """
     # Setup the Open-Meteo API client with cache and retry on error
-    cache_session = requests_cache.CachedSession('.cache', expire_after = 3600)
-    retry_session = retry(cache_session, retries = 5, backoff_factor = 0.2)
-    openmeteo = openmeteo_requests.Client(session = retry_session)
+    cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
+    retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
+    openmeteo = openmeteo_requests.Client(session=retry_session)
 
-    # Make sure all required weather variables are listed here
-    # The order of variables in hourly or daily is important to assign them correctly below
     url = "https://api.open-meteo.com/v1/forecast"
     params = {
         "latitude": lat,
@@ -135,21 +134,17 @@ def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
         "current": ["temperature_2m", "wind_speed_10m", "wind_direction_10m"],
         "temperature_unit": temp_unit,
         "wind_speed_unit": "mph",
-        "precipitation_unit": "inch"
+        "precipitation_unit": "inch",
     }
     responses = openmeteo.weather_api(url, params=params)
 
-    # Process first location. Add a for-loop for multiple locations or weather models
     response = responses[0]
 
     # Current values. The order of variables needs to be the same as requested.
     current = response.Current()
-    current_temperature = round(
-        current.Variables(0).Value(), decimal)
-    current_wind_speed = round(
-        current.Variables(1).Value(), decimal)
-    current_wind_direction = round(
-        current.Variables(2).Value(), decimal)
+    current_temperature = round(current.Variables(0).Value(), decimal)
+    current_wind_speed = round(current.Variables(1).Value(), decimal)
+    current_wind_direction = round(current.Variables(2).Value(), decimal)
 
     return current_temperature, current_wind_speed, current_wind_direction
 

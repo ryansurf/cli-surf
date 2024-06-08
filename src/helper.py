@@ -42,7 +42,7 @@ def arguments_dictionary(lat, long, city, args):
     return arguments
 
 
-def set_output_values(args, arguments):
+def set_output_values(args, arguments):  # noqa
     """
     Takes a list of command line arguments(args)
     and sets the appropritate values
@@ -77,6 +77,7 @@ def set_output_values(args, arguments):
         arguments["show_wind_speed"] = 1
     if "show_wind_direction" in args or "swd" in args:
         arguments["show_wind_direction"] = 1
+
     return arguments
 
 
