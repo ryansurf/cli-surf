@@ -27,6 +27,9 @@ def arguments_dictionary(lat, long, city, args):
         "show_period": 1,
         "show_city": 1,
         "show_date": 1,
+        "show_air_temp": 0,
+        "show_wind_speed": 0,
+        "show_wind_direction": 0,
         "json_output": 0,
         "unit": "imperial",
         "decimal": extract_decimal(args),
@@ -39,7 +42,7 @@ def arguments_dictionary(lat, long, city, args):
     return arguments
 
 
-def set_output_values(args, arguments):
+def set_output_values(args, arguments):  # noqa
     """
     Takes a list of command line arguments(args)
     and sets the appropritate values
@@ -68,6 +71,13 @@ def set_output_values(args, arguments):
         arguments["json_output"] = 1
     if "gpt" in args or "g" in args:
         arguments["gpt"] = 1
+    if "show_air_temp" in args or "sat" in args:
+        arguments["show_air_temp"] = 1
+    if "show_wind_speed" in args or "sws" in args:
+        arguments["show_wind_speed"] = 1
+    if "show_wind_direction" in args or "swd" in args:
+        arguments["show_wind_direction"] = 1
+
     return arguments
 
 
@@ -106,18 +116,24 @@ def print_location(city, show_city):
         print("\n")
 
 
-def print_ocean_data(ocean_data_dict):
+def print_ocean_data(arguments_dict, ocean_data_dict):
     """
     Prints ocean data(height, wave direction, period, etc)
     """
-    if int(ocean_data_dict["show_uv"]) == 1:
-        print("UV index: ", ocean_data_dict["uv_index"])
-    if int(ocean_data_dict["show_height"]) == 1:
-        print("Wave Height: ", ocean_data_dict["ocean_data"][0])
-    if int(ocean_data_dict["show_direction"]) == 1:
-        print("Wave Direction: ", ocean_data_dict["ocean_data"][1])
-    if int(ocean_data_dict["show_period"]) == 1:
-        print("Wave Period: ", ocean_data_dict["ocean_data"][2])
+    if int(arguments_dict["show_uv"]) == 1:
+        print("UV index: ", ocean_data_dict["UV Index"])
+    if int(arguments_dict["show_height"]) == 1:
+        print("Wave Height: ", ocean_data_dict["Height"])
+    if int(arguments_dict["show_direction"]) == 1:
+        print("Wave Direction: ", ocean_data_dict["Swell Direction"])
+    if int(arguments_dict["show_period"]) == 1:
+        print("Wave Period: ", ocean_data_dict["Period"])
+    if int(arguments_dict["show_air_temp"]) == 1:
+        print("Air Temp: ", ocean_data_dict["Air Temperature"])
+    if int(arguments_dict["show_wind_speed"]) == 1:
+        print("Wind Speed: ", ocean_data_dict["Wind Speed"])
+    if int(arguments_dict["show_wind_direction"]) == 1:
+        print("Wind Direction: ", ocean_data_dict["Wind Direction"])
 
 
 def print_forecast(ocean, forecast):
@@ -203,7 +219,7 @@ def print_outputs(city, data_dict, arguments, gpt_prompt, gpt_info):
             arguments["color"],
         )
         # Prints(Height: <>, Period: <>, etc.)
-        print_ocean_data(arguments)
+        print_ocean_data(arguments, data_dict)
     print("\n")
     forecast = api.forecast(
         data_dict["Lat"],
