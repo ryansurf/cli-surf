@@ -7,4 +7,4 @@ This is achieved using the ruff Linter and Formatter.
 
 The Linter and Formatter are automatically executed before committing via pre-commit.
 
-If you want to run the Linter and Formatter at any time, execute `pre-commit run --all-files`.
+If you want to run the Linter and Formatter at any time, execute `poetry run pre-commit run --all-files`.

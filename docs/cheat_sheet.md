@@ -8,7 +8,6 @@ When developing, these commands may come in handy:
 | -------- | ------- |
 | `sudo ss -lptn 'sport = :<port>'`  |  List the processes running on port `<port>`. |
 | `sudo kill -9 <pid>`  |  Kill the process with with id `<pid>` |
-| `pre-commit run --all-files`  |  Run the Linter & Formatter |
 
 ## [Poetry Commands](https://python-poetry.org/docs/basic-usage/)
 
@@ -19,6 +18,7 @@ When developing, these commands may come in handy:
 |  `poetry add <package-name>` |  Add a new dependency to Poetry |
 | `poetry add --group dev <package-name>`  |  Add a new developer dependency to Poetry |
 | `poetry show`  |  List all available dependencies with descriptions |
+| `poetry run pre-commit run --all-files`  |  Run the Linter & Formatter |
 
 ## [Mkdocs Commands](https://www.mkdocs.org/user-guide/)
 
