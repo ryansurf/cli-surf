@@ -84,7 +84,6 @@ document.addEventListener("submit", function() {
 });
 
 function handleLoadingChange() {
-    // var elLoadingDiv = document.getElementById("loadingDiv");
     if (elLoadingDiv.style.display === "none") {
         elLoadingDiv.style.display = "block";
         serverResponse.style.display = "none"
