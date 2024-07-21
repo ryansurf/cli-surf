@@ -88,9 +88,9 @@ def set_output_values(args, arguments):
     return arguments
 
 
-def seperate_args(args):
+def separate_args(args):
     """
-    Args are seperated by commas in input. Sereperat them and return list
+    Args are separated by commas in input. Separate them and return list
     """
     if len(args) > 1:
         new_args = args[1].split(",")

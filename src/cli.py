@@ -19,8 +19,8 @@ def run(lat=0, long=0):
     """
     Main function
     """
-    # Seperates the cli args into a list
-    args = helper.seperate_args(sys.argv)
+    # Separates the cli args into a list
+    args = helper.separate_args(sys.argv)
 
     #  return coordinates, lat, long, city
     location = api.seperate_args_and_get_location(args)
