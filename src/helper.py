@@ -148,15 +148,18 @@ def print_forecast(ocean, forecast):
     Takes in list of forecast data and prints
     """
     transposed = list(zip(*forecast))
+
     for day in transposed:
-        if ocean["show_date"] == 1:
-            print("Date: ", day[3])
-        if int(ocean["show_height"]) == 1:
-            print("Wave Height: ", day[0])
-        if int(ocean["show_direction"]) == 1:
-            print("Wave Direction: ", day[1])
-        if int(ocean["show_period"]) == 1:
-            print("Wave Period: ", day[2])
+        actions = {
+            "show_date": (3, "Date: "),
+            "show_height": (0, "Wave Height: "),
+            "show_direction": (1, "Wave Direction: "),
+            "show_period": (2, "Wave Period: ")
+        }
+
+        for key, (index, forecast_data) in actions.items():
+            if int(ocean.get(key, 0)) == 1:
+                print(forecast_data, day[index])
         print("\n")
 
 
