@@ -125,22 +125,25 @@ def print_location(city, show_city):
 
 def print_ocean_data(arguments_dict, ocean_data_dict):
     """
-    Prints ocean data(height, wave direction, period, etc)
+    Prints ocean data (height, wave direction, period, etc.)
     """
-    if int(arguments_dict["show_uv"]) == 1:
-        print("UV index: ", ocean_data_dict["UV Index"])
-    if int(arguments_dict["show_height"]) == 1:
-        print("Wave Height: ", ocean_data_dict["Height"])
-    if int(arguments_dict["show_direction"]) == 1:
-        print("Wave Direction: ", ocean_data_dict["Swell Direction"])
-    if int(arguments_dict["show_period"]) == 1:
-        print("Wave Period: ", ocean_data_dict["Period"])
-    if int(arguments_dict["show_air_temp"]) == 1:
-        print("Air Temp: ", ocean_data_dict["Air Temperature"])
-    if int(arguments_dict["show_wind_speed"]) == 1:
-        print("Wind Speed: ", ocean_data_dict["Wind Speed"])
-    if int(arguments_dict["show_wind_direction"]) == 1:
-        print("Wind Direction: ", ocean_data_dict["Wind Direction"])
+    display_mapping = {
+        "show_uv": ("UV Index", "UV index: "),
+        "show_height": ("Height", "Wave Height: "),
+        "show_direction": ("Swell Direction", "Wave Direction: "),
+        "show_period": ("Period", "Wave Period: "),
+        "show_air_temp": ("Air Temperature", "Air Temp: "),
+        "show_wind_speed": ("Wind Speed", "Wind Speed: "),
+        "show_wind_direction": ("Wind Direction", "Wind Direction: ")
+    }
+
+    for key, (data_key, label) in display_mapping.items():
+        if int(arguments_dict.get(key, 0)) == 1:
+            value = ocean_data_dict.get(data_key)
+            if value is not None:
+                print(f"{label} {value}")
+            else:
+                print(f"{label} None")
 
 
 def print_forecast(ocean, forecast):
