@@ -75,7 +75,7 @@ def graph_data(report_dict, graph_type="Height/Period :ocean:"):
         forecast["direction"] for forecast in report_dict["Forecast"]
     ]
     # table
-    if graph_type == "Height/Period :ocean:" or graph_type == None:
+    if graph_type == "Height/Period :ocean:" or graph_type is None:
         df = pd.DataFrame({
             "date": forecasted_dates,
             "heights": forecasted_heights,
@@ -84,10 +84,7 @@ def graph_data(report_dict, graph_type="Height/Period :ocean:"):
     else:
         df = pd.DataFrame({
             "date": forecasted_dates,
-            "directions": forecasted_directions
+            "directions": forecasted_directions,
         })
 
     return df
-
-
-

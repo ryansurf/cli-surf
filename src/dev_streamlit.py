@@ -78,7 +78,7 @@ if location:
     # Writes the GPT response
     if gpt_response is not None:
         st.write(gpt_response)
-    
+
     # Displays the line graph
     st.write("# Surf Conditions")
     df = sl_help.graph_data(report_dict, graph_type)
