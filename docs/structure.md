@@ -28,6 +28,9 @@ More in-depth structure:
 .
 ├── compose.yaml
 ├── CONTRIBUTING.md
+├── dist
+│   ├── cli_surf-0.1.0-py3-none-any.whl
+│   └── cli_surf-0.1.0.tar.gz
 ├── Dockerfile
 ├── docs
 │   ├── cheat_sheet.md
@@ -73,6 +76,6 @@ More in-depth structure:
     ├── test_helper.py
     └── test_server.py
 
-9 directories, 38 files
+10 directories, 40 files
 ```
 <!-- STRUCTURE END  -->
