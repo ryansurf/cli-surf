@@ -42,48 +42,55 @@ def arguments_dictionary(lat, long, city, args):
     return arguments
 
 
-def set_output_values(args, arguments):  # noqa
+def set_output_values(args, arguments):
     """
-    Takes a list of command line arguments(args)
-    and sets the appropritate values
-    in the arguments dictionary(show_wave = 1, etc).
-    Returns the arguments dict with the updated CLI args
+    Takes a list of command line arguments (args)
+    and sets the appropriate values
+    in the arguments dictionary (show_wave = 1, etc).
+    Returns the arguments dict with the updated CLI args.
     """
-    if "hide_wave" in args or "hw" in args:
-        arguments["show_wave"] = 0
-    if "show_large_wave" in args or "slw" in args:
-        arguments["show_large_wave"] = 1
-    if "hide_uv" in args or "huv" in args:
-        arguments["show_uv"] = 0
-    if "hide_height" in args or "hh" in args:
-        arguments["show_height"] = 0
-    if "hide_direction" in args or "hdir" in args:
-        arguments["show_direction"] = 0
-    if "hide_period" in args or "hp" in args:
-        arguments["show_period"] = 0
-    if "hide_location" in args or "hl" in args:
-        arguments["show_city"] = 0
-    if "hide_date" in args or "hdate" in args:
-        arguments["show_date"] = 0
-    if "metric" in args or "m" in args:
-        arguments["unit"] = "metric"
-    if "json" in args or "j" in args:
-        arguments["json_output"] = 1
-    if "gpt" in args or "g" in args:
-        arguments["gpt"] = 1
-    if "show_air_temp" in args or "sat" in args:
-        arguments["show_air_temp"] = 1
-    if "show_wind_speed" in args or "sws" in args:
-        arguments["show_wind_speed"] = 1
-    if "show_wind_direction" in args or "swd" in args:
-        arguments["show_wind_direction"] = 1
+    actions = {
+        "hide_wave": ("show_wave", 0),
+        "hw": ("show_wave", 0),
+        "show_large_wave": ("show_large_wave", 1),
+        "slw": ("show_large_wave", 1),
+        "hide_uv": ("show_uv", 0),
+        "huv": ("show_uv", 0),
+        "hide_height": ("show_height", 0),
+        "hh": ("show_height", 0),
+        "hide_direction": ("show_direction", 0),
+        "hdir": ("show_direction", 0),
+        "hide_period": ("show_period", 0),
+        "hp": ("show_period", 0),
+        "hide_location": ("show_city", 0),
+        "hl": ("show_city", 0),
+        "hide_date": ("show_date", 0),
+        "hdate": ("show_date", 0),
+        "metric": ("unit", "metric"),
+        "m": ("unit", "metric"),
+        "json": ("json_output", 1),
+        "j": ("json_output", 1),
+        "gpt": ("gpt", 1),
+        "g": ("gpt", 1),
+        "show_air_temp": ("show_air_temp", 1),
+        "sat": ("show_air_temp", 1),
+        "show_wind_speed": ("show_wind_speed", 1),
+        "sws": ("show_wind_speed", 1),
+        "show_wind_direction": ("show_wind_direction", 1),
+        "swd": ("show_wind_direction", 1),
+    }
+
+    for arg in args:
+        if arg in actions:
+            key, value = actions[arg]
+            arguments[key] = value
 
     return arguments
 
 
-def seperate_args(args):
+def separate_args(args):
     """
-    Args are seperated by commas in input. Sereperat them and return list
+    Args are separated by commas in input. Separate them and return list
     """
     if len(args) > 1:
         new_args = args[1].split(",")
@@ -118,22 +125,25 @@ def print_location(city, show_city):
 
 def print_ocean_data(arguments_dict, ocean_data_dict):
     """
-    Prints ocean data(height, wave direction, period, etc)
+    Prints ocean data (height, wave direction, period, etc.)
     """
-    if int(arguments_dict["show_uv"]) == 1:
-        print("UV index: ", ocean_data_dict["UV Index"])
-    if int(arguments_dict["show_height"]) == 1:
-        print("Wave Height: ", ocean_data_dict["Height"])
-    if int(arguments_dict["show_direction"]) == 1:
-        print("Wave Direction: ", ocean_data_dict["Swell Direction"])
-    if int(arguments_dict["show_period"]) == 1:
-        print("Wave Period: ", ocean_data_dict["Period"])
-    if int(arguments_dict["show_air_temp"]) == 1:
-        print("Air Temp: ", ocean_data_dict["Air Temperature"])
-    if int(arguments_dict["show_wind_speed"]) == 1:
-        print("Wind Speed: ", ocean_data_dict["Wind Speed"])
-    if int(arguments_dict["show_wind_direction"]) == 1:
-        print("Wind Direction: ", ocean_data_dict["Wind Direction"])
+    display_mapping = {
+        "show_uv": ("UV Index", "UV index: "),
+        "show_height": ("Height", "Wave Height: "),
+        "show_direction": ("Swell Direction", "Wave Direction: "),
+        "show_period": ("Period", "Wave Period: "),
+        "show_air_temp": ("Air Temperature", "Air Temp: "),
+        "show_wind_speed": ("Wind Speed", "Wind Speed: "),
+        "show_wind_direction": ("Wind Direction", "Wind Direction: ")
+    }
+
+    for key, (data_key, label) in display_mapping.items():
+        if int(arguments_dict.get(key, 0)) == 1:
+            value = ocean_data_dict.get(data_key)
+            if value is not None:
+                print(f"{label} {value}")
+            else:
+                print(f"{label} None")
 
 
 def print_forecast(ocean, forecast):
@@ -141,15 +151,18 @@ def print_forecast(ocean, forecast):
     Takes in list of forecast data and prints
     """
     transposed = list(zip(*forecast))
+
     for day in transposed:
-        if ocean["show_date"] == 1:
-            print("Date: ", day[3])
-        if int(ocean["show_height"]) == 1:
-            print("Wave Height: ", day[0])
-        if int(ocean["show_direction"]) == 1:
-            print("Wave Direction: ", day[1])
-        if int(ocean["show_period"]) == 1:
-            print("Wave Period: ", day[2])
+        actions = {
+            "show_date": (3, "Date: "),
+            "show_height": (0, "Wave Height: "),
+            "show_direction": (1, "Wave Direction: "),
+            "show_period": (2, "Wave Period: ")
+        }
+
+        for key, (index, forecast_data) in actions.items():
+            if int(ocean.get(key, 0)) == 1:
+                print(forecast_data, day[index])
         print("\n")
 
 
