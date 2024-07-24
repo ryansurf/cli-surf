@@ -1,10 +1,17 @@
 repos:
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.4.6
+  - repo: local
     hooks:
       # Run the linter.
-      - id: ruff
-        entry: ruff check . --fix
+      - id: lint
+        name: Lint
+        entry: make lint
+        types: [python]
+        language: system
+        pass_filenames: false
       # Run the formatter.
-      - id: ruff-format
-        args: [ . ]
+      - id: format
+        name: Format
+        entry: make format
+        types: [python]
+        language: system
+        pass_filenames: false

@@ -37,8 +37,10 @@ build-backend = "poetry.core.masonry.api"
 
 # pytest settings
 [tool.pytest.ini_options]
+testpaths = 'tests'
 pythonpath = "."
 addopts = '-p no:warnings'  # disable pytest warnings
+log_format = '%(name)s %(levelname)s: %(message)s'
 
 # ruff global settings
 [tool.ruff]

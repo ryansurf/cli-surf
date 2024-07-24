@@ -16,12 +16,10 @@ Once you find an interesting issue let us know that you want to work on it by co
 
 ## Development
 ### Install our development environment
-1. Please set up your development environment by referring to the `Setup` section in the `README.md`.
+Please set up your development environment by referring to the `Setup` section in the `README.md`.
 
-2. Install the `pre-commit`:
-    ```
-    pre-commit install
-    ```
+> [!WARNING]
+> Make sure to run `make install` to ensure that lint and format are executed reliably when using the `git commit` command.
 
 ### Code Style and Quality
 - The [PEP 8](https://realpython.com/python-pep8/) styling convention is used.
