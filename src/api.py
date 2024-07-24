@@ -159,7 +159,11 @@ def forecast(lat, long, decimal, days=0):
     retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
     openmeteo = openmeteo_requests.Client(session=retry_session)
 
-    url = "https://marine-api.open-meteo.com/v1/marine"
+    # First URL is the marine API. Second is for general weather/UV index
+    urls = (
+        "https://marine-api.open-meteo.com/v1/marine",
+        "https://api.open-meteo.com/v1/forecast",
+    )
     params = {
         "latitude": lat,
         "longitude": long,
@@ -172,9 +176,14 @@ def forecast(lat, long, decimal, days=0):
         "timezone": "auto",
         "forecast_days": days,
     }
-    responses = openmeteo.weather_api(url, params=params)
+
+    params_uv = {"latitude": lat, "longitude": long, "daily": "uv_index_max"}
+
+    responses = openmeteo.weather_api(urls[0], params=params)
+    responses_uv = openmeteo.weather_api(urls[1], params=params_uv)
 
     response = responses[0]
+    response_uv = responses_uv[0]
 
     daily_height_max = helper.round_decimal(
         response.Daily().Variables(0).ValuesAsNumpy(), decimal
@@ -186,6 +195,10 @@ def forecast(lat, long, decimal, days=0):
         response.Daily().Variables(2).ValuesAsNumpy(), decimal
     )
 
+    daily_uv_index_max = helper.round_decimal(
+        response_uv.Daily().Variables(0).ValuesAsNumpy(), decimal
+    )
+
     daily_data = {
         "date": pd.date_range(
             start=pd.to_datetime(response.Daily().Time(), unit="s", utc=True),
@@ -194,12 +207,12 @@ def forecast(lat, long, decimal, days=0):
             inclusive="left",
         )
     }
-
     return [
         daily_height_max,
         daily_direction_dominant,
         daily_period_max,
         daily_data["date"],
+        daily_uv_index_max,
     ]
 
 
