@@ -80,17 +80,12 @@ To use cli-surf, clone the project locally and install the necessary dependencie
     cd cli-surf
     ```
 
-3. Install dependencies using Poetry.
+3. Install dependencies and Activate the virtual environment.
     ```bash
-    poetry install
+    make install
     ```
 
-4. Activate the virtual environment.
-    ```bash
-    poetry shell
-    ```
-
-5. Run the project. For example, if the entry point is `server.py`, use the following command.
+4. Run the project. For example, if the entry point is `server.py`, use the following command.
     ```bash
     python src/server.py
 
