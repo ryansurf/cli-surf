@@ -273,7 +273,7 @@ def surf_summary(surf_data):
     """
     location = surf_data["Location"]
     height = surf_data["Height"]
-    direction = surf_data["Direction"]
+    direction = surf_data["Swell Direction"]
     period = surf_data["Period"]
     unit = surf_data["Unit"]
     report = f"""
