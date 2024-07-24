@@ -58,6 +58,7 @@ More in-depth structure:
 │   ├── api.py
 │   ├── art.py
 │   ├── cli.py
+│   ├── dev_streamlit.py
 │   ├── gpt.py
 │   ├── helper.py
 │   ├── __init__.py
@@ -66,6 +67,7 @@ More in-depth structure:
 │   ├── server.py
 │   ├── settings.py
 │   ├── static
+│   ├── streamlit_helper.py
 │   └── templates
 └── tests
     ├── __init__.py
@@ -76,6 +78,6 @@ More in-depth structure:
     ├── test_helper.py
     └── test_server.py
 
-10 directories, 40 files
+10 directories, 42 files
 ```
 <!-- STRUCTURE END  -->
