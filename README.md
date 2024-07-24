@@ -162,13 +162,23 @@ Note that the Flask server must be running in order to send emails.
     <img src="images/website.gif" alt="cli-surf_website gif" style="width: 700px; height: auto;">
 </p>
 
-Although this application was made with the cli in mind, there is a frontend.
+Although this application was made with the cli in mind, there are two frontends (experimenting at the moment).
+
+**HTML/JS/CSS Frontend**
 
 `http://localhost:8000/home` **or** `<ip_of_host>:<port>/home` if the application is running on a different host or you have changed the default port.
 
 You may need to change `IP_ADDRESS` in `.env` to match the ip of the host running the machine.
 
 Now, running `python3 server.py` will launch the website!
+
+**Streamlit Frontend**
+
+[Streamlit](https://streamlit.io/) is also an option that we are experimenting with. 
+
+To run streamlit: `streamlit run src/dev_streamlit.py`
+
+You will be able to find the frontend here: `http://localhost:8502`
 
 
 ## 📈 Contributing

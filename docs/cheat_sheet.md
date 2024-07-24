@@ -18,7 +18,7 @@ When developing, these commands may come in handy:
 |  `poetry add <package-name>` |  Add a new dependency to Poetry |
 | `poetry add --group dev <package-name>`  |  Add a new developer dependency to Poetry |
 | `poetry show`  |  List all available dependencies with descriptions |
-| `poetry run pre-commit run --all-files`  |  Run the Linter & Formatter |
+| `pre-commit run --all-files`  |  Run the Linter & Formatter |
 
 ## [Mkdocs Commands](https://www.mkdocs.org/user-guide/)
 
@@ -30,12 +30,15 @@ When developing, these commands may come in handy:
 
 | Argument    | Description|
 | -------- | ------- |
+| `make install`  |  Install dependencies and activates the virtual environment. |
 | `make run`  |  Runs `server.py` |
 | `make run_docker`  |  Runs `docker compose up -d` |
 | `make test`  |  Runs pytest |
 | `make test_docker`  |  Runs pytest on Docker |
 | `make output_coverage`  |  Outputs the coverage of the tests |
 | `make send_email`  |  Runs `send_email.py` |
+| `make lint`  |  Runs the ruff linter |
+| `make format`  |  Runs the ruff formatter |
 
 
 ## [Git](https://education.github.com/git-cheat-sheet-education.pdf)
@@ -52,3 +55,4 @@ When developing, these commands may come in handy:
 | `git branch -d <branch>`  |  Delete a local branch |
 | `git push -u origin <branch-name>`  |  Pushes a local branch to the upstream remote repo |
 | `git log --branches --not --remotes`  |  View commits that have not yet been pushed |
+| `git fetch origin pull/ID/head:BRANCH_NAME`  |  Checking out a PR branch with `ID` and `BRANCH_NAME` |
