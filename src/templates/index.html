@@ -74,6 +74,15 @@
       <div class="flex flex-col h-[50vh] max-w-xl min-w-96">
         <div id="serverResponse" class="text-black flex flex-row justify-center pb-8 bg-white p-4 rounded-lg shadow-lg">
         </div>
+        <div id="loadingDiv">
+          <div class="flex flex-row justify-center">
+            <!-- Outer Ring-->
+            <div class="w-6 h-6 rounded-full absolute
+              border-4 border-solid border-gray-200"></div>
+            <!-- Inner Ring -->
+            <div class="w-6 h-6 rounded-full animate-spin absolute
+              border-4 border-solid border-blue-500 border-t-transparent"></div>
+        </div>
       </div>
     </div>
     <script>

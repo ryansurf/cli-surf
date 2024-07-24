@@ -3,6 +3,9 @@ cancelbutton.addEventListener("click",function(){
     document.getElementById("curlInput").value =""; 
 });
 
+const elLoadingDiv = document.getElementById("loadingDiv");
+elLoadingDiv.style.display = "none";
+
 
 document.getElementById("reportForm").addEventListener("submit", function(event) {
     event.preventDefault(); // Prevent default form submission
@@ -42,6 +45,8 @@ function httpGetAsync(theUrl, callback) {
 document.addEventListener("submit", function() {
     // Function to make the HTTP GET request and update the HTML content
     // Function to make the HTTP GET request and update the HTML content
+
+    handleLoadingChange()
     function fetchDataAndUpdateHTML() {
         // Make the HTTP GET request
         // Get the value of the location input field
@@ -67,15 +72,27 @@ document.addEventListener("submit", function() {
 
                 // Update the content of the serverResponse div with the extracted data
                 document.getElementById('serverResponse').innerHTML = extractedData;
+                handleLoadingChange()
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
+                handleLoadingChange()
             });
     }
     // Call the function to fetch data and update HTML content when the form is submitted
     fetchDataAndUpdateHTML();
 });
 
+function handleLoadingChange() {
+    var serverResponse = document.getElementById("serverResponse");
+    if (elLoadingDiv.style.display === "none") {
+        elLoadingDiv.style.display = "block";
+        serverResponse.style.display = "none"
 
+    } else {
+        elLoadingDiv.style.display = "none";
+        serverResponse.style.display = "block"
+    }
+}
 
 

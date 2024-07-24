@@ -118,6 +118,37 @@ def ocean_information(lat, long, decimal, unit="imperial"):
     return [current_wave_height, current_wave_direction, current_wave_period]
 
 
+def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
+    """
+    Gathers the wind and temperature data
+    """
+    # Setup the Open-Meteo API client with cache and retry on error
+    cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
+    retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
+    openmeteo = openmeteo_requests.Client(session=retry_session)
+
+    url = "https://api.open-meteo.com/v1/forecast"
+    params = {
+        "latitude": lat,
+        "longitude": long,
+        "current": ["temperature_2m", "wind_speed_10m", "wind_direction_10m"],
+        "temperature_unit": temp_unit,
+        "wind_speed_unit": "mph",
+        "precipitation_unit": "inch",
+    }
+    responses = openmeteo.weather_api(url, params=params)
+
+    response = responses[0]
+
+    # Current values. The order of variables needs to be the same as requested.
+    current = response.Current()
+    current_temperature = round(current.Variables(0).Value(), decimal)
+    current_wind_speed = round(current.Variables(1).Value(), decimal)
+    current_wind_direction = round(current.Variables(2).Value(), decimal)
+
+    return current_temperature, current_wind_speed, current_wind_direction
+
+
 def forecast(lat, long, decimal, days=0):
     """
     Number of forecast days. Max is 7
@@ -184,6 +215,9 @@ def gather_data(lat, long, arguments):
     )
     uv_index = get_uv(lat, long, arguments["decimal"], arguments["unit"])
 
+    wind_temp = current_wind_temp(lat, long, arguments["decimal"])
+    air_temp, wind_speed, wind_dir = wind_temp[0], wind_temp[1], wind_temp[2]
+
     arguments["ocean_data"] = ocean_data
     arguments["uv_index"] = uv_index
     spot_forecast = forecast(lat, long, arguments["decimal"], 7)
@@ -196,9 +230,12 @@ def gather_data(lat, long, arguments):
         "Long": long,
         "Location": arguments["city"],
         "Height": ocean_data[0],
-        "Direction": ocean_data[1],
+        "Swell Direction": ocean_data[1],
         "Period": ocean_data[2],
         "UV Index": uv_index,
+        "Air Temperature": air_temp,
+        "Wind Speed": wind_speed,
+        "Wind Direction": wind_dir,
         "Forecast": json_forecast,
         "Unit": arguments["unit"],
     }

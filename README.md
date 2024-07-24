@@ -42,6 +42,9 @@ Wave Period:  9.8
 | forecast / fc  | Number of forecast days. Max = 7, default = 0  |
 | hide_wave / hw | Hide the default wave art    |
 | show_large_wave / slw   | Show the large wave art   | 
+| show_air_temp / sat   | Show the air temp   | 
+| show_wind_speed / sws   | Show the wind speed   | 
+| show_wind_direction / swd   | Show the wind direction   | 
 | hide_uv / huv    | Hide uv index   | 
 | hide_height / hh    | Hide surf height   | 
 | hide_direction / hdir    | Hide Swell direction    | 
@@ -77,17 +80,12 @@ To use cli-surf, clone the project locally and install the necessary dependencie
     cd cli-surf
     ```
 
-3. Install dependencies using Poetry.
+3. Install dependencies and Activate the virtual environment.
     ```bash
-    poetry install
+    make install
     ```
 
-4. Activate the virtual environment.
-    ```bash
-    poetry shell
-    ```
-
-5. Run the project. For example, if the entry point is `server.py`, use the following command.
+4. Run the project. For example, if the entry point is `server.py`, use the following command.
     ```bash
     python src/server.py
 

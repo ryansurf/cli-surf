@@ -1,11 +1,10 @@
 
-FROM python:3.12.3-slim
+FROM python:alpine3.20
 
 # install apt packages (curl command)
-RUN apt-get update && \
-    apt-get install -y curl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk add --update-cache curl && \
+    apk cache clean && \
+    rm -rf /var/cache/apk/*
 
 #this instruction specifies the "working directory"
 #or the path in the image where files will be copied and commands will be executed.
