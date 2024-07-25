@@ -1,7 +1,7 @@
 Usage:
 
     $ curl localhost:8000                     # current location
-    $ curl localhost:8000?args=loc=new_york   # surf report in New new_york
+    $ curl localhost:8000?loc=new_york        # surf report in new_york
 
 Supported location types:
 
@@ -18,26 +18,34 @@ Units:
 
 Arguments:
 
-    location / loc	                          #Specify the location of your forecast
-    forecast / fc	                          # Number of forecast days. Max = 7, default = 0
-    hide_wave / hw	                          # Hide the default wave art
-    show_large_wave / slw	                  # Show the large wave art
-    hide_uv / huv	                          # Hide uv index
-    hide_height / hh	                      # Hide surf height
-    hide_direction / hdir	                  # Hide Swell direction
-    hide_period / hp	                      # Hide swell period
-    hide_location / hl	                      # Hide location
-    hide_date / hdate	                      # Hide date in forecast
-    metric / m	                              # Numbers in Metric units. Defaults to Imperial
-    decimal / dec	                          # Specify decimal points in output
-    color / c	                              # Choose color of wave art. Ex: color=light_blue
+    location / loc                            # Specify the location of your forecast
+    forecast / fc                             # Number of forecast days. Max = 7, default = 0
+    hide_wave / hw                            # Hide the default wave art
+    show_large_wave / slw                     # Show the large wave art
+    show_air_temp / sat                       # Show the air temperature
+    show_wind_speed / sws                     # Show the wind speed
+    show_wind_direction / swd                 # Show the wind direction
+    hide_uv / huv                             # Hide UV index
+    hide_height / hh                          # Hide surf height
+    hide_direction / hdir                     # Hide swell direction
+    hide_period / hp                          # Hide swell period
+    hide_location / hl                        # Hide location
+    hide_date / hdate                         # Hide date in forecast
+    metric / m                                # Numbers in Metric units. Defaults to Imperial
+    decimal / dec                             # Specify decimal points in output
+    color / c                                 # Choose color of wave art. Ex: color=light_blue
+    json / j                                  # Output the data in JSON format. Must be the only argument
+    gpt / g                                   # Activates the GPT surf report. Change the GPT_PROMPT variable in .env to customize responses. Default = off
 
 Color Options:
 
-    defualt, red, green, yellow, blue, purple, teal, light_blue
+    default, red, green, yellow, blue, purple, teal, light_blue
 
 Examples:
 
     curl localhost:8000
-    curl localhost:8000?args=location=new_york,hide_height,hide_wave,show_large_wave
-    curl localhost:8000?args=fc=3,hdate,loc=trestles,c=light_blue
+    curl localhost:8000?loc=new_york,hide_height,hide_wave,show_large_wave
+    curl localhost:8000?fc=3,hdate,loc=trestles,c=light_blue
+    curl localhost:8000?loc=malibu,show_air_temp,show_wind_speed,show_wind_direction
+    curl localhost:8000?loc=nazare,json
+    curl localhost:8000?loc=gold_coast,gpt,color=yellow
