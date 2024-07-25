@@ -1,7 +1,7 @@
 Usage:
 
     $ curl localhost:8000                     # current location
-    $ curl localhost:8000?loc=new_york        # surf report in new_york
+    $ curl localhost:8000?loc=new_york        # surf report in New York
 
 Supported location types:
 
