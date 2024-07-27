@@ -119,8 +119,9 @@ def print_location(city, show_city):
     Prints location
     """
     if int(show_city) == 1:
-        print("Location: ", city)
-        print("\n")
+        print("Location:", city)
+    else:
+        print("Location unknown")
 
 
 def print_ocean_data(arguments_dict, ocean_data):
