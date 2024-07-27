@@ -16,9 +16,9 @@ from src import helper
 
 def get_coordinates(args):
     """
-    Takes a location(city or address) and returns the coordinates: [lat, long]
+    Takes a location (city or address) and returns the coordinates: [lat, long]
     If no location is specified or the location is invalid, default_location()
-    finds the user's coordinates
+    finds the user's coordinates.
     """
     for arg in args:
         arg_str = str(arg)
@@ -29,7 +29,9 @@ def get_coordinates(args):
             if location is not None:
                 return [location.latitude, location.longitude, location]
             else:
-                print(f"Invalid location '{address}' provided. Using default location.")
+                print(
+                    f"Invalid location '{address}' provided. Using default location."
+                )
                 return default_location()
     return default_location()
 
