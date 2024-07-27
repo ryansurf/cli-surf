@@ -5,9 +5,10 @@ Run pytest: pytest
 """
 
 import io
+import sys
 from unittest.mock import patch
 
-from src.helper import extract_decimal
+from src.helper import extract_decimal, print_location
 
 
 def test_invalid_input():
@@ -27,3 +28,14 @@ def test_default_input():
     """
     decimal = extract_decimal([])
     assert 1 == decimal
+
+
+def test_print_location():
+    city = "Perth"
+    show_city = 1
+    captured_output = io.StringIO()
+    sys.stdout = captured_output
+    print_location(city, show_city)
+    sys.stdout = sys.__stdout__
+    expected_output = "Location: Perth"
+    assert captured_output.getvalue().strip() == expected_output.strip()

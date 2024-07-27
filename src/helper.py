@@ -123,7 +123,7 @@ def print_location(city, show_city):
         print("\n")
 
 
-def print_ocean_data(arguments_dict, ocean_data_dict):
+def print_ocean_data(arguments_dict, ocean_data):
     """
     Prints ocean data (height, wave direction, period, etc.)
     """
@@ -139,7 +139,7 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
 
     for key, (data_key, label) in display_mapping.items():
         if int(arguments_dict.get(key, 0)) == 1:
-            value = ocean_data_dict.get(data_key)
+            value = ocean_data.get(data_key)
             if value is not None:
                 print(f"{label} {value}")
             else:
