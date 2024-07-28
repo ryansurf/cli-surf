@@ -8,7 +8,7 @@ import io
 import sys
 from unittest.mock import patch
 
-from src.helper import extract_decimal, print_location
+from src.helper import extract_decimal, print_location, set_output_values
 
 
 def test_invalid_input():
@@ -39,3 +39,10 @@ def test_print_location():
     sys.stdout = sys.__stdout__
     expected_output = "Location: Perth"
     assert captured_output.getvalue().strip() == expected_output.strip()
+
+
+def test_set_output_values():
+    args = ['hw', 'show_large_wave', 'huv']
+    arguments = {}
+    expected = {"show_wave": 0, "show_large_wave": 1, "show_uv": 0}
+    assert set_output_values(args, arguments) == expected
