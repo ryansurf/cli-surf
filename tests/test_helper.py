@@ -6,9 +6,10 @@ Run pytest: pytest
 
 import io
 import sys
+from io import StringIO
 from unittest.mock import patch
 
-from src.helper import extract_decimal, print_location, set_output_values
+from src.helper import extract_decimal, print_location, set_output_values, print_ocean_data
 
 
 def test_invalid_input():
@@ -46,3 +47,37 @@ def test_set_output_values():
     arguments = {}
     expected = {"show_wave": 0, "show_large_wave": 1, "show_uv": 0}
     assert set_output_values(args, arguments) == expected
+
+
+def test_print_ocean_data():
+    arguments_dict = {
+        "show_uv": "1",
+        "show_height": "1",
+        "show_direction": "1",
+        "show_period": "0",
+        "show_air_temp": "1",
+        "show_wind_speed": "1",
+        "show_wind_direction": "0"
+    }
+
+    ocean_data = {
+        "UV Index": 5,
+        "Height": 2.5,
+        "Swell Direction": "NE",
+        "Air Temperature": 25,
+        "Wind Speed": 15
+    }
+
+    expected_output = (
+        "UV index: 5\n"
+        "Wave Height: 2.5\n"
+        "Wave Direction: NE\n"
+        "Air Temp: 25\n"
+        "Wind Speed: 15\n"
+    )
+
+    captured_output = StringIO()
+    sys.stdout = captured_output
+    print_ocean_data(arguments_dict, ocean_data)
+    sys.stdout = sys.__stdout__
+    assert captured_output.getvalue() == expected_output
