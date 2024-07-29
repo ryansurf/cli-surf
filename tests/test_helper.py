@@ -9,7 +9,13 @@ import sys
 from io import StringIO
 from unittest.mock import patch
 
-from src.helper import extract_decimal, print_location, set_output_values, print_ocean_data
+from src.helper import (
+    extract_decimal,
+    print_forecast,
+    print_location,
+    print_ocean_data,
+    set_output_values,
+)
 
 
 def test_invalid_input():
@@ -32,6 +38,7 @@ def test_default_input():
 
 
 def test_print_location():
+
     city = "Perth"
     show_city = 1
     captured_output = io.StringIO()
@@ -43,7 +50,7 @@ def test_print_location():
 
 
 def test_set_output_values():
-    args = ['hw', 'show_large_wave', 'huv']
+    args = ["hw", "show_large_wave", "huv"]
     arguments = {}
     expected = {"show_wave": 0, "show_large_wave": 1, "show_uv": 0}
     assert set_output_values(args, arguments) == expected
@@ -57,7 +64,7 @@ def test_print_ocean_data():
         "show_period": "0",
         "show_air_temp": "1",
         "show_wind_speed": "1",
-        "show_wind_direction": "0"
+        "show_wind_direction": "0",
     }
 
     ocean_data = {
@@ -65,7 +72,7 @@ def test_print_ocean_data():
         "Height": 2.5,
         "Swell Direction": "NE",
         "Air Temperature": 25,
-        "Wind Speed": 15
+        "Wind Speed": 15,
     }
 
     expected_output = (
