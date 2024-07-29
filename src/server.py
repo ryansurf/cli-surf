@@ -99,4 +99,5 @@ def create_app():
 if __name__ == "__main__":
     app = create_app()
     env = ServerSettings()
+    app = create_app(env)
     app.run(host="0.0.0.0", port=env.PORT, debug=env.DEBUG)
