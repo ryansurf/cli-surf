@@ -16,8 +16,9 @@ from src import helper
 
 def get_coordinates(args):
     """
-    Takes a location(city or address) and returns the coordinates: [lat, long]
-    If no location is specified, default_location() finds the users coordinates
+    Takes a location (city or address) and returns the coordinates: [lat, long]
+    If no location is specified or the location is invalid, default_location()
+    finds the user's coordinates.
     """
     for arg in args:
         arg_str = str(arg)
@@ -27,13 +28,18 @@ def get_coordinates(args):
             location = geolocator.geocode(address)
             if location is not None:
                 return [location.latitude, location.longitude, location]
-            return "No data"
+            else:
+                print(
+                    f"Invalid location '{address}' provided. "
+                    "Using default location."
+                )
+                return default_location()
     return default_location()
 
 
 def default_location():
     """
-    If no location specified in cli, find users location
+    If no location specified in cli, find user's location
     Make a GET request to the API endpoint
     """
     response = requests.get("https://ipinfo.io/json", timeout=10)
