@@ -142,7 +142,7 @@ def print_ocean_data(arguments_dict, ocean_data):
         if int(arguments_dict.get(key, 0)) == 1:
             value = ocean_data.get(data_key)
             if value is not None:
-                print(f"{label} {value}")
+                print(f"{label}{value}")
             else:
                 print(f"{label} None")
 
