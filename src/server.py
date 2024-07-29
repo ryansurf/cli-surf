@@ -25,7 +25,6 @@ def create_app():
     """
 
     # Load environment variables from .env file
-    env = ServerSettings()
 
     app = Flask(__name__)
     CORS(app)
