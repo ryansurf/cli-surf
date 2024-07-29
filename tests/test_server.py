@@ -14,7 +14,8 @@ def test_routes():
     When a page is requested (GET)
     THEN check if the response is valid (200)
     """
-    flask_app = create_app()
+    env = ServerSettings()
+    flask_app = create_app(env)
     OK = 200
 
     # Create a test client using the Flask application configured for testing
