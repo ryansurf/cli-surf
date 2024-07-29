@@ -150,6 +150,8 @@ def print_forecast(ocean, forecast):
             print("Wave Direction: ", day[1])
         if int(ocean["show_period"]) == 1:
             print("Wave Period: ", day[2])
+        if int(ocean["show_uv"]) == 1:
+            print("UV Index: ", day[4])
         print("\n")
 
 
@@ -250,16 +252,17 @@ def forecast_to_json(data, decimal):
     """
     Takes forecast() as input and returns it in JSON format
     """
-    surf_height, swell_direction, swell_period, dates = data
+    surf_height, swell_direction, swell_period, dates, uv_index = data
 
     # Formatting into JSON
     forecasts = []
     for i in range(len(dates)):
         forecast = {
             "date": str(dates[i].date()),
-            "height": round(float(surf_height[i]), decimal),
-            "direction": round(float(swell_direction[i]), decimal),
-            "period": round(float(swell_period[i]), decimal),
+            "surf height": round(float(surf_height[i]), decimal),
+            "swell direction": round(float(swell_direction[i]), decimal),
+            "swell period": round(float(swell_period[i]), decimal),
+            "uv index": round(float(uv_index[i]), decimal),
         }
         forecasts.append(forecast)
 
