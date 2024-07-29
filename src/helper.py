@@ -135,7 +135,7 @@ def print_ocean_data(arguments_dict, ocean_data):
         "show_period": ("Period", "Wave Period: "),
         "show_air_temp": ("Air Temperature", "Air Temp: "),
         "show_wind_speed": ("Wind Speed", "Wind Speed: "),
-        "show_wind_direction": ("Wind Direction", "Wind Direction: ")
+        "show_wind_direction": ("Wind Direction", "Wind Direction: "),
     }
 
     for key, (data_key, label) in display_mapping.items():
@@ -158,7 +158,7 @@ def print_forecast(ocean, forecast):
             "show_date": (3, "Date: "),
             "show_height": (0, "Wave Height: "),
             "show_direction": (1, "Wave Direction: "),
-            "show_period": (2, "Wave Period: ")
+            "show_period": (2, "Wave Period: "),
         }
 
         for key, (index, forecast_data) in actions.items():
