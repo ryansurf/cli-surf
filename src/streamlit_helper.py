@@ -1,5 +1,5 @@
 """
-Helper functions for the streamlit frontent
+Helper functions for the streamlit frontend
 """
 
 import sys

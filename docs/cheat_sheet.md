@@ -39,6 +39,7 @@ When developing, these commands may come in handy:
 | `make send_email`  |  Runs `send_email.py` |
 | `make lint`  |  Runs the ruff linter |
 | `make format`  |  Runs the ruff formatter |
+| `make clean`  |  Cleans up files generated during testing (`.coverage`, `pytest_cache`, etc.) |
 
 
 ## [Git](https://education.github.com/git-cheat-sheet-education.pdf)

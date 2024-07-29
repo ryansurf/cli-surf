@@ -71,6 +71,7 @@ if location:
     report_dict, gpt_response, lat, long = get_report
 
     # Displays the map
+    # TODO: Configure map to only show nearby surf spots based on the lat/long
     if map:
         map_data = sl_help.map_data(lat, long)
         st_folium(map_data, width=725)
