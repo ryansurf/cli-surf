@@ -232,9 +232,11 @@ def print_outputs(city, data_dict, arguments, gpt_prompt, gpt_info):
     # Prints the forecast(if activated in CLI args)
     print_forecast(arguments, forecast)
     # Checks if GPT in args, prints GPT response if True
+    gpt_response = None
     if arguments["gpt"] == 1:
         gpt_response = print_gpt(data_dict, gpt_prompt, gpt_info)
         print(gpt_response)
+    return gpt_response
 
 
 def set_location(location):

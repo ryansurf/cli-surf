@@ -18,6 +18,6 @@ def test_cli_output():
     # Hardcode lat and long for location.
     # If not, when test are ran in Github Actions
     # We get an error(because server probably isn't near ocean)
-    data_dict = cli.run(36.95, -121.97)
+    data_dict = cli.run(36.95, -121.97)[0]
     time.sleep(5)
     assert len(data_dict) >= expected
