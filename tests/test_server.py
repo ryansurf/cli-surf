@@ -4,6 +4,7 @@ Make sure pytest is installed: pip install pytest
 Run pytest: pytest
 """
 
+from src import settings
 from src.server import create_app
 
 
@@ -14,7 +15,7 @@ def test_routes():
     When a page is requested (GET)
     THEN check if the response is valid (200)
     """
-    env = ServerSettings()
+    env = settings.ServerSettings()
     flask_app = create_app(env)
     OK = 200
 

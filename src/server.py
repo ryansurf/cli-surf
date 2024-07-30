@@ -19,7 +19,7 @@ from flask_cors import CORS
 from src.settings import ServerSettings
 
 
-def create_app():
+def create_app(env):
     """
     Application factory function
     """
@@ -96,7 +96,6 @@ def create_app():
 
 
 if __name__ == "__main__":
-    app = create_app()
     env = ServerSettings()
     app = create_app(env)
     app.run(host="0.0.0.0", port=env.PORT, debug=env.DEBUG)
