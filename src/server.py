@@ -3,7 +3,9 @@ Flask Server!
 """
 
 import asyncio
+import os
 import subprocess
+import sys
 import urllib.parse
 from pathlib import Path
 
@@ -73,8 +75,10 @@ def create_app(env):
 
         async def run_subprocess():
             try:
+                script_path = os.path.join("src", "cli.py")
+
                 result = subprocess.run(
-                    ["python3", "src/cli.py", args],
+                    [sys.executable, script_path, args],
                     capture_output=True,
                     text=True,
                     check=True,
