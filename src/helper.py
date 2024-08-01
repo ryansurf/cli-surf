@@ -153,9 +153,17 @@ def print_forecast(ocean, forecast):
         if int(ocean["show_uv"]) == 1:
             print("UV Index: ", day[4])
         if int(ocean["show_air_temp"]) == 1:
-            print("Air Temp Max: ", day[4])
-        # if int(ocean["show_air_temp"]) == 1:
-        #    print("Air Temp Min: ", day[6])
+            print("Air Temp Max: ", day[5])
+        if int(ocean["show_air_temp"]) == 1:
+            print("Air Temp Min: ", day[6])
+        if int(ocean["show_air_temp"]) == 1:
+            print("Rain Sum: ", day[7])
+        if int(ocean["show_air_temp"]) == 1:
+            print("Precipitation Probability: ", day[8], "%")
+        if int(ocean["show_wind_speed"]) == 1:
+            print("Max Wind Speed: ", day[9])
+        if int(ocean["show_wind_speed"]) == 1:
+            print("Wind Direction ", day[10])
         print("\n")
 
 
