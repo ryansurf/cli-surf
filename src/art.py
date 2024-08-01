@@ -23,16 +23,7 @@ def print_wave(show_wave, show_large_wave, color):
     if color is not None and color.lower() not in colors:
         print("Not a valid color")
         color = "blue"
-    if int(show_wave) == 1:
-        print(
-            colors[color]
-            + """
-      .-``'.
-    .`   .`
-_.-'     '._
-        """
-            + colors["end"]
-        )
+
     if int(show_large_wave) == 1:
         print(
             colors[color]
@@ -47,5 +38,15 @@ _.-'     '._
 ⢀⣄⣠⣶⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠓⠚⠋⠉⠀⠀⠀⠀⠀⠀⠈⠛⡛⡻⠿⠿⠙⠓⢒⣺⡿⠋⠁
 ⠉⠉⠉⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠁⠀
 """
+            + colors["end"]
+        )
+    elif int(show_wave) == 1:
+        print(
+            colors[color]
+            + """
+      .-``'.
+    .`   .`
+_.-'     '._
+        """
             + colors["end"]
         )
