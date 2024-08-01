@@ -187,7 +187,7 @@ def forecast(lat, long, decimal, days=0):
             "rain_sum",
             "precipitation_probability_max",
             "wind_speed_10m_max",
-            "wind_direction_10m_dominant"
+            "wind_direction_10m_dominant",
         ],
         "temperature_unit": "fahrenheit",
         "wind_speed_unit": "mph",
@@ -197,8 +197,7 @@ def forecast(lat, long, decimal, days=0):
     }
 
     responses_marine = openmeteo.weather_api(urls[0], params=params)
-    responses_general = openmeteo.weather_api(
-        urls[1], params=params_general)
+    responses_general = openmeteo.weather_api(urls[1], params=params_general)
 
     response = responses_marine[0]
     response_general = responses_general[0]
@@ -207,7 +206,8 @@ def forecast(lat, long, decimal, days=0):
     marine_data = [
         helper.round_decimal(
             response.Daily().Variables(i).ValuesAsNumpy(), decimal
-        ) for i in range(3)
+        )
+        for i in range(3)
     ]
 
     # Extract general weather data using a loop to reduce number of local
@@ -216,7 +216,8 @@ def forecast(lat, long, decimal, days=0):
     general_data = [
         helper.round_decimal(
             response_general.Daily().Variables(i).ValuesAsNumpy(), decimal
-        ) for i in range(7)
+        )
+        for i in range(7)
     ]
 
     daily_data = {
@@ -239,7 +240,7 @@ def forecast(lat, long, decimal, days=0):
         "rain_sum": general_data[3],
         "precipitation_probability_max": general_data[4],
         "wind_speed_10m_max": general_data[5],
-        "wind_direction_10m_dominant": general_data[6]
+        "wind_direction_10m_dominant": general_data[6],
     }
 
     return [

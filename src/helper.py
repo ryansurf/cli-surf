@@ -262,17 +262,18 @@ def forecast_to_json(data, decimal):
     """
     Takes forecast() as input and returns it in JSON format
     """
-    (surf_height,
-     swell_direction,
-     swell_period,
-     dates,
-     uv_index,
-     temp_max,
-     temp_min,
-     rain_sum,
-     precipitation_probability,
-     wind_speed,
-     wind_direction_dominant
+    (
+        surf_height,
+        swell_direction,
+        swell_period,
+        dates,
+        uv_index,
+        temp_max,
+        temp_min,
+        rain_sum,
+        precipitation_probability,
+        wind_speed,
+        wind_direction_dominant,
     ) = data
     # Formatting into JSON
     forecasts = []
@@ -287,10 +288,12 @@ def forecast_to_json(data, decimal):
             "temperature_2m_min": round(float(temp_min[i]), decimal),
             "rain_sum": round(float(rain_sum[i]), decimal),
             "daily_precipitation_probability": round(
-                float(precipitation_probability[i]), decimal),
+                float(precipitation_probability[i]), decimal
+            ),
             "wind_speed_max": round(float(wind_speed[i]), decimal),
             "wind_direction_10m_dominant": round(
-                float(wind_direction_dominant[i]), decimal),
+                float(wind_direction_dominant[i]), decimal
+            ),
         }
         forecasts.append(forecast)
 
