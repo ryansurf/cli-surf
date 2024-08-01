@@ -13,6 +13,8 @@ colors = {
     "purple": "\033[0;35m",
     "teal": "\033[0;36m",
     "light_blue": "\033[0;34m",
+    "black" : "\e[0;30m",
+    "cyan" : "\e[0;36m"    
 }
 
 
