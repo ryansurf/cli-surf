@@ -27,9 +27,9 @@ def arguments_dictionary(lat, long, city, args):
         "show_period": 1,
         "show_city": 1,
         "show_date": 1,
-        "show_air_temp": 0,
-        "show_wind_speed": 0,
-        "show_wind_direction": 0,
+        "show_air_temp": 1,
+        "show_wind_speed": 1,
+        "show_wind_direction": 1,
         "json_output": 0,
         "unit": "imperial",
         "decimal": extract_decimal(args),
@@ -134,6 +134,7 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
         print("Wind Speed: ", ocean_data_dict["Wind Speed"])
     if int(arguments_dict["show_wind_direction"]) == 1:
         print("Wind Direction: ", ocean_data_dict["Wind Direction"])
+
 
 
 def print_forecast(ocean, forecast):
