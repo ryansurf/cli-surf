@@ -44,9 +44,7 @@ def arguments_dictionary(lat, long, city, args):
 
 def set_output_values(args, arguments):
     """
-    Takes a list of command line arguments (args)
-    and sets the appropriate values
-    in the arguments dictionary (show_wave = 1, etc).
+    Takes a list of command line (show_wave = 1, etc).
     Returns the arguments dict with the updated CLI args.
     """
     actions = {
@@ -130,7 +128,7 @@ def print_location(city, show_city):
     if int(show_city) == 1:
         print("Location:", city)
     else:
-        print("Location unknown")
+        print("Not Available")
 
 
 def print_ocean_data(arguments_dict, ocean_data):
