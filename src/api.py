@@ -262,10 +262,16 @@ def forecast(lat, long, decimal, days=0):
 
     return [
         forecast_data["wave_height_max"],
-        daily_direction_dominant,
-        daily_period_max,
+        forecast_data["wave_direction_dominant"],
+        forecast_data["wave_period_max"],
         daily_data["date"],
-        daily_uv_index_max,
+        forecast_data["uv_index_max"],
+        forecast_data["rain_sum"],
+        forecast_data["temperature_2m_max"],
+        forecast_data["temperature_2m_min"],
+        forecast_data["precipitation_probability_max"],
+        forecast_data["wind_speed_10m_max"],
+        forecast_data["wind_direction_10m_dominant"],
     ]
 
 

@@ -153,7 +153,9 @@ def print_forecast(ocean, forecast):
         if int(ocean["show_uv"]) == 1:
             print("UV Index: ", day[4])
         if int(ocean["show_air_temp"]) == 1:
-            print("Air Temp: ", day[4])
+            print("Air Temp Max: ", day[4])
+        # if int(ocean["show_air_temp"]) == 1:
+        #    print("Air Temp Min: ", day[6])
         print("\n")
 
 
@@ -252,8 +254,18 @@ def forecast_to_json(data, decimal):
     """
     Takes forecast() as input and returns it in JSON format
     """
-    surf_height, swell_direction, swell_period, dates, uv_index = data
-
+    (surf_height,
+     swell_direction,
+     swell_period,
+     dates,
+     uv_index,
+     temp_max,
+     temp_min,
+     rain_sum,
+     precipitation_probability,
+     wind_speed,
+     wind_direction_dominant
+    ) = data
     # Formatting into JSON
     forecasts = []
     for i in range(len(dates)):
@@ -263,6 +275,14 @@ def forecast_to_json(data, decimal):
             "swell direction": round(float(swell_direction[i]), decimal),
             "swell period": round(float(swell_period[i]), decimal),
             "uv index": round(float(uv_index[i]), decimal),
+            "temperature_2m_max": round(float(temp_max[i]), decimal),
+            "temperature_2m_min": round(float(temp_min[i]), decimal),
+            "rain_sum": round(float(rain_sum[i]), decimal),
+            "daily_precipitation_probability": round(
+                float(precipitation_probability[i]), decimal),
+            "wind_speed_max": round(float(wind_speed[i]), decimal),
+            "wind_direction_10m_dominant": round(
+                float(wind_direction_dominant[i]), decimal),
         }
         forecasts.append(forecast)
 
