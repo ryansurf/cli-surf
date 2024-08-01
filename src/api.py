@@ -177,13 +177,31 @@ def forecast(lat, long, decimal, days=0):
         "forecast_days": days,
     }
 
-    params_uv = {"latitude": lat, "longitude": long, "daily": "uv_index_max"}
+    params_general = {
+        "latitude": lat,
+        "longitude": long,
+        "daily": [
+            "uv_index_max",
+            "temperature_2m_max",
+            "temperature_2m_min",
+            "rain_sum",
+            "precipitation_probability_max",
+            "wind_speed_10m_max",
+            "wind_direction_10m_dominant"
+        ],
+        "temperature_unit": "fahrenheit",
+        "wind_speed_unit": "mph",
+        "precipitation_unit": "inch",
+        "timezone": "auto",
+        "forecast_days": days,
+    }
 
     responses = openmeteo.weather_api(urls[0], params=params)
-    responses_uv = openmeteo.weather_api(urls[1], params=params_uv)
+    responses_general = openmeteo.weather_api(
+        urls[1], params=params_general)
 
     response = responses[0]
-    response_uv = responses_uv[0]
+    response_general = responses_general[0]
 
     daily_height_max = helper.round_decimal(
         response.Daily().Variables(0).ValuesAsNumpy(), decimal
@@ -196,7 +214,7 @@ def forecast(lat, long, decimal, days=0):
     )
 
     daily_uv_index_max = helper.round_decimal(
-        response_uv.Daily().Variables(0).ValuesAsNumpy(), decimal
+        response_general.Daily().Variables(0).ValuesAsNumpy(), decimal
     )
 
     daily_data = {
