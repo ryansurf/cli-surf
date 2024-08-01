@@ -196,46 +196,28 @@ def forecast(lat, long, decimal, days=0):
         "forecast_days": days,
     }
 
-    responses = openmeteo.weather_api(urls[0], params=params)
+    responses_marine = openmeteo.weather_api(urls[0], params=params)
     responses_general = openmeteo.weather_api(
         urls[1], params=params_general)
 
-    response = responses[0]
+    response = responses_marine[0]
     response_general = responses_general[0]
 
-    # Extract marine data
-    daily_height_max = helper.round_decimal(
-        response.Daily().Variables(0).ValuesAsNumpy(), decimal
-    )
-    daily_direction_dominant = helper.round_decimal(
-        response.Daily().Variables(1).ValuesAsNumpy(), decimal
-    )
-    daily_period_max = helper.round_decimal(
-        response.Daily().Variables(2).ValuesAsNumpy(), decimal
-    )
+    # Extract marine data using a loop
+    marine_data = [
+        helper.round_decimal(
+            response.Daily().Variables(i).ValuesAsNumpy(), decimal
+        ) for i in range(3)
+    ]
 
-    # Extract general weather data
-    daily_uv_index_max = helper.round_decimal(
-        response_general.Daily().Variables(0).ValuesAsNumpy(), decimal
-    )
-    daily_temperature_max = helper.round_decimal(
-        response_general.Daily().Variables(1).ValuesAsNumpy(), decimal
-    )
-    daily_temperature_min = helper.round_decimal(
-        response_general.Daily().Variables(2).ValuesAsNumpy(), decimal
-    )
-    daily_rain_sum = helper.round_decimal(
-        response_general.Daily().Variables(3).ValuesAsNumpy(), decimal
-    )
-    daily_precipitation_probability_max = helper.round_decimal(
-        response_general.Daily().Variables(4).ValuesAsNumpy(), decimal
-    )
-    daily_wind_speed_max = helper.round_decimal(
-        response_general.Daily().Variables(5).ValuesAsNumpy(), decimal
-    )
-    daily_wind_direction_dominant = helper.round_decimal(
-        response_general.Daily().Variables(6).ValuesAsNumpy(), decimal
-    )
+    # Extract general weather data using a loop to reduce number of local
+    # variables
+
+    general_data = [
+        helper.round_decimal(
+            response_general.Daily().Variables(i).ValuesAsNumpy(), decimal
+        ) for i in range(7)
+    ]
 
     daily_data = {
         "date": pd.date_range(
@@ -248,16 +230,16 @@ def forecast(lat, long, decimal, days=0):
 
     forecast_data = {
         "date": daily_data["date"],
-        "wave_height_max": daily_height_max,
-        "wave_direction_dominant": daily_direction_dominant,
-        "wave_period_max": daily_period_max,
-        "uv_index_max": daily_uv_index_max,
-        "temperature_2m_max": daily_temperature_max,
-        "temperature_2m_min": daily_temperature_min,
-        "rain_sum": daily_rain_sum,
-        "precipitation_probability_max": daily_precipitation_probability_max,
-        "wind_speed_10m_max": daily_wind_speed_max,
-        "wind_direction_10m_dominant": daily_wind_direction_dominant
+        "wave_height_max": marine_data[0],
+        "wave_direction_dominant": marine_data[1],
+        "wave_period_max": marine_data[2],
+        "uv_index_max": general_data[0],
+        "temperature_2m_max": general_data[1],
+        "temperature_2m_min": general_data[2],
+        "rain_sum": general_data[3],
+        "precipitation_probability_max": general_data[4],
+        "wind_speed_10m_max": general_data[5],
+        "wind_direction_10m_dominant": general_data[6]
     }
 
     return [
