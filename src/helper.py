@@ -116,7 +116,16 @@ def get_forecast_days(args):
 
 def print_location(city, show_city):
     """
-    Prints location
+    Prints the location only if `show_city` is equal to 1.
+    Prints "Location unknown" if the value is not 1.
+
+    Args:
+        city (str): The name of the city to be printed.
+        show_city (int): An integer that determines whether the city
+                         should be printed (1) or not (any other value).
+
+    Returns:
+        None
     """
     if int(show_city) == 1:
         print("Location:", city)
@@ -127,6 +136,20 @@ def print_location(city, show_city):
 def print_ocean_data(arguments_dict, ocean_data):
     """
     Prints ocean data (height, wave direction, period, etc.)
+
+    Args:
+        arguments_dict (dict): Dictionary with keys such as "show_uv", "show_height",
+                               "show_direction", "show_period", "show_air_temp",
+                               "show_wind_speed", and "show_wind_direction". Values
+                               should be 1 to display the corresponding data; If the value
+                               is not equal to 1 data will not be displayed.
+
+        ocean_data (dict): Dictionary containing ocean data. Keys include
+                           "UV Index", "Height", "Swell Direction", "Period",
+                           "Air Temperature", "Wind Speed", and "Wind Direction".
+
+    Returns:
+        None
     """
     display_mapping = {
         "show_uv": ("UV Index", "UV index: "),
@@ -144,12 +167,23 @@ def print_ocean_data(arguments_dict, ocean_data):
             if value is not None:
                 print(f"{label}{value}")
             else:
-                print(f"{label} None")
+                print(f"{label} Not available")
 
 
 def print_forecast(ocean, forecast):
     """
-    Takes in list of forecast data and prints
+    Prints forecast data based on flags in the ocean dictionary.
+
+    Args:
+        ocean: Dictionary with keys like "show_date", "show_height",
+               "show_direction", and "show_period" indicating which data
+               to display (1 to show, otherwise hide).
+
+        forecast: List of tuples where each tuple contains
+                  (date, wave height, wave direction, wave period).
+
+    Returns:
+        None
     """
     transposed = list(zip(*forecast))
 
@@ -165,7 +199,6 @@ def print_forecast(ocean, forecast):
             if int(ocean.get(key, 0)) == 1:
                 print(forecast_data, day[index])
         print("\n")
-
 
 def extract_decimal(args):
     """

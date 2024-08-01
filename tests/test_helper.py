@@ -11,7 +11,6 @@ from unittest.mock import patch
 
 from src.helper import (
     extract_decimal,
-    print_forecast,
     print_location,
     print_ocean_data,
     set_output_values,
@@ -38,6 +37,10 @@ def test_default_input():
 
 
 def test_print_location():
+    """
+    Test the print_location function to check if the city name is printed
+    when the show_city parameter is 1
+    """
 
     city = "Perth"
     show_city = 1
@@ -50,6 +53,11 @@ def test_print_location():
 
 
 def test_set_output_values():
+    """
+    Tests the set_output_values function to verify that it correctly
+    sets values in the output dictionary based on the provided list of
+    input arguments (args)
+    """
     args = ["hw", "show_large_wave", "huv"]
     arguments = {}
     expected = {"show_wave": 0, "show_large_wave": 1, "show_uv": 0}
@@ -57,6 +65,10 @@ def test_set_output_values():
 
 
 def test_print_ocean_data():
+    """
+    Test that checks if the print_ocean_data function prints all
+    the ocean data
+    """
     arguments_dict = {
         "show_uv": "1",
         "show_height": "1",
