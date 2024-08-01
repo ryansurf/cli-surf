@@ -51,6 +51,20 @@ def test_print_location():
     expected_output = "Location: Perth"
     assert captured_output.getvalue().strip() == expected_output.strip()
 
+def test_print_location_show_city_0():
+    """
+    Test the print_location function to check if the city name prints
+    location not available when the show_city parameter is 0
+    """
+    city = "Perth"
+    show_city = 0
+    captured_output = io.StringIO()
+    sys.stdout = captured_output
+    print_location(city, show_city)
+    sys.stdout = sys.__stdout__
+    expected_output = "Not Available"
+    assert captured_output.getvalue().strip() == expected_output.strip()
+
 
 def test_set_output_values():
     """
