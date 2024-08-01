@@ -136,7 +136,6 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
         print("Wind Direction: ", ocean_data_dict["Wind Direction"])
 
 
-
 def print_forecast(ocean, forecast):
     """
     Takes in list of forecast data and prints
@@ -153,6 +152,8 @@ def print_forecast(ocean, forecast):
             print("Wave Period: ", day[2])
         if int(ocean["show_uv"]) == 1:
             print("UV Index: ", day[4])
+        if int(ocean["show_air_temp"]) == 1:
+            print("Air Temp: ", day[4])
         print("\n")
 
 
