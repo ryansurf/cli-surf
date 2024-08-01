@@ -203,6 +203,7 @@ def forecast(lat, long, decimal, days=0):
     response = responses[0]
     response_general = responses_general[0]
 
+    # Extract marine data
     daily_height_max = helper.round_decimal(
         response.Daily().Variables(0).ValuesAsNumpy(), decimal
     )
@@ -212,8 +213,28 @@ def forecast(lat, long, decimal, days=0):
     daily_period_max = helper.round_decimal(
         response.Daily().Variables(2).ValuesAsNumpy(), decimal
     )
+
+    # Extract general weather data
     daily_uv_index_max = helper.round_decimal(
         response_general.Daily().Variables(0).ValuesAsNumpy(), decimal
+    )
+    daily_temperature_max = helper.round_decimal(
+        response_general.Daily().Variables(1).ValuesAsNumpy(), decimal
+    )
+    daily_temperature_min = helper.round_decimal(
+        response_general.Daily().Variables(2).ValuesAsNumpy(), decimal
+    )
+    daily_rain_sum = helper.round_decimal(
+        response_general.Daily().Variables(3).ValuesAsNumpy(), decimal
+    )
+    daily_precipitation_probability_max = helper.round_decimal(
+        response_general.Daily().Variables(4).ValuesAsNumpy(), decimal
+    )
+    daily_wind_speed_max = helper.round_decimal(
+        response_general.Daily().Variables(5).ValuesAsNumpy(), decimal
+    )
+    daily_wind_direction_dominant = helper.round_decimal(
+        response_general.Daily().Variables(6).ValuesAsNumpy(), decimal
     )
 
     daily_data = {
@@ -224,8 +245,23 @@ def forecast(lat, long, decimal, days=0):
             inclusive="left",
         )
     }
+
+    forecast_data = {
+        "date": daily_data["date"],
+        "wave_height_max": daily_height_max,
+        "wave_direction_dominant": daily_direction_dominant,
+        "wave_period_max": daily_period_max,
+        "uv_index_max": daily_uv_index_max,
+        "temperature_2m_max": daily_temperature_max,
+        "temperature_2m_min": daily_temperature_min,
+        "rain_sum": daily_rain_sum,
+        "precipitation_probability_max": daily_precipitation_probability_max,
+        "wind_speed_10m_max": daily_wind_speed_max,
+        "wind_direction_10m_dominant": daily_wind_direction_dominant
+    }
+
     return [
-        daily_height_max,
+        forecast_data["wave_height_max"],
         daily_direction_dominant,
         daily_period_max,
         daily_data["date"],
