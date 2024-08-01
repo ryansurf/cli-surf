@@ -215,7 +215,6 @@ def forecast(lat, long, decimal, days=0):
     daily_uv_index_max = helper.round_decimal(
         response_general.Daily().Variables(0).ValuesAsNumpy(), decimal
     )
-    print(daily_uv_index_max)
 
     daily_data = {
         "date": pd.date_range(
