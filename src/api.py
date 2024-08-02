@@ -199,13 +199,13 @@ def forecast(lat, long, decimal, days=0):
     responses_marine = openmeteo.weather_api(urls[0], params=params)
     responses_general = openmeteo.weather_api(urls[1], params=params_general)
 
-    response = responses_marine[0]
+    response_marine = responses_marine[0]
     response_general = responses_general[0]
 
     # Extract marine data using a loop
     marine_data = [
         helper.round_decimal(
-            response.Daily().Variables(i).ValuesAsNumpy(), decimal
+            response_marine.Daily().Variables(i).ValuesAsNumpy(), decimal
         )
         for i in range(3)
     ]
@@ -222,9 +222,11 @@ def forecast(lat, long, decimal, days=0):
 
     daily_data = {
         "date": pd.date_range(
-            start=pd.to_datetime(response.Daily().Time(), unit="s", utc=True),
-            end=pd.to_datetime(response.Daily().TimeEnd(), unit="s", utc=True),
-            freq=pd.Timedelta(seconds=response.Daily().Interval()),
+            start=pd.to_datetime(response_marine.Daily().Time(),
+                                 unit="s", utc=True),
+            end=pd.to_datetime(response_marine.Daily().TimeEnd(),
+                               unit="s", utc=True),
+            freq=pd.Timedelta(seconds=response_marine.Daily().Interval()),
             inclusive="left",
         )
     }
