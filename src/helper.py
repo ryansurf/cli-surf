@@ -27,10 +27,12 @@ def arguments_dictionary(lat, long, city, args):
         "show_period": 1,
         "show_city": 1,
         "show_date": 1,
-        "show_air_temp": 1,
-        "show_wind_speed": 1,
-        "show_wind_direction": 1,
+        "show_air_temp": 0,
+        "show_wind_speed": 0,
+        "show_wind_direction": 0,
         "json_output": 0,
+        "show_rain_sum": 0,
+        "show_precipitation_prob": 0,
         "unit": "imperial",
         "decimal": extract_decimal(args),
         "forecast_days": get_forecast_days(args),
@@ -77,6 +79,10 @@ def set_output_values(args, arguments):  # noqa
         arguments["show_wind_speed"] = 1
     if "show_wind_direction" in args or "swd" in args:
         arguments["show_wind_direction"] = 1
+    if "show_rain_sum" in args or "srs" in args:
+        arguments["show_rain_sum"] = 1
+    if "show_precipitation_prob" in args or "spp" in args:
+        arguments["show_precipitation_prob"] = 1
 
     return arguments
 
@@ -156,13 +162,13 @@ def print_forecast(ocean, forecast):
             print("Air Temp Max: ", day[5])
         if int(ocean["show_air_temp"]) == 1:
             print("Air Temp Min: ", day[6])
-        if int(ocean["show_air_temp"]) == 1:
+        if int(ocean["show_rain_sum"]) == 1:
             print("Rain Sum: ", day[7])
-        if int(ocean["show_air_temp"]) == 1:
+        if int(ocean["show_precipitation_prob"]) == 1:
             print("Precipitation Probability: ", day[8], "%")
         if int(ocean["show_wind_speed"]) == 1:
             print("Max Wind Speed: ", day[9])
-        if int(ocean["show_wind_speed"]) == 1:
+        if int(ocean["show_wind_direction"]) == 1:
             print("Wind Direction ", day[10])
         print("\n")
 
