@@ -222,10 +222,12 @@ def forecast(lat, long, decimal, days=0):
 
     daily_data = {
         "date": pd.date_range(
-            start=pd.to_datetime(response_marine.Daily().Time(),
-                                 unit="s", utc=True),
-            end=pd.to_datetime(response_marine.Daily().TimeEnd(),
-                               unit="s", utc=True),
+            start=pd.to_datetime(
+                response_marine.Daily().Time(), unit="s", utc=True
+            ),
+            end=pd.to_datetime(
+                response_marine.Daily().TimeEnd(), unit="s", utc=True
+            ),
             freq=pd.Timedelta(seconds=response_marine.Daily().Interval()),
             inclusive="left",
         )
