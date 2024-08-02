@@ -150,14 +150,14 @@ def print_forecast(ocean, forecast):
     for day in transposed:
         if ocean["show_date"] == 1:
             print("Date: ", day[3])
+        if int(ocean["show_uv"]) == 1:
+            print("UV Index: ", day[4])
         if int(ocean["show_height"]) == 1:
             print("Wave Height: ", day[0])
         if int(ocean["show_direction"]) == 1:
             print("Wave Direction: ", day[1])
         if int(ocean["show_period"]) == 1:
             print("Wave Period: ", day[2])
-        if int(ocean["show_uv"]) == 1:
-            print("UV Index: ", day[4])
         if int(ocean["show_air_temp"]) == 1:
             print("Air Temp Max: ", day[5])
         if int(ocean["show_air_temp"]) == 1:
