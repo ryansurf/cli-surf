@@ -39,7 +39,7 @@ Arguments:
 
 Color Options:
 
-    default, red, green, yellow, blue, purple, teal, light_blue
+    default, red, green, yellow, blue, purple, teal, light_blue, black, cyan
 
 Examples:
 
