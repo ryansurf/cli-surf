@@ -132,7 +132,6 @@ def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
         "latitude": lat,
         "longitude": long,
         "current": ["temperature_2m", "wind_speed_10m", "wind_direction_10m"],
-        "daily": ["rain_sum", "precipitation_probability_max"],
         "temperature_unit": temp_unit,
         "wind_speed_unit": "mph",
     }
@@ -146,18 +145,38 @@ def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
     current_wind_speed = round(current.Variables(1).Value(), decimal)
     current_wind_direction = round(current.Variables(2).Value(), decimal)
 
-    # Daily Values. The order of variables needs to be the same as requested.
-    # This should be seperated into its own function in the future.
-    daily = response.Daily()
-    daily_rain_sum = round(daily.Variables(0).Value(), decimal)
-    daily_precipitation_probability = round(daily.Variables(1).Value(), decimal)
-
     return [current_temperature,
             current_wind_speed,
             current_wind_direction,
-            daily_rain_sum,
-            daily_precipitation_probability,
             ]
+
+
+def get_rain(lat, long, decimal):
+    """
+    Get rain data at coordinates (lat, long)
+    Calling the API here: https://open-meteo.com/en/docs
+    """
+    # Setup the Open-Meteo API client with cache and retry on error
+    cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
+    retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
+    openmeteo = openmeteo_requests.Client(session=retry_session)
+
+    url = "https://api.open-meteo.com/v1/forecast"
+    params = {
+        "latitude": lat,
+        "longitude": long,
+        "daily": ["rain_sum", "precipitation_probability_max"]
+    }
+    responses = openmeteo.weather_api(url, params=params)
+
+    response = responses[0]
+    # Process daily data. The order of variables needs to be the
+    # same as requested.
+    daily = response.Daily()
+    daily_rain_sum = daily.Variables(0).ValuesAsNumpy(), decimal
+    daily_precipitation_probability_max = daily.Variables(1).ValuesAsNumpy(), decimal
+
+    return daily_rain_sum[0][0], daily_precipitation_probability_max[0][0]
 
 
 def forecast(lat, long, decimal, days=0):
@@ -286,8 +305,10 @@ def gather_data(lat, long, arguments):
     uv_index = get_uv(lat, long, arguments["decimal"], arguments["unit"])
 
     wind_temp = current_wind_temp(lat, long, arguments["decimal"])
+
+    rain_data = get_rain(lat, long, arguments["decimal"])
     air_temp, wind_speed, wind_dir = wind_temp[0], wind_temp[1], wind_temp[2]
-    rain_sum, precipitation_probability_max = wind_temp[3], wind_temp[4]
+    rain_sum, precipitation_probability_max = rain_data[0], rain_data[1]
     arguments["ocean_data"] = ocean_data
     arguments["uv_index"] = uv_index
     spot_forecast = forecast(lat, long, arguments["decimal"], 7)
