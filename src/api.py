@@ -145,10 +145,11 @@ def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
     current_wind_speed = round(current.Variables(1).Value(), decimal)
     current_wind_direction = round(current.Variables(2).Value(), decimal)
 
-    return [current_temperature,
-            current_wind_speed,
-            current_wind_direction,
-            ]
+    return [
+        current_temperature,
+        current_wind_speed,
+        current_wind_direction,
+    ]
 
 
 def get_rain(lat, long, decimal):
@@ -165,7 +166,7 @@ def get_rain(lat, long, decimal):
     params = {
         "latitude": lat,
         "longitude": long,
-        "daily": ["rain_sum", "precipitation_probability_max"]
+        "daily": ["rain_sum", "precipitation_probability_max"],
     }
     responses = openmeteo.weather_api(url, params=params)
 
@@ -174,7 +175,10 @@ def get_rain(lat, long, decimal):
     # same as requested.
     daily = response.Daily()
     daily_rain_sum = daily.Variables(0).ValuesAsNumpy(), decimal
-    daily_precipitation_probability_max = daily.Variables(1).ValuesAsNumpy(), decimal
+    daily_precipitation_probability_max = (
+        daily.Variables(1).ValuesAsNumpy(),
+        decimal,
+    )
 
     return daily_rain_sum[0][0], daily_precipitation_probability_max[0][0]
 
