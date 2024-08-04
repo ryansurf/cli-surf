@@ -167,38 +167,38 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
 
 def print_forecast(ocean, forecast):
     """
-    Takes in list of forecast data and prints.
+    Takes in dict of forecast data and prints.
     forecast = list of lists detailed forecast data (should be a dict?)
     Each "day" is a tuple of data for that forecasted day
     """
-    print("FORECAST: ", forecast)
-    print("\n")
-    print("OCEAN: ", ocean)
-    transposed = list(zip(*forecast))
-    for day in transposed:
-        if ocean["show_date"] == 1:
-            print("Date: ", day[3])
-        if int(ocean["show_uv"]) == 1:
-            print("UV Index: ", day[4])
-        if int(ocean["show_height"]) == 1:
-            print("Wave Height: ", day[0])
-        if int(ocean["show_direction"]) == 1:
-            print("Wave Direction: ", day[1])
-        if int(ocean["show_period"]) == 1:
-            print("Wave Period: ", day[2])
-        if int(ocean["show_air_temp"]) == 1:
-            print("Air Temp Max: ", day[5])
-        if int(ocean["show_air_temp"]) == 1:
-            print("Air Temp Min: ", day[6])
-        if int(ocean["show_rain_sum"]) == 1:
-            print("Rain Sum: ", day[7])
-        if int(ocean["show_precipitation_prob"]) == 1:
-            print("Precipitation Probability: ", day[8], "%")
-        if int(ocean["show_wind_speed"]) == 1:
-            print("Max Wind Speed: ", day[9])
-        if int(ocean["show_wind_direction"]) == 1:
-            print("Wind Direction ", day[10])
+    # List of tuples mapping argument keys to ocean data keys and labels
+
+    mappings = [
+        ("show_date", "date", "Date: "),
+        ("show_uv", 'uv_index_max', "UV Index: "),
+        ("show_height", 'wave_height_max', "Wave Height: "),
+        ("show_direction", 'wave_direction_dominant', "Wave Direction: "),
+        ("show_period", 'wave_period_max', "Wave Period: "),
+        ("show_air_temp", 'temperature_2m_max', "Air Temp Max: "),
+        ("show_air_temp", 'temperature_2m_min', "Air Temp Min: "),
+        ("show_rain_sum", 'rain_sum', "Rain Sum: "),
+        ("show_precipitation_prob", 'precipitation_probability_max', "Precipitation Probability: "),
+        ("show_wind_speed", 'wind_speed_10m_max', "Max Wind Speed: "),
+        ("show_wind_direction", 'wind_direction_10m_dominant', "Wind Direction: "),
+    ]
+    
+    forecast_days = ocean['forecast_days']
+
+    for day in range(forecast_days):
+        for arg_key, data_key, label in mappings:
+            if int(ocean[arg_key]) == 1:
+                try:
+                    print(f"{label}{round(float(forecast[data_key][day]), ocean['decimal'])}")
+                except TypeError:
+                    print(f"{label}{forecast[data_key][day]}")
         print("\n")
+
+
 
 
 def extract_decimal(args):
@@ -273,7 +273,7 @@ def print_outputs(city, ocean_data_dict, arguments, gpt_prompt, gpt_info):
         ocean_data_dict["Lat"],
         ocean_data_dict["Long"],
         arguments["decimal"],
-        arguments["forecast_days"],
+        arguments['forecast_days'],
     )
     # Prints the forecast(if activated in CLI args)
     print_forecast(arguments, forecast)
@@ -292,41 +292,29 @@ def set_location(location):
     return city, lat, long
 
 
-def forecast_to_json(data, decimal):
+def forecast_to_json(forecast_data, decimal):
     """
-    Takes forecast() as input and returns it in JSON format
+    Takes forecast_data from forecast() as input 
+    and returns it in JSON format
     """
-    (
-        surf_height,
-        swell_direction,
-        swell_period,
-        dates,
-        uv_index,
-        temp_max,
-        temp_min,
-        rain_sum,
-        precipitation_probability,
-        wind_speed,
-        wind_direction_dominant,
-    ) = data
     # Formatting into JSON
     forecasts = []
-    for i in range(len(dates)):
+    for i in range(len(forecast_data["date"])):
         forecast = {
-            "date": str(dates[i].date()),
-            "surf height": round(float(surf_height[i]), decimal),
-            "swell direction": round(float(swell_direction[i]), decimal),
-            "swell period": round(float(swell_period[i]), decimal),
-            "uv index": round(float(uv_index[i]), decimal),
-            "temperature_2m_max": round(float(temp_max[i]), decimal),
-            "temperature_2m_min": round(float(temp_min[i]), decimal),
-            "rain_sum": round(float(rain_sum[i]), decimal),
+            "date": str(forecast_data["date"][i].date()),
+            "surf height": round(float(forecast_data['wave_height_max'][i]), decimal),
+            "swell direction": round(float(forecast_data['wave_direction_dominant'][i]), decimal),
+            "swell period": round(float(forecast_data['wave_period_max'][i]), decimal),
+            "uv index": round(float(forecast_data['uv_index_max'][i]), decimal),
+            "temperature_2m_max": round(float(forecast_data['temperature_2m_max'][i]), decimal),
+            "temperature_2m_min": round(float(forecast_data['temperature_2m_min'][i]), decimal),
+            "rain_sum": round(float(forecast_data['rain_sum'][i]), decimal),
             "daily_precipitation_probability": round(
-                float(precipitation_probability[i]), decimal
+                float(forecast_data['precipitation_probability_max'][i]), decimal
             ),
-            "wind_speed_max": round(float(wind_speed[i]), decimal),
+            "wind_speed_max": round(float(forecast_data['wind_speed_10m_max'][i]), decimal),
             "wind_direction_10m_dominant": round(
-                float(wind_direction_dominant[i]), decimal
+                float(forecast_data['wind_direction_10m_dominant'][i]), decimal
             ),
         }
         forecasts.append(forecast)
