@@ -140,6 +140,11 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
         print("Wind Speed: ", ocean_data_dict["Wind Speed"])
     if int(arguments_dict["show_wind_direction"]) == 1:
         print("Wind Direction: ", ocean_data_dict["Wind Direction"])
+    if int(arguments_dict["show_rain_sum"]) == 1:
+        print("Rain Sum: ", ocean_data_dict["Rain Sum"])
+    if int(arguments_dict["show_precipitation_prob"]) == 1:
+        print("Precipitation Probability Max: ",
+               ocean_data_dict["Precipitation Probability Max"])
 
 
 def print_forecast(ocean, forecast):
