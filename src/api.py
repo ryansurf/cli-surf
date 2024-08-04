@@ -132,9 +132,9 @@ def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
         "latitude": lat,
         "longitude": long,
         "current": ["temperature_2m", "wind_speed_10m", "wind_direction_10m"],
+        "daily": ["rain_sum", "precipitation_probability_max"],
         "temperature_unit": temp_unit,
         "wind_speed_unit": "mph",
-        "precipitation_unit": "inch",
     }
     responses = openmeteo.weather_api(url, params=params)
 
@@ -146,7 +146,18 @@ def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
     current_wind_speed = round(current.Variables(1).Value(), decimal)
     current_wind_direction = round(current.Variables(2).Value(), decimal)
 
-    return current_temperature, current_wind_speed, current_wind_direction
+    # Daily Values. The order of variables needs to be the same as requested.
+    # This should be seperated into its own function in the future.
+    daily = response.Daily()
+    daily_rain_sum = round(daily.Variables(0).Value(), decimal)
+    daily_precipitation_probability = round(daily.Variables(1).Value(), decimal)
+
+    return [current_temperature,
+            current_wind_speed,
+            current_wind_direction,
+            daily_rain_sum,
+            daily_precipitation_probability,
+            ]
 
 
 def forecast(lat, long, decimal, days=0):
@@ -276,7 +287,7 @@ def gather_data(lat, long, arguments):
 
     wind_temp = current_wind_temp(lat, long, arguments["decimal"])
     air_temp, wind_speed, wind_dir = wind_temp[0], wind_temp[1], wind_temp[2]
-
+    rain_sum, precipitation_probability_max = wind_temp[3], wind_temp[4]
     arguments["ocean_data"] = ocean_data
     arguments["uv_index"] = uv_index
     spot_forecast = forecast(lat, long, arguments["decimal"], 7)
@@ -297,6 +308,8 @@ def gather_data(lat, long, arguments):
         "Wind Direction": wind_dir,
         "Forecast": json_forecast,
         "Unit": arguments["unit"],
+        "Rain Sum": rain_sum,
+        "Precipitation Probability Max": precipitation_probability_max,
     }
     return ocean_data_dict
 
