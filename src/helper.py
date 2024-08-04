@@ -49,11 +49,11 @@ def arguments_dictionary(lat, long, city, args):
 def set_output_values(args, arguments_dictionary):  # noqa
     """
     Takes a list of command line arguments(args)
-    and sets the appropritate values in the 
+    and sets the appropritate values in the
     arguments_dictionary(show_wave = 1, etc).
     Returns the arguments_dictionary dict with the updated CLI args
     """
-    #map of arguments to dictionary keys & values
+    # map of arguments to dictionary keys & values
     mappings = {
         "hide_wave": ("show_wave", 0),
         "hw": ("show_wave", 0),
@@ -90,7 +90,8 @@ def set_output_values(args, arguments_dictionary):  # noqa
     }
 
     # Update arguments_dictionary based on the cli arguments in args
-    # Ex: If "hide_uv" in args, "show_uv" will be set to 0 in arguments_dictionary
+    # Ex: If "hide_uv" in args,
+    # "show_uv" will be set to 0 in arguments_dictionary
     for arg in args:
         if arg in mappings:
             key, value = mappings[arg]
@@ -101,7 +102,7 @@ def set_output_values(args, arguments_dictionary):  # noqa
 
 def seperate_args(args):
     """
-    Args are seperated by commas in input. Sereperat them and return list
+    Args are seperated by commas in input. Seperate them and return list
     """
     if len(args) > 1:
         new_args = args[1].split(",")
@@ -138,33 +139,41 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
     """
     Prints ocean data(height, wave direction, period, etc)
     """
-    if int(arguments_dict["show_uv"]) == 1:
-        print("UV index: ", ocean_data_dict["UV Index"])
-    if int(arguments_dict["show_height"]) == 1:
-        print("Wave Height: ", ocean_data_dict["Height"])
-    if int(arguments_dict["show_direction"]) == 1:
-        print("Wave Direction: ", ocean_data_dict["Swell Direction"])
-    if int(arguments_dict["show_period"]) == 1:
-        print("Wave Period: ", ocean_data_dict["Period"])
-    if int(arguments_dict["show_air_temp"]) == 1:
-        print("Air Temp: ", ocean_data_dict["Air Temperature"])
-    if int(arguments_dict["show_wind_speed"]) == 1:
-        print("Wind Speed: ", ocean_data_dict["Wind Speed"])
-    if int(arguments_dict["show_wind_direction"]) == 1:
-        print("Wind Direction: ", ocean_data_dict["Wind Direction"])
-    if int(arguments_dict["show_rain_sum"]) == 1:
-        print("Rain Sum: ", ocean_data_dict["Rain Sum"])
-    if int(arguments_dict["show_precipitation_prob"]) == 1:
-        print(
+
+    # List of tuples mapping argument keys to ocean data keys and labels
+    mappings = [
+        ("show_uv", "UV Index", "UV index: "),
+        ("show_height", "Height", "Wave Height: "),
+        ("show_direction", "Swell Direction", "Wave Direction: "),
+        ("show_period", "Period", "Wave Period: "),
+        ("show_air_temp", "Air Temperature", "Air Temp: "),
+        ("show_wind_speed", "Wind Speed", "Wind Speed: "),
+        ("show_wind_direction", "Wind Direction", "Wind Direction: "),
+        ("show_rain_sum", "Rain Sum", "Rain Sum: "),
+        (
+            "show_precipitation_prob",
+            "Precipitation Probability Max",
             "Precipitation Probability Max: ",
-            ocean_data_dict["Precipitation Probability Max"],
-        )
+        ),
+    ]
+
+    # arg_key example: "show_height : 1" from arguments_dict
+    # data_key example: "Height : 2.4" from ocean_data_dict
+    # Label example: "Wave Period: "
+    for arg_key, data_key, label in mappings:
+        if int(arguments_dict[arg_key]) == 1:
+            print(f"{label}{ocean_data_dict[data_key]}")
 
 
 def print_forecast(ocean, forecast):
     """
-    Takes in list of forecast data and prints
+    Takes in list of forecast data and prints.
+    forecast = list of lists detailed forecast data (should be a dict?)
+    Each "day" is a tuple of data for that forecasted day
     """
+    print("FORECAST: ", forecast)
+    print("\n")
+    print("OCEAN: ", ocean)
     transposed = list(zip(*forecast))
     for day in transposed:
         if ocean["show_date"] == 1:
@@ -238,7 +247,7 @@ def json_output(data_dict):
     return data_dict
 
 
-def print_outputs(city, data_dict, arguments, gpt_prompt, gpt_info):
+def print_outputs(city, ocean_data_dict, arguments, gpt_prompt, gpt_info):
     """
     Basically the main printing function,
     calls all the other printing functions
@@ -246,8 +255,8 @@ def print_outputs(city, data_dict, arguments, gpt_prompt, gpt_info):
     print("\n")
     if city == "No data":
         print("No location found")
-    if data_dict["Height"] == "No data":
-        print(data_dict["Lat"], data_dict["Long"])
+    if ocean_data_dict["Height"] == "No data":
+        print(ocean_data_dict["Lat"], ocean_data_dict["Long"])
         print("No ocean data at this location.")
     else:
         # Location is found, print details
@@ -258,11 +267,11 @@ def print_outputs(city, data_dict, arguments, gpt_prompt, gpt_info):
             arguments["color"],
         )
         # Prints(Height: <>, Period: <>, etc.)
-        print_ocean_data(arguments, data_dict)
+        print_ocean_data(arguments, ocean_data_dict)
     print("\n")
     forecast = api.forecast(
-        data_dict["Lat"],
-        data_dict["Long"],
+        ocean_data_dict["Lat"],
+        ocean_data_dict["Long"],
         arguments["decimal"],
         arguments["forecast_days"],
     )
@@ -270,7 +279,7 @@ def print_outputs(city, data_dict, arguments, gpt_prompt, gpt_info):
     print_forecast(arguments, forecast)
     # Checks if GPT in args, prints GPT response if True
     if arguments["gpt"] == 1:
-        gpt_response = print_gpt(data_dict, gpt_prompt, gpt_info)
+        gpt_response = print_gpt(ocean_data_dict, gpt_prompt, gpt_info)
         print(gpt_response)
 
 
