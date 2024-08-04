@@ -140,7 +140,6 @@ def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
         "current": ["temperature_2m", "wind_speed_10m", "wind_direction_10m"],
         "temperature_unit": temp_unit,
         "wind_speed_unit": "mph",
-        "precipitation_unit": "inch",
     }
     responses = openmeteo.weather_api(url, params=params)
 
@@ -152,7 +151,42 @@ def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
     current_wind_speed = round(current.Variables(1).Value(), decimal)
     current_wind_direction = round(current.Variables(2).Value(), decimal)
 
-    return current_temperature, current_wind_speed, current_wind_direction
+    return [
+        current_temperature,
+        current_wind_speed,
+        current_wind_direction,
+    ]
+
+
+def get_rain(lat, long, decimal):
+    """
+    Get rain data at coordinates (lat, long)
+    Calling the API here: https://open-meteo.com/en/docs
+    """
+    # Setup the Open-Meteo API client with cache and retry on error
+    cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
+    retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
+    openmeteo = openmeteo_requests.Client(session=retry_session)
+
+    url = "https://api.open-meteo.com/v1/forecast"
+    params = {
+        "latitude": lat,
+        "longitude": long,
+        "daily": ["rain_sum", "precipitation_probability_max"],
+    }
+    responses = openmeteo.weather_api(url, params=params)
+
+    response = responses[0]
+    # Process daily data. The order of variables needs to be the
+    # same as requested.
+    daily = response.Daily()
+    daily_rain_sum = daily.Variables(0).ValuesAsNumpy(), decimal
+    daily_precipitation_probability_max = (
+        daily.Variables(1).ValuesAsNumpy(),
+        decimal,
+    )
+
+    return daily_rain_sum[0][0], daily_precipitation_probability_max[0][0]
 
 
 def forecast(lat, long, decimal, days=0):
@@ -183,42 +217,88 @@ def forecast(lat, long, decimal, days=0):
         "forecast_days": days,
     }
 
-    params_uv = {"latitude": lat, "longitude": long, "daily": "uv_index_max"}
+    params_general = {
+        "latitude": lat,
+        "longitude": long,
+        "daily": [
+            "uv_index_max",
+            "temperature_2m_max",
+            "temperature_2m_min",
+            "rain_sum",
+            "precipitation_probability_max",
+            "wind_speed_10m_max",
+            "wind_direction_10m_dominant",
+        ],
+        "temperature_unit": "fahrenheit",
+        "wind_speed_unit": "mph",
+        "precipitation_unit": "inch",
+        "timezone": "auto",
+        "forecast_days": days,
+    }
 
-    responses = openmeteo.weather_api(urls[0], params=params)
-    responses_uv = openmeteo.weather_api(urls[1], params=params_uv)
+    responses_marine = openmeteo.weather_api(urls[0], params=params)
+    responses_general = openmeteo.weather_api(urls[1], params=params_general)
 
-    response = responses[0]
-    response_uv = responses_uv[0]
+    response_marine = responses_marine[0]
+    response_general = responses_general[0]
 
-    daily_height_max = helper.round_decimal(
-        response.Daily().Variables(0).ValuesAsNumpy(), decimal
-    )
-    daily_direction_dominant = helper.round_decimal(
-        response.Daily().Variables(1).ValuesAsNumpy(), decimal
-    )
-    daily_period_max = helper.round_decimal(
-        response.Daily().Variables(2).ValuesAsNumpy(), decimal
-    )
+    # Extract marine data using a loop
+    marine_data = [
+        helper.round_decimal(
+            response_marine.Daily().Variables(i).ValuesAsNumpy(), decimal
+        )
+        for i in range(3)
+    ]
 
-    daily_uv_index_max = helper.round_decimal(
-        response_uv.Daily().Variables(0).ValuesAsNumpy(), decimal
-    )
+    # Extract general weather data using a loop to reduce number of local
+    # variables
+
+    general_data = [
+        helper.round_decimal(
+            response_general.Daily().Variables(i).ValuesAsNumpy(), decimal
+        )
+        for i in range(7)
+    ]
 
     daily_data = {
         "date": pd.date_range(
-            start=pd.to_datetime(response.Daily().Time(), unit="s", utc=True),
-            end=pd.to_datetime(response.Daily().TimeEnd(), unit="s", utc=True),
-            freq=pd.Timedelta(seconds=response.Daily().Interval()),
+            start=pd.to_datetime(
+                response_marine.Daily().Time(), unit="s", utc=True
+            ),
+            end=pd.to_datetime(
+                response_marine.Daily().TimeEnd(), unit="s", utc=True
+            ),
+            freq=pd.Timedelta(seconds=response_marine.Daily().Interval()),
             inclusive="left",
         )
     }
+
+    forecast_data = {
+        "date": daily_data["date"],
+        "wave_height_max": marine_data[0],
+        "wave_direction_dominant": marine_data[1],
+        "wave_period_max": marine_data[2],
+        "uv_index_max": general_data[0],
+        "temperature_2m_max": general_data[1],
+        "temperature_2m_min": general_data[2],
+        "rain_sum": general_data[3],
+        "precipitation_probability_max": general_data[4],
+        "wind_speed_10m_max": general_data[5],
+        "wind_direction_10m_dominant": general_data[6],
+    }
+
     return [
-        daily_height_max,
-        daily_direction_dominant,
-        daily_period_max,
+        forecast_data["wave_height_max"],
+        forecast_data["wave_direction_dominant"],
+        forecast_data["wave_period_max"],
         daily_data["date"],
-        daily_uv_index_max,
+        forecast_data["uv_index_max"],
+        forecast_data["temperature_2m_max"],
+        forecast_data["temperature_2m_min"],
+        forecast_data["rain_sum"],
+        forecast_data["precipitation_probability_max"],
+        forecast_data["wind_speed_10m_max"],
+        forecast_data["wind_direction_10m_dominant"],
     ]
 
 
@@ -235,8 +315,10 @@ def gather_data(lat, long, arguments):
     uv_index = get_uv(lat, long, arguments["decimal"], arguments["unit"])
 
     wind_temp = current_wind_temp(lat, long, arguments["decimal"])
-    air_temp, wind_speed, wind_dir = wind_temp[0], wind_temp[1], wind_temp[2]
 
+    rain_data = get_rain(lat, long, arguments["decimal"])
+    air_temp, wind_speed, wind_dir = wind_temp[0], wind_temp[1], wind_temp[2]
+    rain_sum, precipitation_probability_max = rain_data[0], rain_data[1]
     arguments["ocean_data"] = ocean_data
     arguments["uv_index"] = uv_index
     spot_forecast = forecast(lat, long, arguments["decimal"], 7)
@@ -257,6 +339,8 @@ def gather_data(lat, long, arguments):
         "Wind Direction": wind_dir,
         "Forecast": json_forecast,
         "Unit": arguments["unit"],
+        "Rain Sum": rain_sum,
+        "Precipitation Probability Max": precipitation_probability_max,
     }
     return ocean_data_dict
 

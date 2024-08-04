@@ -45,6 +45,8 @@ Wave Period:  9.8
 | show_air_temp / sat   | Show the air temp   | 
 | show_wind_speed / sws   | Show the wind speed   | 
 | show_wind_direction / swd   | Show the wind direction   | 
+| show_rain_sum / srs   | Show the rain sum   |
+| show_precipitation_prob / spp   | Show the max precipitation chance   |
 | hide_uv / huv    | Hide uv index   | 
 | hide_height / hh    | Hide surf height   | 
 | hide_direction / hdir    | Hide Swell direction    | 
