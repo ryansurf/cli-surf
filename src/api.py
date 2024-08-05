@@ -180,7 +180,10 @@ def get_rain(lat, long, decimal):
         decimal,
     )
 
-    return daily_rain_sum[0][0], daily_precipitation_probability_max[0][0]
+    return(
+        float(daily_rain_sum[0][0]), 
+        float(daily_precipitation_probability_max[0][0])
+    ) 
 
 
 def forecast(lat, long, decimal, days=0):

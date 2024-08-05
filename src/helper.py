@@ -241,6 +241,7 @@ def round_decimal(round_list, decimal):
 def json_output(data_dict):
     """
     If JSON=TRUE in .args, we print and return the JSON data
+    Data dict includes current & forecast data
     """
     json_out = json.dumps(data_dict, indent=4)
     print(json_out)
