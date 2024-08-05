@@ -186,10 +186,10 @@ def get_rain(lat, long, decimal):
         decimal,
     )
 
-    return(
-        float(daily_rain_sum[0][0]), 
-        float(daily_precipitation_probability_max[0][0])
-    ) 
+    return (
+        float(daily_rain_sum[0][0]),
+        float(daily_precipitation_probability_max[0][0]),
+    )
 
 
 def forecast(lat, long, decimal, days=0):
@@ -288,7 +288,7 @@ def forecast(lat, long, decimal, days=0):
         "precipitation_probability_max": general_data[4],
         "wind_speed_10m_max": general_data[5],
         "wind_direction_10m_dominant": general_data[6],
-        "daily_data": daily_data["date"]
+        "daily_data": daily_data["date"],
     }
 
     return forecast_data

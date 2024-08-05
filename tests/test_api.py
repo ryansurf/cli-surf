@@ -42,7 +42,9 @@ def test_forecast():
     """
     len_of_forecast_list = 7
     fc = forecast(26.705, -80.036, 1, 7)
-    heights, directions, periods = fc[0], fc[1], fc[2]
+    heights = fc["wave_height_max"]
+    directions = fc["wave_direction_dominant"]
+    periods = fc["wave_period_max"]
     assert len(heights) == len_of_forecast_list
     assert len(directions) == len_of_forecast_list
     assert len(periods) == len_of_forecast_list
