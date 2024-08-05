@@ -8,6 +8,7 @@ import io
 from unittest.mock import patch
 
 from src.helper import extract_decimal
+from src import cli
 
 
 def test_invalid_input():
@@ -27,3 +28,17 @@ def test_default_input():
     """
     decimal = extract_decimal([])
     assert 1 == decimal
+
+def test_json_output():
+    """
+    Passing "JSON" as an argument to cli.run,
+    we check if a JSON object returns.
+    We also check for expected outputs,
+    like a lat that is a float/int
+    """
+    # Hardcode lat and long for location.
+    # If not, when test are ran in Github Actions
+    # We get an error(because server probably isn't near ocean)
+    json_output = cli.run(36.95, -121.97, ["", "json"])
+    assert type(json_output["Lat"]) in (int, float)
+    assert type(json_output["Location"]) == str
