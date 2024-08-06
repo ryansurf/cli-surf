@@ -197,9 +197,16 @@ Questions? Comments?
 
 ## ✨ Contributors
 
-<a href="https://github.com/ryansurf/cli-surf/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=ryansurf/cli-surf" />
-</a>
+[![All Contributors](https://img.shields.io/github/all-contributors/ryansurf/cli-surf?color=ee8449&style=flat-square)](#contributors)
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 
 ## License
