@@ -49,7 +49,7 @@ make output_coverage_docker
 ```
 Additionally, when a PR is raised, pytest will be executed by the GitHub Actions CI.
 
-## Adding youself to the contributors list
+## Adding yourself to the contributors list
 
 On your issue/PR, simply ask the `@all-contributors` bot to add yourself!
 
