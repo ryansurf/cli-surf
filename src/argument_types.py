@@ -120,5 +120,27 @@ class ArgumentMappings(BaseModel):
         "show_precipitation_prob": ["spp"]
     }
 
+    @classmethod
+    def generate_mappings(cls) -> dict[str, str]:
+        """
+        Flatten the alias map to create a mapping from each alias to the field
+        name
+        """""
+        mappings = {}
+        for field_name, aliases in cls.alias_map.items():
+            for alias in aliases:
+                mappings[alias] = field_name
+        return mappings
+
+    @classmethod
+    def parse_input(cls, data: dict) -> dict:
+        alias_to_field_map = cls.generate_mappings()
+        remapped_data = {}
+        for key, value in data.items():
+            field_name = alias_to_field_map.get(key, key)
+            remapped_data[field_name] = value
+
+        return remapped_data
+
     class Config:
         allow_population_by_field_name = True
