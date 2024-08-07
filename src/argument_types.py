@@ -1,10 +1,13 @@
 # arguments.py
-from typing import Dict, Literal
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
 
 class Arguments(BaseModel):
+    """
+    Define arguments
+    """
     lat: float
     long: float
     city: str
@@ -30,95 +33,92 @@ class Arguments(BaseModel):
 
 
 class ArgumentMappings(BaseModel):
+    """
+    Class for argument mappings with multiple aliases.
+    """
     show_wave: bool = Field(
         default=True,
         description="Show wave information",
-        aliases=["sw", "hide_wave", "hw"]
     )
     show_large_wave: bool = Field(
         default=False,
         description="Show large wave information",
-        aliases=["slw"]
     )
     show_uv: bool = Field(
         default=True,
         description="Show UV information",
-        aliases=["suv", "hide_uv", "huv"]
     )
     show_height: bool = Field(
         default=True,
         description="Show wave height information",
-        aliases=["sh", "hide_height", "hh"]
     )
     show_direction: bool = Field(
         default=True,
         description="Show wave direction information",
-        aliases=["sd", "hide_direction", "hdir"]
     )
     show_period: bool = Field(
         default=True,
         description="Show wave period information",
-        aliases=["sp", "hide_period", "hp"]
     )
     show_city: bool = Field(
         default=True,
         description="Show city information",
-        aliases=["sc", "hide_location", "hl"]
     )
     show_date: bool = Field(
         default=True,
         description="Show date information",
-        aliases=["sdate", "hide_date", "hdate"]
     )
     unit: Literal["imperial", "metric"] = Field(
         default="imperial",
         description="Set unit system",
-        aliases=["m", "metric"]
     )
     json_output: bool = Field(
         default=False,
         description="Enable JSON output",
-        aliases=["j", "json"]
     )
     gpt: bool = Field(
         default=False,
         description="Enable GPT functionality",
-        aliases=["g"]
     )
     show_air_temp: bool = Field(
         default=False,
         description="Show air temperature",
-        aliases=["sat"]
     )
     show_wind_speed: bool = Field(
         default=False,
         description="Show wind speed",
-        aliases=["sws"]
         )
     show_wind_direction: bool = Field(
         default=False,
         description="Show wind direction",
-        aliases=["swd"]
     )
     show_rain_sum: bool = Field(
         default=False,
         description="Show rain sum",
-        aliases=["srs"]
     )
     show_precipitation_prob: bool = Field(
         default=False,
         description="Show precipitation probability",
-        aliases=["spp"]
     )
 
-    @classmethod
-    def generate_mappings(cls) -> Dict[str, str]:
-        mappings = {}
-        for field_name, field in cls.model_fields.items():
-            mappings[field_name] = field_name
-            for alias in field.alias_priority or []:
-                mappings[alias] = field_name
-        return mappings
+    alias_map = {
+        "show_wave": ["sw", "hide_wave", "hw"],
+        "show_large_wave": ["slw"],
+        "show_uv": ["suv", "hide_uv", "huv"],
+        "show_height": ["sh", "hide_height", "hh"],
+        "show_direction": ["sd", "hide_direction", "hdir"],
+        "show_period": ["sp", "hide_period", "hp"],
+        "show_city": ["sc", "hide_location", "hl"],
+        "show_date": ["sdate", "hide_date", "hdate"],
+        "unit": ["m", "metric"],
+        "json_output": ["j", "json"],
+        "gpt": ["g"],
+        "show_air_temp": ["sat"],
+        "show_wind_speed": ["sws"],
+        "show_wind_direction": ["swd"],
+        "show_rain_sum": ["srs"],
+        "show_precipitation_prob": ["spp"]
+    }
 
     class Config:
         allow_population_by_field_name = True
