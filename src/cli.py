@@ -5,6 +5,7 @@ Main module
 import sys
 
 from src import api, helper, settings
+from src.argument_types import ArgumentMappings, Arguments
 
 # Load environment variables from .env file
 env = settings.GPTSettings()
@@ -25,8 +26,13 @@ def run(lat=0, long=0, args=None):
     else:
         args = helper.seperate_args(args)
 
+    parsed_arguments = ArgumentMappings.parse(args)
+
+    arguments = Arguments(**parsed_arguments)
+
     #  return coordinates, lat, long, city
     location = api.seperate_args_and_get_location(args)
+    print(arguments.city)
 
     # Set location returns: city, lat, long
     set_location = helper.set_location(location)
