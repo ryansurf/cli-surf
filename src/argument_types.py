@@ -1,5 +1,4 @@
-# arguments.py
-from typing import Literal
+from typing import ClassVar, Literal
 
 from pydantic import BaseModel, Field
 
@@ -87,7 +86,7 @@ class ArgumentMappings(BaseModel):
     show_wind_speed: bool = Field(
         default=False,
         description="Show wind speed",
-        )
+    )
     show_wind_direction: bool = Field(
         default=False,
         description="Show wind direction",
@@ -101,7 +100,7 @@ class ArgumentMappings(BaseModel):
         description="Show precipitation probability",
     )
 
-    alias_map = {
+    alias_map: ClassVar[dict[str, list[str]]] = {
         "show_wave": ["sw", "hide_wave", "hw"],
         "show_large_wave": ["slw"],
         "show_uv": ["suv", "hide_uv", "huv"],
@@ -125,7 +124,7 @@ class ArgumentMappings(BaseModel):
         """
         Flatten the alias map to create a mapping from each alias to the field
         name
-        """""
+        """
         mappings = {}
         for field_name, aliases in cls.alias_map.items():
             for alias in aliases:
@@ -145,11 +144,11 @@ class ArgumentMappings(BaseModel):
     @classmethod
     def set_output_values(cls, args, arguments_dictionary: dict) -> dict:
         """
-            Takes a list of command line arguments(args)
-            and sets the appropritate values in the
-            arguments_dictionary(show_wave = 1, etc).
-            Returns the arguments_dictionary dict with the updated CLI args
-            """
+        Takes a list of command line arguments(args)
+        and sets the appropriate values in the
+        arguments_dictionary(show_wave = 1, etc).
+        Returns the arguments_dictionary dict with the updated CLI args
+        """
         # map of arguments to dictionary keys & values
         mappings = {
             "hide_wave": ("show_wave", 0),
@@ -196,4 +195,4 @@ class ArgumentMappings(BaseModel):
         return arguments_dictionary
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
