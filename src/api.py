@@ -186,7 +186,10 @@ def get_rain(lat, long, decimal):
         decimal,
     )
 
-    return daily_rain_sum[0][0], daily_precipitation_probability_max[0][0]
+    return (
+        float(daily_rain_sum[0][0]),
+        float(daily_precipitation_probability_max[0][0]),
+    )
 
 
 def forecast(lat, long, decimal, days=0):
@@ -204,7 +207,7 @@ def forecast(lat, long, decimal, days=0):
         "https://marine-api.open-meteo.com/v1/marine",
         "https://api.open-meteo.com/v1/forecast",
     )
-    params = {
+    params_marine = {
         "latitude": lat,
         "longitude": long,
         "daily": [
@@ -236,7 +239,7 @@ def forecast(lat, long, decimal, days=0):
         "forecast_days": days,
     }
 
-    responses_marine = openmeteo.weather_api(urls[0], params=params)
+    responses_marine = openmeteo.weather_api(urls[0], params=params_marine)
     responses_general = openmeteo.weather_api(urls[1], params=params_general)
 
     response_marine = responses_marine[0]
@@ -285,21 +288,10 @@ def forecast(lat, long, decimal, days=0):
         "precipitation_probability_max": general_data[4],
         "wind_speed_10m_max": general_data[5],
         "wind_direction_10m_dominant": general_data[6],
+        "daily_data": daily_data["date"],
     }
 
-    return [
-        forecast_data["wave_height_max"],
-        forecast_data["wave_direction_dominant"],
-        forecast_data["wave_period_max"],
-        daily_data["date"],
-        forecast_data["uv_index_max"],
-        forecast_data["temperature_2m_max"],
-        forecast_data["temperature_2m_min"],
-        forecast_data["rain_sum"],
-        forecast_data["precipitation_probability_max"],
-        forecast_data["wind_speed_10m_max"],
-        forecast_data["wind_direction_10m_dominant"],
-    ]
+    return forecast_data
 
 
 def gather_data(lat, long, arguments):

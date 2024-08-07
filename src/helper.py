@@ -13,7 +13,9 @@ from src import api, art, gpt
 
 def arguments_dictionary(lat, long, city, args):
     """
-    Dictionary to keep cli argument values
+    Dictionary to keep cli argument values.
+    Returns the arguments dictionary, updated with
+    command line arguments
     """
     arguments = {
         "lat": lat,
@@ -44,52 +46,63 @@ def arguments_dictionary(lat, long, city, args):
     return arguments
 
 
-def set_output_values(args, arguments):  # noqa
+def set_output_values(args, arguments_dictionary):  # noqa
     """
     Takes a list of command line arguments(args)
-    and sets the appropritate values
-    in the arguments dictionary(show_wave = 1, etc).
-    Returns the arguments dict with the updated CLI args
+    and sets the appropritate values in the
+    arguments_dictionary(show_wave = 1, etc).
+    Returns the arguments_dictionary dict with the updated CLI args
     """
-    if "hide_wave" in args or "hw" in args:
-        arguments["show_wave"] = 0
-    if "show_large_wave" in args or "slw" in args:
-        arguments["show_large_wave"] = 1
-    if "hide_uv" in args or "huv" in args:
-        arguments["show_uv"] = 0
-    if "hide_height" in args or "hh" in args:
-        arguments["show_height"] = 0
-    if "hide_direction" in args or "hdir" in args:
-        arguments["show_direction"] = 0
-    if "hide_period" in args or "hp" in args:
-        arguments["show_period"] = 0
-    if "hide_location" in args or "hl" in args:
-        arguments["show_city"] = 0
-    if "hide_date" in args or "hdate" in args:
-        arguments["show_date"] = 0
-    if "metric" in args or "m" in args:
-        arguments["unit"] = "metric"
-    if "json" in args or "j" in args:
-        arguments["json_output"] = 1
-    if "gpt" in args or "g" in args:
-        arguments["gpt"] = 1
-    if "show_air_temp" in args or "sat" in args:
-        arguments["show_air_temp"] = 1
-    if "show_wind_speed" in args or "sws" in args:
-        arguments["show_wind_speed"] = 1
-    if "show_wind_direction" in args or "swd" in args:
-        arguments["show_wind_direction"] = 1
-    if "show_rain_sum" in args or "srs" in args:
-        arguments["show_rain_sum"] = 1
-    if "show_precipitation_prob" in args or "spp" in args:
-        arguments["show_precipitation_prob"] = 1
+    # map of arguments to dictionary keys & values
+    mappings = {
+        "hide_wave": ("show_wave", 0),
+        "hw": ("show_wave", 0),
+        "show_large_wave": ("show_large_wave", 1),
+        "slw": ("show_large_wave", 1),
+        "hide_uv": ("show_uv", 0),
+        "huv": ("show_uv", 0),
+        "hide_height": ("show_height", 0),
+        "hh": ("show_height", 0),
+        "hide_direction": ("show_direction", 0),
+        "hdir": ("show_direction", 0),
+        "hide_period": ("show_period", 0),
+        "hp": ("show_period", 0),
+        "hide_location": ("show_city", 0),
+        "hl": ("show_city", 0),
+        "hide_date": ("show_date", 0),
+        "hdate": ("show_date", 0),
+        "metric": ("unit", "metric"),
+        "m": ("unit", "metric"),
+        "json": ("json_output", 1),
+        "j": ("json_output", 1),
+        "gpt": ("gpt", 1),
+        "g": ("gpt", 1),
+        "show_air_temp": ("show_air_temp", 1),
+        "sat": ("show_air_temp", 1),
+        "show_wind_speed": ("show_wind_speed", 1),
+        "sws": ("show_wind_speed", 1),
+        "show_wind_direction": ("show_wind_direction", 1),
+        "swd": ("show_wind_direction", 1),
+        "show_rain_sum": ("show_rain_sum", 1),
+        "srs": ("show_rain_sum", 1),
+        "show_precipitation_prob": ("show_precipitation_prob", 1),
+        "spp": ("show_precipitation_prob", 1),
+    }
 
-    return arguments
+    # Update arguments_dictionary based on the cli arguments in args
+    # Ex: If "hide_uv" in args,
+    # "show_uv" will be set to 0 in arguments_dictionary
+    for arg in args:
+        if arg in mappings:
+            key, value = mappings[arg]
+            arguments_dictionary[key] = value
+
+    return arguments_dictionary
 
 
 def seperate_args(args):
     """
-    Args are seperated by commas in input. Sereperat them and return list
+    Args are seperated by commas in input. Seperate them and return list
     """
     if len(args) > 1:
         new_args = args[1].split(",")
@@ -126,57 +139,73 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
     """
     Prints ocean data(height, wave direction, period, etc)
     """
-    if int(arguments_dict["show_uv"]) == 1:
-        print("UV index: ", ocean_data_dict["UV Index"])
-    if int(arguments_dict["show_height"]) == 1:
-        print("Wave Height: ", ocean_data_dict["Height"])
-    if int(arguments_dict["show_direction"]) == 1:
-        print("Wave Direction: ", ocean_data_dict["Swell Direction"])
-    if int(arguments_dict["show_period"]) == 1:
-        print("Wave Period: ", ocean_data_dict["Period"])
-    if int(arguments_dict["show_air_temp"]) == 1:
-        print("Air Temp: ", ocean_data_dict["Air Temperature"])
-    if int(arguments_dict["show_wind_speed"]) == 1:
-        print("Wind Speed: ", ocean_data_dict["Wind Speed"])
-    if int(arguments_dict["show_wind_direction"]) == 1:
-        print("Wind Direction: ", ocean_data_dict["Wind Direction"])
-    if int(arguments_dict["show_rain_sum"]) == 1:
-        print("Rain Sum: ", ocean_data_dict["Rain Sum"])
-    if int(arguments_dict["show_precipitation_prob"]) == 1:
-        print(
+
+    # List of tuples mapping argument keys to ocean data keys and labels
+    mappings = [
+        ("show_uv", "UV Index", "UV index: "),
+        ("show_height", "Height", "Wave Height: "),
+        ("show_direction", "Swell Direction", "Wave Direction: "),
+        ("show_period", "Period", "Wave Period: "),
+        ("show_air_temp", "Air Temperature", "Air Temp: "),
+        ("show_wind_speed", "Wind Speed", "Wind Speed: "),
+        ("show_wind_direction", "Wind Direction", "Wind Direction: "),
+        ("show_rain_sum", "Rain Sum", "Rain Sum: "),
+        (
+            "show_precipitation_prob",
+            "Precipitation Probability Max",
             "Precipitation Probability Max: ",
-            ocean_data_dict["Precipitation Probability Max"],
-        )
+        ),
+    ]
+
+    # arg_key example: "show_height : 1" from arguments_dict
+    # data_key example: "Height : 2.4" from ocean_data_dict
+    # Label example: "Wave Period: "
+    for arg_key, data_key, label in mappings:
+        if int(arguments_dict[arg_key]) == 1:
+            print(f"{label}{ocean_data_dict[data_key]}")
 
 
 def print_forecast(ocean, forecast):
     """
-    Takes in list of forecast data and prints
+    Takes in dict of forecast data and prints.
+    forecast = list of lists detailed forecast data (should be a dict?)
+    Each "day" is a tuple of data for that forecasted day
     """
-    transposed = list(zip(*forecast))
-    for day in transposed:
-        if ocean["show_date"] == 1:
-            print("Date: ", day[3])
-        if int(ocean["show_uv"]) == 1:
-            print("UV Index: ", day[4])
-        if int(ocean["show_height"]) == 1:
-            print("Wave Height: ", day[0])
-        if int(ocean["show_direction"]) == 1:
-            print("Wave Direction: ", day[1])
-        if int(ocean["show_period"]) == 1:
-            print("Wave Period: ", day[2])
-        if int(ocean["show_air_temp"]) == 1:
-            print("Air Temp Max: ", day[5])
-        if int(ocean["show_air_temp"]) == 1:
-            print("Air Temp Min: ", day[6])
-        if int(ocean["show_rain_sum"]) == 1:
-            print("Rain Sum: ", day[7])
-        if int(ocean["show_precipitation_prob"]) == 1:
-            print("Precipitation Probability: ", day[8], "%")
-        if int(ocean["show_wind_speed"]) == 1:
-            print("Max Wind Speed: ", day[9])
-        if int(ocean["show_wind_direction"]) == 1:
-            print("Wind Direction ", day[10])
+    # List of tuples mapping argument keys to ocean data keys and labels
+
+    mappings = [
+        ("show_date", "date", "Date: "),
+        ("show_uv", "uv_index_max", "UV Index: "),
+        ("show_height", "wave_height_max", "Wave Height: "),
+        ("show_direction", "wave_direction_dominant", "Wave Direction: "),
+        ("show_period", "wave_period_max", "Wave Period: "),
+        ("show_air_temp", "temperature_2m_max", "Air Temp Max: "),
+        ("show_air_temp", "temperature_2m_min", "Air Temp Min: "),
+        ("show_rain_sum", "rain_sum", "Rain Sum: "),
+        (
+            "show_precipitation_prob",
+            "precipitation_probability_max",
+            "Precipitation Probability: ",
+        ),
+        ("show_wind_speed", "wind_speed_10m_max", "Max Wind Speed: "),
+        (
+            "show_wind_direction",
+            "wind_direction_10m_dominant",
+            "Wind Direction: ",
+        ),
+    ]
+
+    forecast_days = ocean["forecast_days"]
+
+    for day in range(forecast_days):
+        for arg_key, data_key, label in mappings:
+            if int(ocean[arg_key]) == 1:
+                try:
+                    data = forecast[data_key][day]
+                    formatted = round(float(data), ocean["decimal"])
+                    print(f"{label}{formatted}")
+                except TypeError:
+                    print(f"{label}{forecast[data_key][day]}")
         print("\n")
 
 
@@ -220,13 +249,14 @@ def round_decimal(round_list, decimal):
 def json_output(data_dict):
     """
     If JSON=TRUE in .args, we print and return the JSON data
+    Data dict includes current & forecast data
     """
     json_out = json.dumps(data_dict, indent=4)
     print(json_out)
     return data_dict
 
 
-def print_outputs(city, data_dict, arguments, gpt_prompt, gpt_info):
+def print_outputs(city, ocean_data_dict, arguments, gpt_prompt, gpt_info):
     """
     Basically the main printing function,
     calls all the other printing functions
@@ -234,8 +264,8 @@ def print_outputs(city, data_dict, arguments, gpt_prompt, gpt_info):
     print("\n")
     if city == "No data":
         print("No location found")
-    if data_dict["Height"] == "No data":
-        print(data_dict["Lat"], data_dict["Long"])
+    if ocean_data_dict["Height"] == "No data":
+        print(ocean_data_dict["Lat"], ocean_data_dict["Long"])
         print("No ocean data at this location.")
     else:
         # Location is found, print details
@@ -246,11 +276,11 @@ def print_outputs(city, data_dict, arguments, gpt_prompt, gpt_info):
             arguments["color"],
         )
         # Prints(Height: <>, Period: <>, etc.)
-        print_ocean_data(arguments, data_dict)
+        print_ocean_data(arguments, ocean_data_dict)
     print("\n")
     forecast = api.forecast(
-        data_dict["Lat"],
-        data_dict["Long"],
+        ocean_data_dict["Lat"],
+        ocean_data_dict["Long"],
         arguments["decimal"],
         arguments["forecast_days"],
     )
@@ -259,7 +289,7 @@ def print_outputs(city, data_dict, arguments, gpt_prompt, gpt_info):
     # Checks if GPT in args, prints GPT response if True
     gpt_response = None
     if arguments["gpt"] == 1:
-        gpt_response = print_gpt(data_dict, gpt_prompt, gpt_info)
+        gpt_response = print_gpt(ocean_data_dict, gpt_prompt, gpt_info)
         print(gpt_response)
     return gpt_response
 
@@ -273,41 +303,44 @@ def set_location(location):
     return city, lat, long
 
 
-def forecast_to_json(data, decimal):
+def forecast_to_json(forecast_data, decimal):
     """
-    Takes forecast() as input and returns it in JSON format
+    Takes forecast_data from forecast() as input
+    and returns it in JSON format
     """
-    (
-        surf_height,
-        swell_direction,
-        swell_period,
-        dates,
-        uv_index,
-        temp_max,
-        temp_min,
-        rain_sum,
-        precipitation_probability,
-        wind_speed,
-        wind_direction_dominant,
-    ) = data
     # Formatting into JSON
     forecasts = []
-    for i in range(len(dates)):
+    for i in range(len(forecast_data["date"])):
         forecast = {
-            "date": str(dates[i].date()),
-            "surf height": round(float(surf_height[i]), decimal),
-            "swell direction": round(float(swell_direction[i]), decimal),
-            "swell period": round(float(swell_period[i]), decimal),
-            "uv index": round(float(uv_index[i]), decimal),
-            "temperature_2m_max": round(float(temp_max[i]), decimal),
-            "temperature_2m_min": round(float(temp_min[i]), decimal),
-            "rain_sum": round(float(rain_sum[i]), decimal),
-            "daily_precipitation_probability": round(
-                float(precipitation_probability[i]), decimal
+            "date": str(forecast_data["date"][i].date()),
+            "surf height": round(
+                float(forecast_data["wave_height_max"][i]), decimal
             ),
-            "wind_speed_max": round(float(wind_speed[i]), decimal),
+            "swell direction": round(
+                float(forecast_data["wave_direction_dominant"][i]), decimal
+            ),
+            "swell period": round(
+                float(forecast_data["wave_period_max"][i]), decimal
+            ),
+            "uv index": round(
+                float(forecast_data["uv_index_max"][i]), decimal
+            ),
+            "temperature_2m_max": round(
+                float(forecast_data["temperature_2m_max"][i]), decimal
+            ),
+            "temperature_2m_min": round(
+                float(forecast_data["temperature_2m_min"][i]), decimal
+            ),
+            "rain_sum": round(float(forecast_data["rain_sum"][i]), decimal),
+            "daily_precipitation_probability": round(
+                float(forecast_data["precipitation_probability_max"][i]),
+                decimal,
+            ),
+            "wind_speed_max": round(
+                float(forecast_data["wind_speed_10m_max"][i]), decimal
+            ),
             "wind_direction_10m_dominant": round(
-                float(wind_direction_dominant[i]), decimal
+                float(forecast_data["wind_direction_10m_dominant"][i]), decimal
             ),
         }
         forecasts.append(forecast)
