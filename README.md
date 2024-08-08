@@ -213,6 +213,9 @@ Questions? Comments?
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Rajiv-Rago"><img src="https://avatars.githubusercontent.com/u/70552701?v=4?s=100" width="100px;" alt="Rajiv-Rago"/><br /><sub><b>Rajiv-Rago</b></sub></a><br /><a href="#code-Rajiv-Rago" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Ulises-Sanch3z"><img src="https://avatars.githubusercontent.com/u/143234021?v=4?s=100" width="100px;" alt="Ulises-Sanch3z"/><br /><sub><b>Ulises-Sanch3z</b></sub></a><br /><a href="#code-Ulises-Sanch3z" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/avkoll"><img src="https://avatars.githubusercontent.com/u/139082778?v=4?s=100" width="100px;" alt="Andrew Koller"/><br /><sub><b>Andrew Koller</b></sub></a><br /><a href="#code-avkoll" title="Code">💻</a></td>
+    </tr>
   </tbody>
 </table>
 
