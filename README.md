@@ -206,7 +206,7 @@ Questions? Comments?
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://ryansurf.github.io/"><img src="https://avatars.githubusercontent.com/u/94500732?v=4?s=100" width="100px;" alt="Ryan Frederich"/><br /><sub><b>Ryan Frederich</b></sub></a><br /><a href="#code-ryansurf" title="Code">💻</a> <a href="#doc-ryansurf" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/K-dash"><img src="https://avatars.githubusercontent.com/u/51281148?v=4?s=100" width="100px;" alt="𝕂' "/><br /><sub><b>𝕂' </b></sub></a><br /><a href="#code-K-dash" title="Code">💻</a> <a href="#doc-K-dash" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/K-dash"><img src="https://avatars.githubusercontent.com/u/51281148?v=4?s=100" width="100px;" alt="𝕂' "/><br /><sub><b>𝕂' </b></sub></a><br /><a href="#code-K-dash" title="Code">💻</a> <a href="#doc-K-dash" title="Documentation">📖</a> <a href="#test-K-dash" title="Tests">⚠️</a> <a href="#ideas-K-dash" title="Ideas, Planning, & Feedback">🤔</a> <a href="#question-K-dash" title="Answering Questions">💬</a></td>
     </tr>
   </tbody>
 </table>
