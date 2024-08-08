@@ -2,10 +2,11 @@
 Main module
 """
 
+import json
 import sys
 
 from src import api, helper, settings
-from src.argument_types import ArgumentMappings, Arguments
+from argument_types import Arguments, ArgumentMappings
 
 # Load environment variables from .env file
 env = settings.GPTSettings()
@@ -26,13 +27,31 @@ def run(lat=0, long=0, args=None):
     else:
         args = helper.seperate_args(args)
 
-    parsed_arguments = ArgumentMappings.parse(args)
+    # Begin my whacked implementation tests
+    default_arguments = Arguments()
+    print(json.dumps(default_arguments.model_dump(), indent=4))
 
-    arguments = Arguments(**parsed_arguments)
+    # parse inputs
+    parsed_input = ArgumentMappings.parse_input({"lat": lat, "long": long})
+    updated_arguments = default_arguments.model_copy(update=parsed_input)
+
+    # update arguments with inputs
+    arguments_dict = updated_arguments.model_dump()
+    updated_arguments_dict = ArgumentMappings.set_output_values(args, arguments_dict)
+    arguments = updated_arguments.model_copy(update=updated_arguments_dict)
+
+    print("Updated arguments: ")
+    print(json.dumps(updated_arguments.model_dump(), indent=4))
+
+    for key, value in updated_arguments:
+        if value is False:
+            print("false")
+        else:
+            print(key)
+    # End the test section
 
     #  return coordinates, lat, long, city
     location = api.seperate_args_and_get_location(args)
-    print(arguments.city)
 
     # Set location returns: city, lat, long
     set_location = helper.set_location(location)
