@@ -36,6 +36,10 @@ class ArgumentMappings(BaseModel):
     """
     Class for argument mappings with multiple aliases.
     """
+    city: str = Field(
+        default="pleasure_point",
+        description="Name of the city you want weather data from",
+    )
     show_wave: bool = Field(
         default=True,
         description="Show wave information",
@@ -102,6 +106,7 @@ class ArgumentMappings(BaseModel):
     )
 
     alias_map: ClassVar[dict[str, list[str]]] = {
+        "city": ["loc", "location"],
         "show_wave": ["sw", "hide_wave", "hw"],
         "show_large_wave": ["slw"],
         "show_uv": ["suv", "hide_uv", "huv"],
@@ -141,6 +146,10 @@ class ArgumentMappings(BaseModel):
             remapped_data[field_name] = value
 
         return remapped_data
+
+    """
+    TODO: write method to set location and update the dictionary
+    """
 
     @classmethod
     def set_output_values(cls, args, arguments_dictionary: dict) -> dict:
