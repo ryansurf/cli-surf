@@ -45,6 +45,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Hummus-Ful",
+      "name": "Hummus-Ful",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11685796?v=4",
+      "profile": "https://github.com/Hummus-Ful",
+      "contributions": [
+        "infra"
+      ]
     }
   ]
 }
