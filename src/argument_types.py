@@ -1,4 +1,3 @@
-import json
 from typing import ClassVar, Literal
 
 from pydantic import BaseModel, Field
