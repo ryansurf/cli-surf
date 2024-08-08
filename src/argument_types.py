@@ -1,3 +1,4 @@
+import json
 from typing import ClassVar, Literal
 
 from pydantic import BaseModel, Field
@@ -7,9 +8,9 @@ class Arguments(BaseModel):
     """
     Define arguments
     """
-    lat: float
-    long: float
-    city: str
+    lat: float = 0.0
+    long: float = 0.0
+    city: str = "pleasure_point"
     show_wave: bool = True
     show_large_wave: bool = False
     show_uv: bool = True
@@ -151,42 +152,42 @@ class ArgumentMappings(BaseModel):
         """
         # map of arguments to dictionary keys & values
         mappings = {
-            "hide_wave": ("show_wave", 0),
-            "hw": ("show_wave", 0),
-            "show_large_wave": ("show_large_wave", 1),
-            "slw": ("show_large_wave", 1),
-            "hide_uv": ("show_uv", 0),
-            "huv": ("show_uv", 0),
-            "hide_height": ("show_height", 0),
-            "hh": ("show_height", 0),
-            "hide_direction": ("show_direction", 0),
-            "hdir": ("show_direction", 0),
-            "hide_period": ("show_period", 0),
-            "hp": ("show_period", 0),
-            "hide_location": ("show_city", 0),
-            "hl": ("show_city", 0),
-            "hide_date": ("show_date", 0),
-            "hdate": ("show_date", 0),
+            "hide_wave": ("show_wave", False),
+            "hw": ("show_wave", False),
+            "show_large_wave": ("show_large_wave", True),
+            "slw": ("show_large_wave", True),
+            "hide_uv": ("show_uv", False),
+            "huv": ("show_uv", False),
+            "hide_height": ("show_height", False),
+            "hh": ("show_height", False),
+            "hide_direction": ("show_direction", False),
+            "hdir": ("show_direction", False),
+            "hide_period": ("show_period", False),
+            "hp": ("show_period", False),
+            "hide_location": ("show_city", False),
+            "hl": ("show_city", False),
+            "hide_date": ("show_date", False),
+            "hdate": ("show_date", False),
             "metric": ("unit", "metric"),
             "m": ("unit", "metric"),
-            "json": ("json_output", 1),
-            "j": ("json_output", 1),
-            "gpt": ("gpt", 1),
-            "g": ("gpt", 1),
-            "show_air_temp": ("show_air_temp", 1),
-            "sat": ("show_air_temp", 1),
-            "show_wind_speed": ("show_wind_speed", 1),
-            "sws": ("show_wind_speed", 1),
-            "show_wind_direction": ("show_wind_direction", 1),
-            "swd": ("show_wind_direction", 1),
-            "show_rain_sum": ("show_rain_sum", 1),
-            "srs": ("show_rain_sum", 1),
-            "show_precipitation_prob": ("show_precipitation_prob", 1),
-            "spp": ("show_precipitation_prob", 1),
+            "json": ("json_output", True),
+            "j": ("json_output", True),
+            "gpt": ("gpt", True),
+            "g": ("gpt", True),
+            "show_air_temp": ("show_air_temp", True),
+            "sat": ("show_air_temp", True),
+            "show_wind_speed": ("show_wind_speed", True),
+            "sws": ("show_wind_speed", True),
+            "show_wind_direction": ("show_wind_direction", True),
+            "swd": ("show_wind_direction", True),
+            "show_rain_sum": ("show_rain_sum", True),
+            "srs": ("show_rain_sum", True),
+            "show_precipitation_prob": ("show_precipitation_prob", True),
+            "spp": ("show_precipitation_prob", True),
         }
         # Update arguments_dictionary based on the cli arguments in args
         # Ex: If "hide_uv" in args,
-        # "show_uv" will be set to 0 in arguments_dictionary
+        # "show_uv" will be set to False in arguments_dictionary
         for arg in args:
             if arg in mappings:
                 key, value = mappings[arg]
@@ -194,5 +195,41 @@ class ArgumentMappings(BaseModel):
 
         return arguments_dictionary
 
-    class Config:
-        populate_by_name = True
+"""
+def main():
+    # Sample input data
+    input_data = {
+        "lat": 34.05,
+        "long": -118.25,
+
+    }
+
+    # Create an Arguments instance using the parsed input data
+    parsed_input = ArgumentMappings.parse_input(input_data)
+
+    # Create an instance of Arguments using only valid fields
+    arguments = Arguments(**parsed_input)
+
+    # Print the arguments to verify they are parsed correctly
+    print("Arguments:")
+    print(json.dumps(arguments.model_dump(), indent=4))  # Use json.dumps with model_dump
+
+    # Example of using the set_output_values method
+    args = ["hide_wave", "json", "g", "sws", "m"]
+    arguments_dict = arguments.dict()
+    updated_arguments_dict = ArgumentMappings.set_output_values(args, arguments_dict)
+
+    # Print the updated arguments dictionary
+    print("\nUpdated Arguments Dictionary:")
+    print(json.dumps(updated_arguments_dict, indent=4))  # Use json.dumps for printing dictionaries
+
+
+if __name__ == "__main__":
+    main()
+"""
+
+"""
+This is a lot more complicated than I thought,
+So far the class and methods work without errors but I need to impleement them
+into cli.py with the correct data and whatnot
+"""
