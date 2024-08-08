@@ -218,6 +218,7 @@ Questions? Comments?
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/mrmcgrain"><img src="https://avatars.githubusercontent.com/u/153415900?v=4?s=100" width="100px;" alt="Michael McGrain"/><br /><sub><b>Michael McGrain</b></sub></a><br /><a href="#code-mrmcgrain" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/SeanAverS"><img src="https://avatars.githubusercontent.com/u/110581427?v=4?s=100" width="100px;" alt="SeanAverS"/><br /><sub><b>SeanAverS</b></sub></a><br /><a href="#code-SeanAverS" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/rabelmervin"><img src="https://avatars.githubusercontent.com/u/152761588?v=4?s=100" width="100px;" alt="Rabel Mervin "/><br /><sub><b>Rabel Mervin </b></sub></a><br /><a href="#code-rabelmervin" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/vaibhav-2703"><img src="https://avatars.githubusercontent.com/u/152781960?v=4?s=100" width="100px;" alt="Vaibhav Chouhan"/><br /><sub><b>Vaibhav Chouhan</b></sub></a><br /><a href="#code-vaibhav-2703" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
