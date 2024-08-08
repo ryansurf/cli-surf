@@ -209,6 +209,7 @@ Questions? Comments?
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/K-dash"><img src="https://avatars.githubusercontent.com/u/51281148?v=4?s=100" width="100px;" alt="𝕂' "/><br /><sub><b>𝕂' </b></sub></a><br /><a href="#code-K-dash" title="Code">💻</a> <a href="#doc-K-dash" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/death12239"><img src="https://avatars.githubusercontent.com/u/69333358?v=4?s=100" width="100px;" alt="Corey L."/><br /><sub><b>Corey L.</b></sub></a><br /><a href="#code-death12239" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/shaifulazh"><img src="https://avatars.githubusercontent.com/u/48390814?v=4?s=100" width="100px;" alt="Shaiful Azhar"/><br /><sub><b>Shaiful Azhar</b></sub></a><br /><a href="#code-shaifulazh" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Hummus-Ful"><img src="https://avatars.githubusercontent.com/u/11685796?v=4?s=100" width="100px;" alt="Hummus-Ful"/><br /><sub><b>Hummus-Ful</b></sub></a><br /><a href="#infra-Hummus-Ful" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     </tr>
   </tbody>
 </table>
