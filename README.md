@@ -215,6 +215,7 @@ Questions? Comments?
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/avkoll"><img src="https://avatars.githubusercontent.com/u/139082778?v=4?s=100" width="100px;" alt="Andrew Koller"/><br /><sub><b>Andrew Koller</b></sub></a><br /><a href="#code-avkoll" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/mrmcgrain"><img src="https://avatars.githubusercontent.com/u/153415900?v=4?s=100" width="100px;" alt="Michael McGrain"/><br /><sub><b>Michael McGrain</b></sub></a><br /><a href="#code-mrmcgrain" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
