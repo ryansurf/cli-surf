@@ -211,6 +211,7 @@ Questions? Comments?
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/shaifulazh"><img src="https://avatars.githubusercontent.com/u/48390814?v=4?s=100" width="100px;" alt="Shaiful Azhar"/><br /><sub><b>Shaiful Azhar</b></sub></a><br /><a href="#code-shaifulazh" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Hummus-Ful"><img src="https://avatars.githubusercontent.com/u/11685796?v=4?s=100" width="100px;" alt="Hummus-Ful"/><br /><sub><b>Hummus-Ful</b></sub></a><br /><a href="#infra-Hummus-Ful" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Rajiv-Rago"><img src="https://avatars.githubusercontent.com/u/70552701?v=4?s=100" width="100px;" alt="Rajiv-Rago"/><br /><sub><b>Rajiv-Rago</b></sub></a><br /><a href="#code-Rajiv-Rago" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Ulises-Sanch3z"><img src="https://avatars.githubusercontent.com/u/143234021?v=4?s=100" width="100px;" alt="Ulises-Sanch3z"/><br /><sub><b>Ulises-Sanch3z</b></sub></a><br /><a href="#code-Ulises-Sanch3z" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
