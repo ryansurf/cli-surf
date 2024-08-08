@@ -1,4 +1,22 @@
 {
   "projectName": "cli-surf",
-  "projectOwner": "ryansurf"
+  "projectOwner": "ryansurf",
+  "files": [
+    "README.md"
+  ],
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributorsPerLine": 7,
+  "contributors": [
+    {
+      "login": "ryansurf",
+      "name": "Ryan Frederich",
+      "avatar_url": "https://avatars.githubusercontent.com/u/94500732?v=4",
+      "profile": "https://ryansurf.github.io/",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    }
+  ]
 }
