@@ -206,6 +206,7 @@ Questions? Comments?
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://ryansurf.github.io/"><img src="https://avatars.githubusercontent.com/u/94500732?v=4?s=100" width="100px;" alt="Ryan Frederich"/><br /><sub><b>Ryan Frederich</b></sub></a><br /><a href="#code-ryansurf" title="Code">💻</a> <a href="#doc-ryansurf" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/rabelmervin"><img src="https://avatars.githubusercontent.com/u/152761588?v=4?s=100" width="100px;" alt="Rabel Mervin "/><br /><sub><b>Rabel Mervin </b></sub></a><br /><a href="#code-rabelmervin" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
