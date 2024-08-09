@@ -2,11 +2,9 @@
 Main module
 """
 
-import json
 import sys
 
 from src import api, helper, settings
-from argument_types import Arguments, ArgumentMappings
 
 # Load environment variables from .env file
 env = settings.GPTSettings()

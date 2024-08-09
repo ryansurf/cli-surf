@@ -7,6 +7,7 @@ class Arguments(BaseModel):
     """
     Define arguments
     """
+
     lat: float = 0.0
     long: float = 0.0
     city: str = "pleasure_point"
@@ -35,6 +36,7 @@ class ArgumentMappings(BaseModel):
     """
     Class for argument mappings with multiple aliases.
     """
+
     city: str = Field(
         default="pleasure_point",
         description="Name of the city you want weather data from",
@@ -121,7 +123,7 @@ class ArgumentMappings(BaseModel):
         "show_wind_speed": ["sws"],
         "show_wind_direction": ["swd"],
         "show_rain_sum": ["srs"],
-        "show_precipitation_prob": ["spp"]
+        "show_precipitation_prob": ["spp"],
     }
 
     @classmethod
