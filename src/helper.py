@@ -264,8 +264,6 @@ def print_outputs(curr_hour, ocean_data_dict, arguments, gpt_prompt, gpt_info):
     calls all the other printing functions
     """
     print("\n")
-    # if city == "No data":
-    #     print("No location found")
     if ocean_data_dict["Height"] == "No data":
         print(ocean_data_dict["Lat"], ocean_data_dict["Long"])
         print("No ocean data at this location.")

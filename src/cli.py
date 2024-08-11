@@ -43,13 +43,13 @@ def run(lat=0, long=0, args=None):
     ocean_data_dict = api.gather_data(lat, long, arguments)
 
     # Sets hourly_dict = the dictionary for hourly weather data
-    curr_hour_data = api.get_hourly_forecast(lat, long, days=1)
+    hourly_forecast = api.get_hourly_forecast(lat, long, days=1)
 
     # Non-JSON output
     if arguments["json_output"] == 0:
         # Response prints all the outputs & returns the GPT response
         response = helper.print_outputs(
-            curr_hour_data, ocean_data_dict, arguments, gpt_prompt, gpt_info
+            hourly_forecast, ocean_data_dict, arguments, gpt_prompt, gpt_info
         )
         # Returns ocean data, GPT response
         return ocean_data_dict, response
