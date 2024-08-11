@@ -4,6 +4,7 @@ Functions that make API calls stored here
 
 from http import HTTPStatus
 
+import numpy as np
 import openmeteo_requests
 import pandas as pd
 import requests
@@ -294,6 +295,62 @@ def forecast(lat, long, decimal, days=0):
     return forecast_data
 
 
+def get_hourly_forecast(lat, long, days=1):
+    """
+    Gets hourly weather data
+    """
+    # Setup the Open-Meteo API client with cache and retry on error
+    cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
+    retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
+    openmeteo = openmeteo_requests.Client(session=retry_session)
+
+    # Make sure all required weather variables are listed here
+    # The order of variables in hourly or daily is important
+    # to assign them correctly below
+    url = "https://api.open-meteo.com/v1/forecast"
+    params = {
+        "latitude": lat,
+        "longitude": long,
+        "hourly": ["cloud_cover", "visibility"],
+        "temperature_unit": "fahrenheit",
+        "wind_speed_unit": "mph",
+        "precipitation_unit": "inch",
+        "forecast_days": days,
+    }
+
+    responses = openmeteo.weather_api(url, params=params)
+    response = responses[0]
+
+    hourly = response.Hourly()
+    hourly_cloud_cover = hourly.Variables(0).ValuesAsNumpy()
+    hourly_visibility = hourly.Variables(1).ValuesAsNumpy()
+
+    hourly_data = pd.DataFrame({
+        "date": pd.date_range(
+            start=pd.to_datetime(hourly.Time(), unit="s", utc=True),
+            end=pd.to_datetime(hourly.TimeEnd(), unit="s", utc=True),
+            freq=pd.Timedelta(seconds=hourly.Interval()),
+            inclusive="left",
+        ),
+        "cloud_cover": hourly_cloud_cover,
+        "visibility": hourly_visibility
+    })
+
+    # Sets variable to get current time
+    current_time = pd.Timestamp.now(tz="UTC")
+
+    # Sets variable to find index of current hour
+    curr_hour = np.argmin(np.abs(hourly_data["date"] - current_time))
+
+    # Creates dictionary for the current hour's weather data
+    curr_hour_data = {
+        "cloud_cover": float(hourly_data["cloud_cover"].iloc[curr_hour]),
+        "visibility": round(float(hourly_data["visibility"].iloc[curr_hour]), 1)
+    }
+
+    return curr_hour_data
+
+
 def gather_data(lat, long, arguments):
     """
     Calls APIs though python files,
@@ -307,6 +364,8 @@ def gather_data(lat, long, arguments):
     uv_index = get_uv(lat, long, arguments["decimal"], arguments["unit"])
 
     wind_temp = current_wind_temp(lat, long, arguments["decimal"])
+
+    hourly_dict = get_hourly_forecast(lat, long, arguments["decimal"])
 
     rain_data = get_rain(lat, long, arguments["decimal"])
     air_temp, wind_speed, wind_dir = wind_temp[0], wind_temp[1], wind_temp[2]
@@ -333,6 +392,8 @@ def gather_data(lat, long, arguments):
         "Unit": arguments["unit"],
         "Rain Sum": rain_sum,
         "Precipitation Probability Max": precipitation_probability_max,
+        "Cloud Cover": hourly_dict["cloud_cover"],
+        "Visibility": hourly_dict["visibility"],
     }
     return ocean_data_dict
 

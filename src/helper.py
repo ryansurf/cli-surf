@@ -40,6 +40,8 @@ def arguments_dictionary(lat, long, city, args):
         "forecast_days": get_forecast_days(args),
         "color": get_color(args),
         "gpt": 0,
+        "show_visibility": 1,
+        "show_cloud_cover": 1,
     }
     # Updates the arguments dict with the values from the CLI args
     arguments = set_output_values(args, arguments)
@@ -256,14 +258,14 @@ def json_output(data_dict):
     return data_dict
 
 
-def print_outputs(city, ocean_data_dict, arguments, gpt_prompt, gpt_info):
+def print_outputs(curr_hour, ocean_data_dict, arguments, gpt_prompt, gpt_info):
     """
     Basically the main printing function,
     calls all the other printing functions
     """
     print("\n")
-    if city == "No data":
-        print("No location found")
+    # if city == "No data":
+    #     print("No location found")
     if ocean_data_dict["Height"] == "No data":
         print(ocean_data_dict["Lat"], ocean_data_dict["Long"])
         print("No ocean data at this location.")
@@ -286,6 +288,10 @@ def print_outputs(city, ocean_data_dict, arguments, gpt_prompt, gpt_info):
     )
     # Prints the forecast(if activated in CLI args)
     print_forecast(arguments, forecast)
+
+    # Prints hourly weather data
+    print_hourly_data(curr_hour)
+
     # Checks if GPT in args, prints GPT response if True
     gpt_response = None
     if arguments["gpt"] == 1:
@@ -379,3 +385,16 @@ def print_gpt(surf_data, gpt_prompt, gpt_info):
     else:
         gpt_response = gpt.openai_gpt(summary, gpt_prompt, api_key, gpt_model)
     return gpt_response
+
+
+def print_hourly_data(curr_hour):
+    """
+    Prints hourly forecast data for current hour
+    """
+    if isinstance(curr_hour, dict):
+        if "cloud_cover" in curr_hour:
+            print(f"Cloud Cover: {curr_hour['cloud_cover']}%")
+        if "visibility" in curr_hour:
+            print(f"Visibility: {curr_hour['visibility']} meters")
+    else:
+        print("Unexpected data type for hourly_dict")
