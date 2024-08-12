@@ -333,7 +333,7 @@ def get_hourly_forecast(lat, long, days=1):
             inclusive="left",
         ),
         "cloud_cover": hourly_cloud_cover,
-        "visibility": hourly_visibility
+        "visibility": hourly_visibility,
     })
 
     # Sets variable to get current time
@@ -343,10 +343,9 @@ def get_hourly_forecast(lat, long, days=1):
     curr_hour = np.argmin(np.abs(hourly_data["date"] - current_time))
 
     # Creates dictionary for the current hour's weather data
-    curr_hour_data = {
-        "cloud_cover": float(hourly_data["cloud_cover"].iloc[curr_hour]),
-        "visibility": round(float(hourly_data["visibility"].iloc[curr_hour]), 1)
-    }
+    curr_hour_data = {}
+    for i in ["cloud_cover", "visibility"]:
+        curr_hour_data[i] = round(float(hourly_data[i].iloc[curr_hour]), 1)
 
     return curr_hour_data
 
