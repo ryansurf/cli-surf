@@ -76,4 +76,4 @@ def test_seperate_args_and_get_location():
     city = location_data["city"]
     assert isinstance(lat, (int, float))
     assert isinstance(long, (int, float))
-    assert "Pleasure Point" in str(location_data["city"])
+    assert "Pleasure Point" in str(city)
