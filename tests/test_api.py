@@ -71,4 +71,9 @@ def test_seperate_args_and_get_location():
     """
     location = ["location=pleasure_point_california"]
     location_data = seperate_args_and_get_location(location)
-    assert "Santa Cruz County" in location_data["city"][0]
+    lat = location_data["lat"]
+    long = location_data["long"]
+    city = location_data["city"]
+    assert isinstance(lat, (int, float))
+    assert isinstance(long, (int, float))
+    assert "Pleasure Point" in str(location_data["city"])
