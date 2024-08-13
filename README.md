@@ -1,3 +1,6 @@
+![pytest](https://github.com/ryansurf/cli-surf/actions/workflows/pytest.yml/badge.svg)
+![linter](https://github.com/ryansurf/cli-surf/actions/workflows/linter.yml/badge.svg)
+
 <p align="center">
   <img src="./images/wave.png" height=100>
 </p>
