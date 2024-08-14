@@ -132,6 +132,25 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "hotpocket",
+      "name": "Brandon",
+      "avatar_url": "https://avatars.githubusercontent.com/u/973131?v=4",
+      "profile": "https://github.com/hotpocket",
+      "contributions": [
+        "infra"
+      ]
+    },
+    {
+      "login": "ChristianToro",
+      "name": "ChristianToro",
+      "avatar_url": "https://avatars.githubusercontent.com/u/143457701?v=4",
+      "profile": "https://github.com/ChristianToro",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ]
 }

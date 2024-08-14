@@ -28,7 +28,11 @@ def get_coordinates(args):
             geolocator = Nominatim(user_agent="cli-surf")
             location = geolocator.geocode(address)
             if location is not None:
-                return [location.latitude, location.longitude, location]
+                return [
+                    location.latitude,
+                    location.longitude,
+                    location.raw["name"],
+                ]
             else:
                 print(
                     f"Invalid location '{address}' provided. "

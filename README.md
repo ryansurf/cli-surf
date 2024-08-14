@@ -1,3 +1,6 @@
+![pytest](https://github.com/ryansurf/cli-surf/actions/workflows/pytest.yml/badge.svg)
+![linter](https://github.com/ryansurf/cli-surf/actions/workflows/linter.yml/badge.svg)
+
 <p align="center">
   <img src="./images/wave.png" height=100>
 </p>
@@ -220,6 +223,10 @@ Questions? Comments?
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/rabelmervin"><img src="https://avatars.githubusercontent.com/u/152761588?v=4?s=100" width="100px;" alt="Rabel Mervin "/><br /><sub><b>Rabel Mervin </b></sub></a><br /><a href="#code-rabelmervin" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/vaibhav-2703"><img src="https://avatars.githubusercontent.com/u/152781960?v=4?s=100" width="100px;" alt="Vaibhav Chouhan"/><br /><sub><b>Vaibhav Chouhan</b></sub></a><br /><a href="#code-vaibhav-2703" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/NandaniThakur"><img src="https://avatars.githubusercontent.com/u/79366385?v=4?s=100" width="100px;" alt="Nandani Thakur "/><br /><sub><b>Nandani Thakur </b></sub></a><br /><a href="#code-NandaniThakur" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/hotpocket"><img src="https://avatars.githubusercontent.com/u/973131?v=4?s=100" width="100px;" alt="Brandon"/><br /><sub><b>Brandon</b></sub></a><br /><a href="#infra-hotpocket" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ChristianToro"><img src="https://avatars.githubusercontent.com/u/143457701?v=4?s=100" width="100px;" alt="ChristianToro"/><br /><sub><b>ChristianToro</b></sub></a><br /><a href="#code-ChristianToro" title="Code">💻</a> <a href="#bug-ChristianToro" title="Bug reports">🐛</a></td>
     </tr>
   </tbody>
 </table>
