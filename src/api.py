@@ -299,7 +299,7 @@ def forecast(lat, long, decimal, days=0):
     return forecast_data
 
 
-def get_hourly_forecast(lat, long, days=1):
+def get_hourly_forecast(lat, long, days=1, unit="fahrenheit"):
     """
     Gets hourly weather data
     """
@@ -316,7 +316,7 @@ def get_hourly_forecast(lat, long, days=1):
         "latitude": lat,
         "longitude": long,
         "hourly": ["cloud_cover", "visibility"],
-        "temperature_unit": "fahrenheit",
+        "temperature_unit": unit,
         "wind_speed_unit": "mph",
         "precipitation_unit": "inch",
         "forecast_days": days,

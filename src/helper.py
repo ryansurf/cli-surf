@@ -40,8 +40,8 @@ def arguments_dictionary(lat, long, city, args):
         "forecast_days": get_forecast_days(args),
         "color": get_color(args),
         "gpt": 0,
-        "show_visibility": 1,
-        "show_cloud_cover": 1,
+        "show_cloud_cover": 0,
+        "show_visibility": 0,
     }
     # Updates the arguments dict with the values from the CLI args
     arguments = set_output_values(args, arguments)
@@ -89,6 +89,10 @@ def set_output_values(args, arguments_dictionary):  # noqa
         "srs": ("show_rain_sum", 1),
         "show_precipitation_prob": ("show_precipitation_prob", 1),
         "spp": ("show_precipitation_prob", 1),
+        "show_cloud_cover": ("show_cloud_cover", 1),
+        "scc": ("show_cloud_cover", 1),
+        "show_visibility": ("show_visibility", 1),
+        "sv": ("show_visibility", 1),
     }
 
     # Update arguments_dictionary based on the cli arguments in args
@@ -157,6 +161,8 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
             "Precipitation Probability Max",
             "Precipitation Probability Max: ",
         ),
+        ("show_cloud_cover", "Cloud Cover", "Cloud Cover: "),
+        ("show_visibility", "Visibility", "Visibility: "),
     ]
 
     # arg_key example: "show_height : 1" from arguments_dict
@@ -258,7 +264,7 @@ def json_output(data_dict):
     return data_dict
 
 
-def print_outputs(curr_hour, ocean_data_dict, arguments, gpt_prompt, gpt_info):
+def print_outputs(ocean_data_dict, arguments, gpt_prompt, gpt_info):
     """
     Basically the main printing function,
     calls all the other printing functions
@@ -286,9 +292,6 @@ def print_outputs(curr_hour, ocean_data_dict, arguments, gpt_prompt, gpt_info):
     )
     # Prints the forecast(if activated in CLI args)
     print_forecast(arguments, forecast)
-
-    # Prints hourly weather data
-    print_hourly_data(curr_hour)
 
     # Checks if GPT in args, prints GPT response if True
     gpt_response = None
