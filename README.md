@@ -61,7 +61,9 @@ Wave Period:  9.8
 | color / c   | Choose color of wave art. Ex: `color=light_blue`   | 
 | json / j   | Output the data in JSON format. Must be the only argument  | 
 | gpt / g   | Activates the GPT surf report. Change the `GPT_PROMPT` variable in `.env` to customize responses. Default = off  |
-
+| show_cloud_cover / scc   | Show the hourly cloud cover   |
+| show_visibility / sv   | Show the hourly visibility   |
+ 
 **Examples**
 * Arguments are seperated by commas.
 * `curl localhost:8000`
