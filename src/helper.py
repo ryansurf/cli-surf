@@ -386,16 +386,3 @@ def print_gpt(surf_data, gpt_prompt, gpt_info):
     else:
         gpt_response = gpt.openai_gpt(summary, gpt_prompt, api_key, gpt_model)
     return gpt_response
-
-
-def print_hourly_data(curr_hour):
-    """
-    Prints hourly forecast data for current hour
-    """
-    if isinstance(curr_hour, dict):
-        if "cloud_cover" in curr_hour:
-            print(f"Cloud Cover: {curr_hour['cloud_cover']}%")
-        if "visibility" in curr_hour:
-            print(f"Visibility: {curr_hour['visibility']} meters")
-    else:
-        print("Unexpected data type for hourly_dict")
