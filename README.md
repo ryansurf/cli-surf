@@ -229,6 +229,7 @@ Questions? Comments?
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ChristianToro"><img src="https://avatars.githubusercontent.com/u/143457701?v=4?s=100" width="100px;" alt="ChristianToro"/><br /><sub><b>ChristianToro</b></sub></a><br /><a href="#code-ChristianToro" title="Code">💻</a> <a href="#bug-ChristianToro" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/MylesPerHour201"><img src="https://avatars.githubusercontent.com/u/124012399?v=4?s=100" width="100px;" alt="Myles B."/><br /><sub><b>Myles B.</b></sub></a><br /><a href="#code-MylesPerHour201" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
