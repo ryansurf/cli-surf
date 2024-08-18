@@ -12,36 +12,46 @@ defaults:
 
 jobs:
   test:
+    name: Run tests and collect coverage
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Prepare environment file
-      run: cp .env.example .env
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      
+      - name: Prepare environment file
+        run: cp .env.example .env
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install poetry
-        poetry config installer.max-workers 10
-        poetry install --no-interaction --no-ansi
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry config installer.max-workers 10
+          poetry install --no-interaction --no-ansi
 
-    - name: Test with pytest
-      run: |
-        poetry run python -m pytest --junitxml=pytest.xml --cov-report=term-missing --cov=src tests/ | tee pytest-coverage.txt
+      - name: Run tests
+        run: |
+          poetry run python -m pytest --junitxml=pytest.xml --cov-report=term-missing --cov=src tests/ | tee pytest-coverage.txt
 
-    - name: Pytest coverage comment
-      if: matrix.os == 'ubuntu-latest'
-      continue-on-error: true
-      uses: MishaKav/pytest-coverage-comment@v1.1.47
-      with:
-        pytest-coverage-path: ./pytest-coverage.txt
-        junitxml-path: ./pytest.xml
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+      
+      - name: Pytest coverage comment
+        if: matrix.os == 'ubuntu-latest'
+        continue-on-error: true
+        uses: MishaKav/pytest-coverage-comment@v1.1.47
+        with:
+          pytest-coverage-path: ./pytest-coverage.txt
+          junitxml-path: ./pytest.xml
