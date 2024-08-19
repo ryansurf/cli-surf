@@ -39,19 +39,22 @@ jobs:
           poetry config installer.max-workers 10
           poetry install --no-interaction --no-ansi
 
-      - name: Run tests
-        run: |
-          poetry run python -m pytest --junitxml=pytest.xml --cov-report=term-missing --cov=src tests/ | tee pytest-coverage.txt
+      # - name: Run tests
+      #   run: |
+      #     poetry run python -m pytest --junitxml=pytest.xml --cov-report=term-missing --cov=src tests/ | tee pytest-coverage.txt
+
+      - name: Run tests and collect coverage
+        run: poetry run pytest --cov=./src --cov-report=xml
 
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
       
-      - name: Pytest coverage comment
-        if: matrix.os == 'ubuntu-latest'
-        continue-on-error: true
-        uses: MishaKav/pytest-coverage-comment@v1.1.47
-        with:
-          pytest-coverage-path: ./pytest-coverage.txt
-          junitxml-path: ./pytest.xml
+      # - name: Pytest coverage comment
+      #   if: matrix.os == 'ubuntu-latest'
+      #   continue-on-error: true
+      #   uses: MishaKav/pytest-coverage-comment@v1.1.47
+      #   with:
+      #     pytest-coverage-path: ./pytest-coverage.txt
+      #     junitxml-path: ./pytest.xml
