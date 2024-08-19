@@ -2,8 +2,6 @@
 ![linter](https://github.com/ryansurf/cli-surf/actions/workflows/linter.yml/badge.svg)
 [![codecov](https://codecov.io/github/ryansurf/cli-surf/graph/badge.svg?token=N8CAIUXMJG)](https://codecov.io/github/ryansurf/cli-surf)
 ![GitHub last commit](https://img.shields.io/github/last-commit/ryansurf/cli-surf)
-[![License](https://img.shields.io/:license-mit-blue.svg?style=flat-square)](https://badges.mit-license.org)
-
 
 <p align="center">
   <img src="./images/wave.png" height=100>
