@@ -4,7 +4,7 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/ryansurf/cli-surf)
 
 <div style="text-align: center;">
-    <img src="images/cli-surf_logo.png" alt="Logo" style="max-width: 100%; max-height: 240px; width: auto; height: auto;">
+    <img src="images/cli-surf_logo.png" alt="Logo" style="max-width: 100%; max-height: 150px; width: auto; height: auto;">
 </div>
 
 
