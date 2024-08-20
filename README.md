@@ -3,9 +3,9 @@
 [![codecov](https://codecov.io/github/ryansurf/cli-surf/graph/badge.svg?token=N8CAIUXMJG)](https://codecov.io/github/ryansurf/cli-surf)
 ![GitHub last commit](https://img.shields.io/github/last-commit/ryansurf/cli-surf)
 
-<div style="text-align: center;">
-    <img src="images/cli-surf_logo.png" alt="Logo" style="max-width: 100%; max-height: 150px; width: auto; height: auto;">
-</div>
+<p align="center">
+  <img src="./images/cli-surf_logo.png" style="max-height: 200px;">
+</p>
 
 
 
