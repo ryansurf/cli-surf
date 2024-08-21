@@ -160,6 +160,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "balugans",
+      "name": "Balaji Ganapathy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/58871632?v=4",
+      "profile": "https://github.com/balugans",
+      "contributions": [
+        "bug"
+      ]
     }
   ]
 }
