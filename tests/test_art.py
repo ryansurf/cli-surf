@@ -20,7 +20,8 @@ def test_print_wave():
     sys.stdout = captured_output  # Redirect stdout.
 
     # Call the function
-    art.print_wave(1, 0, "blue")
+    # Color is invalid, should default to blue
+    art.print_wave(1, 0, "sdfsd")
 
     # Reset redirect.
     sys.stdout = sys.__stdout__
@@ -29,4 +30,5 @@ def test_print_wave():
     output = captured_output.getvalue()
 
     # Perform assertions based on expected output
-    assert output
+    assert "[0;34m" in output, "Blue color code not found in output"
+    assert output, "print_wave() did not print anything"
