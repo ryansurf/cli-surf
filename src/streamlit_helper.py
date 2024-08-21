@@ -66,13 +66,13 @@ def graph_data(report_dict, graph_type="Height/Period :ocean:"):
         forecast["date"] for forecast in report_dict["Forecast"]
     ]
     forecasted_heights = [
-        forecast["height"] for forecast in report_dict["Forecast"]
+        forecast["surf height"] for forecast in report_dict["Forecast"]
     ]
     forecasted_periods = [
-        forecast["period"] for forecast in report_dict["Forecast"]
+        forecast["swell period"] for forecast in report_dict["Forecast"]
     ]
     forecasted_directions = [
-        forecast["direction"] for forecast in report_dict["Forecast"]
+        forecast["swell direction"] for forecast in report_dict["Forecast"]
     ]
     # table
     if graph_type == "Height/Period :ocean:" or graph_type is None:
