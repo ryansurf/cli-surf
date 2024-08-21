@@ -7,8 +7,7 @@ Run pytest: pytest
 import io
 from unittest.mock import patch
 
-from src import cli
-from src import helper
+from src import cli, helper
 
 
 def test_invalid_input():
@@ -44,6 +43,7 @@ def test_json_output():
     assert type(json_output["Lat"]) in {int, float}
     assert isinstance(json_output["Location"], str)
 
+
 def test_print_gpt():
     """
     Tests the simple_gpt()
@@ -53,11 +53,9 @@ def test_print_gpt():
         "Height": "test",
         "Swell Direction": "test",
         "Period": "test",
-        "Unit": "test"
+        "Unit": "test",
     }
     gpt_prompt = "Please output 'gpt works'"
     gpt_info = [None, ""]
     gpt_response = helper.print_gpt(surf_data, gpt_prompt, gpt_info)
     assert "gpt works" in gpt_response
-
-

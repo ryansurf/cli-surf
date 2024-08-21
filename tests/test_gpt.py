@@ -6,6 +6,7 @@ Run pytest: pytest
 
 from src import gpt
 
+
 def test_simple_gpt():
     """
     Testing the simple_gpt function
