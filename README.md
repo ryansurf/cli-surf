@@ -155,7 +155,7 @@ Note that when starting with Docker, the `.env` file will be automatically creat
 
 Optional, sends a surf report to a specified email.
 
-You will need to setup an email account that is able to utilize SMTP services. I used Gmail, following Method #1 outlined [here](https://www.cubebackup.com/blog/how-to-use-google-smtp-service-to-send-emails-for-free/). After doing this, change the variables in `.env`
+You will need to setup an email account that is able to utilize SMTP services. Gmail can be used, following Method #1 outlined [here](https://www.cubebackup.com/blog/how-to-use-google-smtp-service-to-send-emails-for-free/). After doing this, change the variables in `.env`
 
 The Email Server can be executed using one of the following methods.
 ```bash
@@ -170,26 +170,29 @@ Note that the Flask server must be running in order to send emails.
 ### Frontend
 
 <p align="center">
-    <img src="images/website.gif" alt="cli-surf_website gif" style="width: 700px; height: auto;">
+    <img src="images/streamlit.gif" alt="cli-surf_website gif" style="width: 700px; height: auto;">
 </p>
 
-Although this application was made with the cli in mind, there are two frontends (experimenting at the moment).
+Although this application was made with the cli in mind, there is a frontend.
+
+**Streamlit Frontend**
+
+[Streamlit](https://streamlit.io/) is used! 
+
+To run streamlit: `streamlit run src/dev_streamlit.py`
+
+You will be able to find the frontend here: `http://localhost:8502`
 
 **HTML/JS/CSS Frontend**
+
+> [!NOTE]
+> Streamlit is now the main focus for the frontend. This legacy frontend is no longer being actively developed.
 
 `http://localhost:8000/home` **or** `<ip_of_host>:<port>/home` if the application is running on a different host or you have changed the default port.
 
 You may need to change `IP_ADDRESS` in `.env` to match the ip of the host running the machine.
 
 Now, running `python3 server.py` will launch the website!
-
-**Streamlit Frontend**
-
-[Streamlit](https://streamlit.io/) is also an option that we are experimenting with. 
-
-To run streamlit: `streamlit run src/dev_streamlit.py`
-
-You will be able to find the frontend here: `http://localhost:8502`
 
 
 ## 📈 Contributing
