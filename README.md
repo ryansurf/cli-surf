@@ -238,6 +238,7 @@ Questions? Comments?
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ChristianToro"><img src="https://avatars.githubusercontent.com/u/143457701?v=4?s=100" width="100px;" alt="ChristianToro"/><br /><sub><b>ChristianToro</b></sub></a><br /><a href="#code-ChristianToro" title="Code">💻</a> <a href="#bug-ChristianToro" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/MylesPerHour201"><img src="https://avatars.githubusercontent.com/u/124012399?v=4?s=100" width="100px;" alt="Myles B."/><br /><sub><b>Myles B.</b></sub></a><br /><a href="#code-MylesPerHour201" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/balugans"><img src="https://avatars.githubusercontent.com/u/58871632?v=4?s=100" width="100px;" alt="Balaji Ganapathy"/><br /><sub><b>Balaji Ganapathy</b></sub></a><br /><a href="#bug-balugans" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/chengjackjelly"><img src="https://avatars.githubusercontent.com/u/76078595?v=4?s=100" width="100px;" alt="chengjackjelly"/><br /><sub><b>chengjackjelly</b></sub></a><br /><a href="#infra-chengjackjelly" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     </tr>
   </tbody>
 </table>
