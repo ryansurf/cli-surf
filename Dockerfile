@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.10-slim
 
 #this instruction specifies the "working directory"
 #or the path in the image where files will be copied and commands will be executed.
