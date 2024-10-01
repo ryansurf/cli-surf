@@ -195,6 +195,50 @@ You may need to change `IP_ADDRESS` in `.env` to match the ip of the host runnin
 Now, running `python3 server.py` will launch the website!
 
 
+### 🧠 GPT Surf Report
+
+**cli-surf** can generate personalized surf reports using OpenAI's GPT models. This section is for those that choose to not rely on gpt4free as the repo faces pending legal action.
+
+**Enabling GPT Reports**
+
+1. **Obtain an OpenAI API Key**:
+
+   - Sign up at [OpenAI](https://beta.openai.com/signup/).
+   - Navigate to the API section and create a new API key.
+   - Make sure to add a payment method.
+
+2. **Update `.env` File**:
+
+   ```bash
+   GPT_PROMPT=With this data, recommend what size board I should ride and nearby surf spots that may be better with the given conditions.
+   API_KEY=your_openai_api_key_here
+   GPT_MODEL=gpt-3.5-turbo  # Or use gpt-4 for better results
+   ```
+
+3. **Use the GPT Argument:**:
+    - Example Usage:
+  ```bash
+  curl localhost:8000?location=Malibu,gpt
+  ```
+
+**Customizing the GPT Prompt**
+You can tailor the response by changing the GPT_PROMPT in your .env file to get different types of reports.
+
+   - Common Examples:
+      ```bash
+        GPT_PROMPT="Analyze the surf conditions and suggest the best time of day to surf."
+       ```
+       ```bash
+        GPT_PROMPT="What are some good places to eat around this surf spot"
+       ```
+
+**Notes on Usage**
+  - Common Issue: Without a payment method, this feature will not work as OpenAI will deny API requests from these accounts.
+  - API Costs: Using the GPT feature will consume tokens from your OpenAI account based on the size of your custom prompt and the responses.
+  - Response Time: Generating GPT responses may take longer than standard outputs, especially if there are outages.
+  - Model Selection: Using gpt-4 provides better results but may be slower and more expensive than gpt-3.5-turbo.
+
+
 ## 📈 Contributing
 
 Thank you for considering contributing to cli-surf!
