@@ -16,14 +16,14 @@ def test_simple_gpt():
     """
 
     surf_summary = (
-    "Please respond with the exact phrase 'gpt works'. "
-    "Do not include any additional text or context."
-)
+        "Please respond with the exact phrase 'gpt works'. "
+        "Do not include any additional text or context."
+    )
 
     gpt_prompt = "This is for testing purposes"
     gpt_response = gpt.simple_gpt(surf_summary, gpt_prompt)
     expected_response = "gpt works"
 
-    assert gpt_response == expected_response, (
-    f"Expected '{expected_response}', but got: {gpt_response}"
-)
+    assert (
+        gpt_response == expected_response
+    ), f"Expected '{expected_response}', but got: {gpt_response}"
