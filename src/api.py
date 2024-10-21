@@ -11,6 +11,7 @@ import requests
 import requests_cache
 from geopy.geocoders import Nominatim
 from retry_requests import retry
+from datetime import datetime, timedelta
 
 from src import helper
 
@@ -89,6 +90,43 @@ def get_uv(lat, long, decimal, unit="imperial"):
 
     return current_uv_index
 
+def get_uv_history(lat, long, decimal, unit="imperial"):
+    """
+    Get UV one year ago at coordinates (lat, long)
+    Calling the API here: https://open-meteo.com/en/docs
+    """
+    # Setup the Open-Meteo API client with cache and retry on error
+    cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
+    retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
+    openmeteo = openmeteo_requests.Client(session=retry_session)
+
+    # Get the date one year ago
+    one_year_ago = datetime.now() - timedelta(days=365)
+    formatted_date_one_year_ago = one_year_ago.strftime("%Y-%m-%d")
+
+
+    url = "https://air-quality-api.open-meteo.com/v1/air-quality"
+    params = {
+        "latitude": lat,
+        "longitude": long,
+        "length_unit": unit,
+        "current": "uv_index",
+        "start_date": formatted_date_one_year_ago,
+        "end_date": formatted_date_one_year_ago
+    }
+    try:
+        responses = openmeteo.weather_api(url, params=params)
+    except ValueError:
+        return "No data"
+
+    response = responses[0]
+
+    # Current values. The order of variables needs to be the same as requested.
+    past_uv = response.Current()
+    historical_uv_index = round(past_uv.Variables(0).Value(), decimal)
+
+    print(params)
+    return historical_uv_index
 
 def ocean_information(lat, long, decimal, unit="imperial"):
     """
