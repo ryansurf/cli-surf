@@ -90,6 +90,7 @@ def get_uv(lat, long, decimal, unit="imperial"):
 
     return current_uv_index
 
+
 def get_uv_history(lat, long, decimal, unit="imperial"):
     """
     Get UV one year ago at coordinates (lat, long)
@@ -103,7 +104,6 @@ def get_uv_history(lat, long, decimal, unit="imperial"):
     # Get the date one year ago
     one_year_ago = datetime.now() - timedelta(days=365)
     formatted_date_one_year_ago = one_year_ago.strftime("%Y-%m-%d")
-
 
     url = "https://air-quality-api.open-meteo.com/v1/air-quality"
     params = {
@@ -125,8 +125,8 @@ def get_uv_history(lat, long, decimal, unit="imperial"):
     past_uv = response.Current()
     historical_uv_index = round(past_uv.Variables(0).Value(), decimal)
 
-    print(params)
     return historical_uv_index
+
 
 def ocean_information(lat, long, decimal, unit="imperial"):
     """
@@ -404,6 +404,13 @@ def gather_data(lat, long, arguments):
     )
     uv_index = get_uv(lat, long, arguments["decimal"], arguments["unit"])
 
+    past_uv_index = get_uv_history(
+        lat,
+        long,
+        arguments["decimal"],
+        arguments["unit"]
+    )
+
     wind_temp = current_wind_temp(lat, long, arguments["decimal"])
 
     hourly_dict = get_hourly_forecast(lat, long, arguments["decimal"])
@@ -426,6 +433,7 @@ def gather_data(lat, long, arguments):
         "Swell Direction": ocean_data[1],
         "Period": ocean_data[2],
         "UV Index": uv_index,
+        "UV Index one year ago": past_uv_index,
         "Air Temperature": air_temp,
         "Wind Speed": wind_speed,
         "Wind Direction": wind_dir,
