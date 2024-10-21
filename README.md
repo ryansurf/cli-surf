@@ -284,6 +284,7 @@ Questions? Comments?
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/balugans"><img src="https://avatars.githubusercontent.com/u/58871632?v=4?s=100" width="100px;" alt="Balaji Ganapathy"/><br /><sub><b>Balaji Ganapathy</b></sub></a><br /><a href="#bug-balugans" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/chengjackjelly"><img src="https://avatars.githubusercontent.com/u/76078595?v=4?s=100" width="100px;" alt="chengjackjelly"/><br /><sub><b>chengjackjelly</b></sub></a><br /><a href="#infra-chengjackjelly" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/vsingk"><img src="https://avatars.githubusercontent.com/u/100103684?v=4?s=100" width="100px;" alt="Varun Singh"/><br /><sub><b>Varun Singh</b></sub></a><br /><a href="#doc-vsingk" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/macnult"><img src="https://avatars.githubusercontent.com/u/113482585?v=4?s=100" width="100px;" alt="macnult"/><br /><sub><b>macnult</b></sub></a><br /><a href="#code-macnult" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
