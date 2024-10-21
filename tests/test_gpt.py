@@ -14,7 +14,16 @@ def test_simple_gpt():
     "gpt works". If anything else is outputted, we can
     assume an error has occured
     """
-    surf_summary = "Please only output: 'gpt works!' "
+
+    surf_summary = (
+    "Please respond with the exact phrase 'gpt works'. "
+    "Do not include any additional text or context."
+)
+
     gpt_prompt = "This is for testing purposes"
     gpt_response = gpt.simple_gpt(surf_summary, gpt_prompt)
-    assert "gpt works" in gpt_response
+    expected_response = "gpt works"
+
+    assert gpt_response == expected_response, (
+    f"Expected '{expected_response}', but got: {gpt_response}"
+)
