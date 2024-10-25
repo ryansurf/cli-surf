@@ -166,6 +166,47 @@ def ocean_information(lat, long, decimal, unit="imperial"):
 
     return [current_wave_height, current_wave_direction, current_wave_period]
 
+def ocean_information_history(lat, long, decimal, unit="imperial"):
+    """
+    Get Ocean Data one year ago at coordinates
+    API: https://open-meteo.com/en/docs/marine-weather-api
+    """
+    # Setup the Open-Meteo API client with cache and retry on error
+    cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
+    retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
+    openmeteo = openmeteo_requests.Client(session=retry_session)
+
+    # Get the date one year ago
+    one_year_ago = datetime.now() - timedelta(days=365)
+    formatted_date_one_year_ago = one_year_ago.strftime("%Y-%m-%d")
+
+    url = "https://marine-api.open-meteo.com/v1/marine"
+    params = {
+        "latitude": lat,
+        "longitude": long,
+        "current": ["wave_height", "wave_direction", "wave_period"],
+        "start_date": formatted_date_one_year_ago,
+        "end_date": formatted_date_one_year_ago,
+        "length_unit": unit,
+        "timezone": "auto",
+
+    }
+    try:
+        responses = openmeteo.weather_api(url, params=params)
+    except ValueError:
+        return "No data"
+
+    # Process first location.
+    response = responses[0]
+
+    # Past values. The order of variables needs to be the same as requested.
+    past_data = response.Current()
+    past_wave_height = round(past_data.Variables(0).Value(), decimal)
+    past_wave_direction = round(past_data.Variables(1).Value(), decimal)
+    past_wave_period = round(past_data.Variables(2).Value(), decimal)
+
+    return [past_wave_height, past_wave_direction, past_wave_period]
+
 
 def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
     """
@@ -402,6 +443,11 @@ def gather_data(lat, long, arguments):
     ocean_data = ocean_information(
         lat, long, arguments["decimal"], arguments["unit"]
     )
+
+    past_ocean_data = ocean_information_history(
+        lat, long, arguments["decimal"], arguments["unit"]
+    )
+
     uv_index = get_uv(lat, long, arguments["decimal"], arguments["unit"])
 
     past_uv_index = get_uv_history(
@@ -430,8 +476,11 @@ def gather_data(lat, long, arguments):
         "Long": long,
         "Location": arguments["city"],
         "Height": ocean_data[0],
+        "Height one year ago": past_ocean_data[0],
         "Swell Direction": ocean_data[1],
+        "Swell Direction one year ago": past_ocean_data[1],
         "Period": ocean_data[2],
+        "Period one year ago": past_ocean_data[2],
         "UV Index": uv_index,
         "UV Index one year ago": past_uv_index,
         "Air Temperature": air_temp,
