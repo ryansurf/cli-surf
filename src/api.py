@@ -166,6 +166,7 @@ def ocean_information(lat, long, decimal, unit="imperial"):
 
     return [current_wave_height, current_wave_direction, current_wave_period]
 
+
 def ocean_information_history(lat, long, decimal, unit="imperial"):
     """
     Get Ocean Data one year ago at coordinates
@@ -179,17 +180,17 @@ def ocean_information_history(lat, long, decimal, unit="imperial"):
     # Get the date one year ago
     one_year_ago = datetime.now() - timedelta(days=365)
     formatted_date_one_year_ago = one_year_ago.strftime("%Y-%m-%d")
+    current_hour = one_year_ago.hour
 
     url = "https://marine-api.open-meteo.com/v1/marine"
     params = {
         "latitude": lat,
         "longitude": long,
-        "current": ["wave_height", "wave_direction", "wave_period"],
-        "start_date": formatted_date_one_year_ago,
-        "end_date": formatted_date_one_year_ago,
+        "hourly": ["wave_height", "wave_direction", "wave_period"],
         "length_unit": unit,
         "timezone": "auto",
-
+        "start_date": formatted_date_one_year_ago,
+        "end_date": formatted_date_one_year_ago
     }
     try:
         responses = openmeteo.weather_api(url, params=params)
@@ -199,11 +200,16 @@ def ocean_information_history(lat, long, decimal, unit="imperial"):
     # Process first location.
     response = responses[0]
 
-    # Past values. The order of variables needs to be the same as requested.
-    past_data = response.Current()
-    past_wave_height = round(past_data.Variables(0).Value(), decimal)
-    past_wave_direction = round(past_data.Variables(1).Value(), decimal)
-    past_wave_period = round(past_data.Variables(2).Value(), decimal)
+    # Hourly values one year ago. The order of variables needs to be the same as requested.
+    hourly = response.Hourly()
+    hourly_wave_height = hourly.Variables(0).ValuesAsNumpy()
+    hourly_wave_direction = hourly.Variables(1).ValuesAsNumpy()
+    hourly_wave_period = hourly.Variables(2).ValuesAsNumpy()
+
+    # Access the data for the current hour one year ago
+    past_wave_height = round(hourly_wave_height[current_hour], decimal)
+    past_wave_direction = round(hourly_wave_direction[current_hour], decimal)
+    past_wave_period = round(hourly_wave_period[current_hour], decimal)
 
     return [past_wave_height, past_wave_direction, past_wave_period]
 

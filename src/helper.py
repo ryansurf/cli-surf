@@ -149,28 +149,6 @@ def print_location(city, show_city):
         print("\n")
 
 
-def print_historical_data(ocean_data_dict):
-    """
-    Prints ocean data one year ago (UV Index, Wave Height,
-    Wave Direction, Wave Period, etc.)
-    """
-    # Extract historical data with default values if not present
-    past_uv_index = ocean_data_dict.get(
-        "UV Index one year ago", "No data"
-    )
-    past_wave_height = ocean_data_dict.get("Height one year ago", "No data")
-    past_wave_direction = ocean_data_dict.get(
-        "Swell Direction one year ago", "No data"
-    )
-    past_wave_period = ocean_data_dict.get("Period one year ago", "No data")
-
-    print("Historical Weather (1 Year Ago):")
-    print(f"UV Index: {past_uv_index}")
-    print(f"Wave Height: {past_wave_height}")
-    print(f"Wave Direction: {past_wave_direction}")
-    print(f"Wave Period: {past_wave_period}")
-
-
 def print_ocean_data(arguments_dict, ocean_data_dict):
     """
     Prints ocean data(height, wave direction, period, etc)
@@ -181,8 +159,11 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
         ("show_uv", "UV Index", "UV index: "),
         ("show_past_uv", "UV Index one year ago", "UV Index one year ago: "),
         ("show_height", "Height", "Wave Height: "),
+        ("show_height_history", "Height one year ago", "Wave Height one year ago: "),
         ("show_direction", "Swell Direction", "Wave Direction: "),
+        ("show_direction_history", "Swell Direction one year ago", "Wave Direction one year ago: "),
         ("show_period", "Period", "Wave Period: "),
+        ("show_period_history","Period one year ago","Wave Period one year ago:"),
         ("show_air_temp", "Air Temperature", "Air Temp: "),
         ("show_wind_speed", "Wind Speed", "Wind Speed: "),
         ("show_wind_direction", "Wind Direction", "Wind Direction: "),
@@ -325,7 +306,7 @@ def print_outputs(ocean_data_dict, arguments, gpt_prompt, gpt_info):
     print_forecast(arguments, forecast)
 
     # Print Historical Data
-    print_historical_data(ocean_data_dict)
+    #print_historical_data(ocean_data_dict)
 
     # Checks if GPT in args, prints GPT response if True
     gpt_response = None
