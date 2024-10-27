@@ -184,22 +184,28 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
         if int(arguments_dict[arg_key]) == 1:
             print(f"{label}{ocean_data_dict[data_key]}")
 
+
 def print_historical_data(ocean_data_dict):
     """
-    Prints ocean data one year ago (UV Index, Wave Height,
-    Wave Direction, Wave Period, etc.)
+    Prints historical ocean data from one year ago, including:
+    - UV Index
+    - Wave Height
+    - Wave Direction
+    - Wave Period
+
+    Args:
+        ocean_data_dict (dict): A dictionary containing ocean data,
+                                 including historical values for UV Index,
+                                 wave height, direction, and period.
     """
-    # Extract historical data with default values if not present
-    past_uv_index = ocean_data_dict.get(
-        "UV Index one year ago", "No data"
-    )
+    # Extract historical data with fallback to "No data" if not available
+    past_uv_index = ocean_data_dict.get("UV Index one year ago", "No data")
     past_wave_height = ocean_data_dict.get("Height one year ago", "No data")
-    past_wave_direction = ocean_data_dict.get(
-        "Swell Direction one year ago", "No data"
-    )
+    past_wave_direction = ocean_data_dict.get("Swell Direction one year ago", "No data")
     past_wave_period = ocean_data_dict.get("Period one year ago", "No data")
 
-    print("Historical Weather (1 Year Ago):")
+    # Display the extracted historical data
+    print("Historical Ocean Data (1 Year Ago):")
     print(f"UV Index: {past_uv_index}")
     print(f"Wave Height: {past_wave_height}")
     print(f"Wave Direction: {past_wave_direction}")
@@ -326,7 +332,7 @@ def print_outputs(ocean_data_dict, arguments, gpt_prompt, gpt_info):
     # Prints the forecast(if activated in CLI args)
     print_forecast(arguments, forecast)
 
-    # Print Historical Data
+    # Prints Historical Data
     print_historical_data(ocean_data_dict)
 
     # Checks if GPT in args, prints GPT response if True
