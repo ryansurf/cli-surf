@@ -104,13 +104,14 @@ def get_uv_history(lat, long, decimal, unit="imperial"):
     # Get the date one year ago
     one_year_ago = datetime.now() - timedelta(days=365)
     formatted_date_one_year_ago = one_year_ago.strftime("%Y-%m-%d")
+    current_hour = one_year_ago.hour
 
     url = "https://air-quality-api.open-meteo.com/v1/air-quality"
     params = {
         "latitude": lat,
         "longitude": long,
         "length_unit": unit,
-        "current": "uv_index",
+        "hourly": ["uv_index"],
         "start_date": formatted_date_one_year_ago,
         "end_date": formatted_date_one_year_ago
     }
@@ -122,8 +123,10 @@ def get_uv_history(lat, long, decimal, unit="imperial"):
     response = responses[0]
 
     # Current values. The order of variables needs to be the same as requested.
-    past_uv = response.Current()
-    historical_uv_index = round(past_uv.Variables(0).Value(), decimal)
+    hourly = response.Hourly()
+    hourly_uv_index = hourly.Variables(0).ValuesAsNumpy()
+
+    historical_uv_index = round(hourly_uv_index[current_hour], decimal)
 
     return historical_uv_index
 
