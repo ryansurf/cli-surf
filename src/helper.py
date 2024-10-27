@@ -159,11 +159,14 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
         ("show_uv", "UV Index", "UV index: "),
         ("show_past_uv", "UV Index one year ago", "UV Index one year ago: "),
         ("show_height", "Height", "Wave Height: "),
-        ("show_height_history", "Height one year ago", "Wave Height one year ago: "),
+        ("show_height_history", "Height one year ago",
+         "Wave Height one year ago: "),
         ("show_direction", "Swell Direction", "Wave Direction: "),
-        ("show_direction_history", "Swell Direction one year ago", "Wave Direction one year ago: "),
+        ("show_direction_history", "Swell Direction one year ago",
+         "Wave Direction one year ago: "),
         ("show_period", "Period", "Wave Period: "),
-        ("show_period_history","Period one year ago","Wave Period one year ago:"),
+        ("show_period_history", "Period one year ago",
+         "Wave Period one year ago:"),
         ("show_air_temp", "Air Temperature", "Air Temp: "),
         ("show_wind_speed", "Wind Speed", "Wind Speed: "),
         ("show_wind_direction", "Wind Direction", "Wind Direction: "),
@@ -200,8 +203,10 @@ def print_historical_data(ocean_data_dict):
     """
     # Extract historical data with fallback to "No data" if not available
     past_uv_index = ocean_data_dict.get("UV Index one year ago", "No data")
-    past_wave_height = ocean_data_dict.get("Height one year ago", "No data")
-    past_wave_direction = ocean_data_dict.get("Swell Direction one year ago", "No data")
+    past_wave_height = ocean_data_dict.get("Height one year ago",
+                                           "No data")
+    past_wave_direction = ocean_data_dict.get("Swell Direction one year ago",
+                                              "No data")
     past_wave_period = ocean_data_dict.get("Period one year ago", "No data")
 
     # Display the extracted historical data

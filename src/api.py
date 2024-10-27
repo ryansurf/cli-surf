@@ -103,7 +103,8 @@ def get_uv_history(lat, long, decimal, unit="imperial"):
         lat (float): Latitude of the location.
         long (float): Longitude of the location.
         decimal (int): Number of decimal places to round the output.
-        unit (str): Unit of measurement ('imperial' or 'metric'). Defaults to 'imperial'.
+        unit (str): Unit of measurement ('imperial' or 'metric').
+        Defaults to 'imperial'.
 
     Returns:
         str: The historical UV index rounded to the specified decimal places,
@@ -197,19 +198,23 @@ def ocean_information_history(lat, long, decimal, unit="imperial"):
     """
     Retrieve ocean data from one year ago for specified coordinates.
 
-    This function accesses the Open-Meteo API to fetch hourly ocean data
-    including wave height, direction, and period for the specified latitude
-    and longitude. It formats the results based on the specified decimal precision.
+    This function accesses the Open-Meteo API to fetch
+    hourly ocean data including wave height,
+    direction, and period for the specified latitude
+    and longitude. It formats the results based on the
+    specified decimal precision.
 
     Args:
         lat (float): Latitude of the location.
         long (float): Longitude of the location.
         decimal (int): Number of decimal places to round the output.
-        unit (str): Unit of measurement ('imperial' or 'metric'). Defaults to 'imperial'.
+        unit (str): Unit of measurement ('imperial' or 'metric').
+                Defaults to 'imperial'.
 
     Returns:
         list: A list containing the wave height, direction, and period rounded
-              to the specified decimal places, or an error message if no data is found.
+              to the specified decimal places,
+              or an error message if no data is found.
 
     API Documentation:
     https://open-meteo.com/en/docs/marine-weather-api
@@ -219,10 +224,10 @@ def ocean_information_history(lat, long, decimal, unit="imperial"):
     retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
     openmeteo = openmeteo_requests.Client(session=retry_session)
 
-    # Calculate the date one year ago and the current hour
+    # Calculate the date and current hour one year ago
     one_year_ago = datetime.now() - timedelta(days=365)
     formatted_date_one_year_ago = one_year_ago.strftime("%Y-%m-%d")
-    current_hour = one_year_ago.hour
+    current_hour = one_year_ago.hour  # Combined calculation here
 
     # Define the API request parameters
     url = "https://marine-api.open-meteo.com/v1/marine"
@@ -239,6 +244,8 @@ def ocean_information_history(lat, long, decimal, unit="imperial"):
     # Attempt to fetch the data from the API
     try:
         responses = openmeteo.weather_api(url, params=params)
+        if not responses:  # Check if responses is empty
+            return "No data"
     except ValueError:
         return "No data"
 
@@ -252,16 +259,12 @@ def ocean_information_history(lat, long, decimal, unit="imperial"):
     hourly_wave_period = hourly.Variables(2).ValuesAsNumpy()
 
     # Retrieve data for the current hour from one year ago
-    past_wave_height = hourly_wave_height[current_hour]
-    past_wave_direction = hourly_wave_direction[current_hour]
-    past_wave_period = hourly_wave_period[current_hour]
-
-    # Format the results to the specified decimal precision
     return [
-        f"{past_wave_height:.{decimal}f}",
-        f"{past_wave_direction:.{decimal}f}",
-        f"{past_wave_period:.{decimal}f}"
+        f"{hourly_wave_height[current_hour]:.{decimal}f}",
+        f"{hourly_wave_direction[current_hour]:.{decimal}f}",
+        f"{hourly_wave_period[current_hour]:.{decimal}f}"
     ]
+
 
 def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
     """
