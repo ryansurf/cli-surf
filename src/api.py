@@ -129,7 +129,8 @@ def get_uv_history(lat, long, decimal, unit="imperial"):
 
     # Get the historical UV index and its corresponding time
     historical_uv_index = hourly_uv_index[current_hour]
-    return historical_uv_index
+
+    return f"{historical_uv_index:.{decimal}f}"
 
 
 def ocean_information(lat, long, decimal, unit="imperial"):
@@ -211,11 +212,15 @@ def ocean_information_history(lat, long, decimal, unit="imperial"):
     hourly_wave_period = hourly.Variables(2).ValuesAsNumpy()
 
     # Access the data for the current hour one year ago
-    past_wave_height = round(hourly_wave_height[current_hour], decimal)
-    past_wave_direction = round(hourly_wave_direction[current_hour], decimal)
-    past_wave_period = round(hourly_wave_period[current_hour], decimal)
+    past_wave_height = hourly_wave_height[current_hour]
+    past_wave_direction = hourly_wave_direction[current_hour]
+    past_wave_period = hourly_wave_period[current_hour]
 
-    return [past_wave_height, past_wave_direction, past_wave_period]
+    return [
+        f"{past_wave_height:.{decimal}f}",
+        f"{past_wave_direction:.{decimal}f}",
+        f"{past_wave_period:.{decimal}f}"
+    ]
 
 
 def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
