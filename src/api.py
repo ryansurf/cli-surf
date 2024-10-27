@@ -113,7 +113,8 @@ def get_uv_history(lat, long, decimal, unit="imperial"):
         "length_unit": unit,
         "hourly": ["uv_index"],
         "start_date": formatted_date_one_year_ago,
-        "end_date": formatted_date_one_year_ago
+        "end_date": formatted_date_one_year_ago,
+        "timezone": "auto"
     }
     try:
         responses = openmeteo.weather_api(url, params=params)
@@ -126,8 +127,8 @@ def get_uv_history(lat, long, decimal, unit="imperial"):
     hourly = response.Hourly()
     hourly_uv_index = hourly.Variables(0).ValuesAsNumpy()
 
-    historical_uv_index = round(hourly_uv_index[current_hour], decimal)
-
+    # Get the historical UV index and its corresponding time
+    historical_uv_index = hourly_uv_index[current_hour]
     return historical_uv_index
 
 

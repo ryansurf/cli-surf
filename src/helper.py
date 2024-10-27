@@ -200,7 +200,7 @@ def print_historical_data(ocean_data_dict):
     past_wave_period = ocean_data_dict.get("Period one year ago", "No data")
 
     print("Historical Weather (1 Year Ago):")
-    print(f"UV Index: {past_uv_index}")
+    print(f"UV Index: {past_uv_index:.1f}")
     print(f"Wave Height: {past_wave_height}")
     print(f"Wave Direction: {past_wave_direction}")
     print(f"Wave Period: {past_wave_period}")
