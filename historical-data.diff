@@ -1,0 +1,599 @@
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+new file mode 100644
+index 0000000..13566b8
+--- /dev/null
++++ b/.idea/.gitignore
+@@ -0,0 +1,8 @@
++# Default ignored files
++/shelf/
++/workspace.xml
++# Editor-based HTTP Client requests
++/httpRequests/
++# Datasource local storage ignored files
++/dataSources/
++/dataSources.local.xml
+diff --git a/.idea/cli-surf.iml b/.idea/cli-surf.iml
+new file mode 100644
+index 0000000..857a781
+--- /dev/null
++++ b/.idea/cli-surf.iml
+@@ -0,0 +1,25 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="PYTHON_MODULE" version="4">
++  <component name="Flask">
++    <option name="enabled" value="true" />
++  </component>
++  <component name="NewModuleRootManager">
++    <content url="file://$MODULE_DIR$">
++      <excludeFolder url="file://$MODULE_DIR$/venv" />
++    </content>
++    <orderEntry type="jdk" jdkName="Python 3.11 (cli-surf)" jdkType="Python SDK" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++  <component name="PyDocumentationSettings">
++    <option name="format" value="PLAIN" />
++    <option name="myDocStringFormat" value="Plain" />
++  </component>
++  <component name="TemplatesService">
++    <option name="TEMPLATE_CONFIGURATION" value="Jinja2" />
++    <option name="TEMPLATE_FOLDERS">
++      <list>
++        <option value="$MODULE_DIR$/src/templates" />
++      </list>
++    </option>
++  </component>
++</module>
+\ No newline at end of file
+diff --git a/.idea/inspectionProfiles/Project_Default.xml b/.idea/inspectionProfiles/Project_Default.xml
+new file mode 100644
+index 0000000..4ad5922
+--- /dev/null
++++ b/.idea/inspectionProfiles/Project_Default.xml
+@@ -0,0 +1,12 @@
++<component name="InspectionProjectProfileManager">
++  <profile version="1.0">
++    <option name="myName" value="Project Default" />
++    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
++      <option name="ignoredIdentifiers">
++        <list>
++          <option value="tests.test_tic_tic_toe.iStringIO" />
++        </list>
++      </option>
++    </inspection_tool>
++  </profile>
++</component>
+\ No newline at end of file
+diff --git a/.idea/inspectionProfiles/profiles_settings.xml b/.idea/inspectionProfiles/profiles_settings.xml
+new file mode 100644
+index 0000000..105ce2d
+--- /dev/null
++++ b/.idea/inspectionProfiles/profiles_settings.xml
+@@ -0,0 +1,6 @@
++<component name="InspectionProjectProfileManager">
++  <settings>
++    <option name="USE_PROJECT_PROFILE" value="false" />
++    <version value="1.0" />
++  </settings>
++</component>
+\ No newline at end of file
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+new file mode 100644
+index 0000000..8648825
+--- /dev/null
++++ b/.idea/misc.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Black">
++    <option name="sdkName" value="Python 3.11 (cli-surf)" />
++  </component>
++  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (cli-surf)" project-jdk-type="Python SDK" />
++</project>
+\ No newline at end of file
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+new file mode 100644
+index 0000000..9f0a871
+--- /dev/null
++++ b/.idea/modules.xml
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectModuleManager">
++    <modules>
++      <module fileurl="file://$PROJECT_DIR$/.idea/cli-surf.iml" filepath="$PROJECT_DIR$/.idea/cli-surf.iml" />
++    </modules>
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+index 0000000..35eb1dd
+--- /dev/null
++++ b/.idea/vcs.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/src/api.py b/src/api.py
+index 8a9abe4..08e04e0 100644
+--- a/src/api.py
++++ b/src/api.py
+@@ -2,6 +2,7 @@
+ Functions that make API calls stored here
+ """
+ 
++from datetime import datetime, timedelta
+ from http import HTTPStatus
+ 
+ import numpy as np
+@@ -14,6 +15,8 @@ from retry_requests import retry
+ 
+ from src import helper
+ 
++testing = 1
++
+ 
+ def get_coordinates(args):
+     """
+@@ -90,6 +93,76 @@ def get_uv(lat, long, decimal, unit="imperial"):
+     return current_uv_index
+ 
+ 
++def get_uv_history(lat, long, decimal, unit="imperial"):
++    """
++    Retrieve the UV index from one year ago for specified coordinates.
++
++    This function accesses the Open-Meteo API to fetch the hourly UV index
++    for the given latitude and longitude. It formats the result based on the
++    specified decimal precision.
++
++    Args:
++        lat (float): Latitude of the location.
++        long (float): Longitude of the location.
++        decimal (int): Number of decimal places to round the output.
++        unit (str): Unit of measurement ('imperial' or 'metric').
++        Defaults to 'imperial'.
++
++    Returns:
++        str: The historical UV index rounded to the specified decimal places,
++              or an error message if no data is found.
++
++    API Documentation:
++    https://open-meteo.com/en/docs/air-quality-api
++    """
++    # Set up the Open-Meteo API client with caching and retry on error
++    cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
++    retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
++    openmeteo = openmeteo_requests.Client(session=retry_session)
++
++    # Calculate the date one year ago and the current hour
++    one_year_ago = datetime.now() - timedelta(days=365)
++    formatted_date_one_year_ago = one_year_ago.strftime("%Y-%m-%d")
++    current_hour = one_year_ago.hour
++
++    # Define the API request parameters
++    url = "https://air-quality-api.open-meteo.com/v1/air-quality"
++    params = {
++        "latitude": lat,
++        "longitude": long,
++        "length_unit": unit,
++        "hourly": ["uv_index"],
++        "start_date": formatted_date_one_year_ago,
++        "end_date": formatted_date_one_year_ago,
++        "timezone": "auto"
++    }
++
++    # For testing purposes if testing equals 1 it will continue
++    if testing == 1:
++        # Attempt to fetch the UV index data from the API
++        try:
++            responses = openmeteo.weather_api(url, params=params)
++
++        except ValueError:
++            return "No data"
++
++        # Process the first response (assuming a single location)
++        response = responses[0]
++
++        # Extract hourly UV index values
++        hourly = response.Hourly()
++        hourly_uv_index = hourly.Variables(0).ValuesAsNumpy()
++
++    else:
++        hourly_uv_index = [0.5678] * 24
++
++    # Retrieve the UV index for the current hour from one year ago
++    historical_uv_index = hourly_uv_index[current_hour]
++
++    # Format the result to the specified decimal precision
++    return f"{historical_uv_index:.{decimal}f}"
++
++
+ def ocean_information(lat, long, decimal, unit="imperial"):
+     """
+     Get Ocean Data at coordinates
+@@ -129,6 +202,84 @@ def ocean_information(lat, long, decimal, unit="imperial"):
+     return [current_wave_height, current_wave_direction, current_wave_period]
+ 
+ 
++def ocean_information_history(lat, long, decimal, unit="imperial"):
++    """
++    Retrieve ocean data from one year ago for specified coordinates.
++
++    This function accesses the Open-Meteo API to fetch
++    hourly ocean data including wave height,
++    direction, and period for the specified latitude
++    and longitude. It formats the results based on the
++    specified decimal precision.
++
++    Args:
++        lat (float): Latitude of the location.
++        long (float): Longitude of the location.
++        decimal (int): Number of decimal places to round the output.
++        unit (str): Unit of measurement ('imperial' or 'metric').
++                Defaults to 'imperial'.
++
++    Returns:
++        list: A list containing the wave height, direction, and period rounded
++              to the specified decimal places,
++              or an error message if no data is found.
++
++    API Documentation:
++    https://open-meteo.com/en/docs/marine-weather-api
++    """
++    # Set up the Open-Meteo API client with caching and retry on error
++    cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
++    retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
++    openmeteo = openmeteo_requests.Client(session=retry_session)
++
++    # Calculate the date and current hour one year ago
++    one_year_ago = datetime.now() - timedelta(days=365)
++    formatted_date_one_year_ago = one_year_ago.strftime("%Y-%m-%d")
++    current_hour = one_year_ago.hour  # Combined calculation here
++
++    # Define the API request parameters
++    url = "https://marine-api.open-meteo.com/v1/marine"
++    params = {
++        "latitude": lat,
++        "longitude": long,
++        "hourly": ["wave_height", "wave_direction", "wave_period"],
++        "length_unit": unit,
++        "timezone": "auto",
++        "start_date": formatted_date_one_year_ago,
++        "end_date": formatted_date_one_year_ago
++    }
++
++    # For testing purposes if testing equals 1 it will continue
++    if testing == 1:
++        # Attempt to fetch the UV index data from the API
++        try:
++            responses = openmeteo.weather_api(url, params=params)
++
++        except ValueError:
++            return "No data"
++
++        # Process the first response (assuming a single location)
++        response = responses[0]
++
++        # Extract hourly values for the specified metrics
++        hourly = response.Hourly()
++        hourly_wave_height = hourly.Variables(0).ValuesAsNumpy()
++        hourly_wave_direction = hourly.Variables(1).ValuesAsNumpy()
++        hourly_wave_period = hourly.Variables(2).ValuesAsNumpy()
++
++    else:
++        hourly_wave_height = [0.5678] * 24
++        hourly_wave_direction = [0.5678] * 24
++        hourly_wave_period = [0.5678] * 24
++
++    # Retrieve data for the current hour from one year ago
++    return [
++        f"{hourly_wave_height[current_hour]:.{decimal}f}",
++        f"{hourly_wave_direction[current_hour]:.{decimal}f}",
++        f"{hourly_wave_period[current_hour]:.{decimal}f}"
++    ]
++
++
+ def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
+     """
+     Gathers the wind and temperature data
+@@ -364,8 +515,20 @@ def gather_data(lat, long, arguments):
+     ocean_data = ocean_information(
+         lat, long, arguments["decimal"], arguments["unit"]
+     )
++
++    past_ocean_data = ocean_information_history(
++        lat, long, arguments["decimal"], arguments["unit"]
++    )
++
+     uv_index = get_uv(lat, long, arguments["decimal"], arguments["unit"])
+ 
++    past_uv_index = get_uv_history(
++        lat,
++        long,
++        arguments["decimal"],
++        arguments["unit"]
++    )
++
+     wind_temp = current_wind_temp(lat, long, arguments["decimal"])
+ 
+     hourly_dict = get_hourly_forecast(lat, long, arguments["decimal"])
+@@ -385,9 +548,13 @@ def gather_data(lat, long, arguments):
+         "Long": long,
+         "Location": arguments["city"],
+         "Height": ocean_data[0],
++        "Height one year ago": past_ocean_data[0],
+         "Swell Direction": ocean_data[1],
++        "Swell Direction one year ago": past_ocean_data[1],
+         "Period": ocean_data[2],
++        "Period one year ago": past_ocean_data[2],
+         "UV Index": uv_index,
++        "UV Index one year ago": past_uv_index,
+         "Air Temperature": air_temp,
+         "Wind Speed": wind_speed,
+         "Wind Direction": wind_dir,
+diff --git a/src/helper.py b/src/helper.py
+index 5a63a14..dae382f 100644
+--- a/src/helper.py
++++ b/src/helper.py
+@@ -24,9 +24,13 @@ def arguments_dictionary(lat, long, city, args):
+         "show_wave": 1,
+         "show_large_wave": 0,
+         "show_uv": 1,
++        "show_past_uv": 0,
+         "show_height": 1,
+         "show_direction": 1,
+         "show_period": 1,
++        "show_height_history": 0,
++        "show_direction_history": 0,
++        "show_period_history": 0,
+         "show_city": 1,
+         "show_date": 1,
+         "show_air_temp": 0,
+@@ -62,12 +66,16 @@ def set_output_values(args, arguments_dictionary):  # noqa
+         "show_large_wave": ("show_large_wave", 1),
+         "slw": ("show_large_wave", 1),
+         "hide_uv": ("show_uv", 0),
++        "show_past_uv": ("show_past_uv", 1),
+         "huv": ("show_uv", 0),
+         "hide_height": ("show_height", 0),
++        "show_height_history": ("show_height_history", 1),
+         "hh": ("show_height", 0),
+         "hide_direction": ("show_direction", 0),
++        "show_direction_history": ("show_direction_history", 1),
+         "hdir": ("show_direction", 0),
+         "hide_period": ("show_period", 0),
++        "show_period_history": ("show_period_history", 1),
+         "hp": ("show_period", 0),
+         "hide_location": ("show_city", 0),
+         "hl": ("show_city", 0),
+@@ -149,9 +157,16 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
+     # List of tuples mapping argument keys to ocean data keys and labels
+     mappings = [
+         ("show_uv", "UV Index", "UV index: "),
++        ("show_past_uv", "UV Index one year ago", "UV Index one year ago: "),
+         ("show_height", "Height", "Wave Height: "),
++        ("show_height_history", "Height one year ago",
++         "Wave Height one year ago: "),
+         ("show_direction", "Swell Direction", "Wave Direction: "),
++        ("show_direction_history", "Swell Direction one year ago",
++         "Wave Direction one year ago: "),
+         ("show_period", "Period", "Wave Period: "),
++        ("show_period_history", "Period one year ago",
++         "Wave Period one year ago:"),
+         ("show_air_temp", "Air Temperature", "Air Temp: "),
+         ("show_wind_speed", "Wind Speed", "Wind Speed: "),
+         ("show_wind_direction", "Wind Direction", "Wind Direction: "),
+@@ -173,6 +188,35 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
+             print(f"{label}{ocean_data_dict[data_key]}")
+ 
+ 
++def print_historical_data(ocean_data_dict):
++    """
++    Prints historical ocean data from one year ago, including:
++    - UV Index
++    - Wave Height
++    - Wave Direction
++    - Wave Period
++
++    Args:
++        ocean_data_dict (dict): A dictionary containing ocean data,
++                                 including historical values for UV Index,
++                                 wave height, direction, and period.
++    """
++    # Extract historical data with fallback to "No data" if not available
++    past_uv_index = ocean_data_dict.get("UV Index one year ago", "No data")
++    past_wave_height = ocean_data_dict.get("Height one year ago",
++                                           "No data")
++    past_wave_direction = ocean_data_dict.get("Swell Direction one year ago",
++                                              "No data")
++    past_wave_period = ocean_data_dict.get("Period one year ago", "No data")
++
++    # Display the extracted historical data
++    print("Historical Ocean Data (1 Year Ago):")
++    print(f"UV Index: {past_uv_index}")
++    print(f"Wave Height: {past_wave_height}")
++    print(f"Wave Direction: {past_wave_direction}")
++    print(f"Wave Period: {past_wave_period}")
++
++
+ def print_forecast(ocean, forecast):
+     """
+     Takes in dict of forecast data and prints.
+@@ -293,6 +337,9 @@ def print_outputs(ocean_data_dict, arguments, gpt_prompt, gpt_info):
+     # Prints the forecast(if activated in CLI args)
+     print_forecast(arguments, forecast)
+ 
++    # Prints Historical Data
++    print_historical_data(ocean_data_dict)
++
+     # Checks if GPT in args, prints GPT response if True
+     gpt_response = None
+     if arguments["gpt"] == 1:
+diff --git a/tests/test_api.py b/tests/test_api.py
+index 2aa186c..82644b6 100644
+--- a/tests/test_api.py
++++ b/tests/test_api.py
+@@ -3,13 +3,19 @@ QA tests for api.py
+ Make sure pytest is installed: pip install pytest
+ Run pytest: pytest
+ """
++from unittest.mock import patch
++
++import pytest
++from openmeteo_requests.Client import OpenMeteoRequestsError
+ 
+ from src.api import (
+     forecast,
+     gather_data,
+     get_coordinates,
+     get_uv,
++    get_uv_history,
+     ocean_information,
++    ocean_information_history,
+     seperate_args_and_get_location,
+ )
+ from src.helper import arguments_dictionary
+@@ -77,3 +83,89 @@ def test_seperate_args_and_get_location():
+     assert isinstance(lat, (int, float))
+     assert isinstance(long, (int, float))
+     assert "Pleasure Point" in str(city)
++
++
++def test_get_uv_history_basic_functionality():
++    """
++    Test the basic functionality of the get_uv_history function.
++
++    This test verifies that the function returns a string
++    when provided with valid latitude and longitude coordinates.
++    """
++    uv = get_uv_history(31.9505, 115.8605, 2)  # Perth coordinates
++    assert isinstance(uv, str)
++
++
++def test_get_uv_history_invalid_coordinates():
++    """
++    Test get_uv_history with invalid coordinates.
++
++    This test checks that the function raises an OpenMeteoRequestsError
++    when provided with latitude and longitude values that are out of range.
++    """
++    with pytest.raises(OpenMeteoRequestsError):
++        get_uv_history(1000, -2000, 2)
++
++
++@patch('src.api.testing', new=0)  # Set testing variable to 0
++def test_get_uv_history_api_response():
++    """
++    Test how get_uv_history handles API response.
++
++    This test verifies that the function returns the expected values
++    when called with valid coordinates while patching the API call request.
++    """
++    result = get_uv_history(31.9505, 115.8605, 1)
++    expected_result = '0.6'
++    assert result == expected_result
++
++
++def test_ocean_information_history_basic_functionality():
++    """
++    Test the basic functionality of the ocean_information_history function.
++
++    This test checks that the function returns actual values for
++    the wave data points when provided with valid coordinates.
++    """
++    waves = ocean_information_history(31.9505, 115.8605, 2)
++    assert waves[0] is not None
++    assert waves[1] is not None
++    assert waves[2] is not None
++
++
++def test_ocean_information_history_invalid_coordinates():
++    """
++    Test ocean_information_history with invalid coordinates.
++
++    This test ensures that the function raises an OpenMeteoRequestsError
++    when provided with latitude and longitude values that are out of range.
++    """
++    with pytest.raises(OpenMeteoRequestsError):
++        get_uv_history(1000, -2000, 2)
++
++
++def test_ocean_information_history_response_format():
++    """
++    Test the response format of ocean_information_history.
++
++    This test verifies that the function returns a list with a
++    specific number of elements when called with valid coordinates.
++    """
++    waves = ocean_information_history(31.9505, 115.8605, 2)
++    expected_wave_count = 3
++    assert isinstance(waves, list)
++    assert len(waves) > 0
++    assert len(waves) == expected_wave_count
++
++
++@patch('src.api.testing', new=0)  # Set testing variable to 0
++def test_ocean_information_history():
++    """
++    Test how ocean_information_history handles API response.
++
++    This test verifies that the function returns the expected values
++    when called with valid coordinates while patching the API call request.
++    """
++    result = ocean_information_history(31.9505, 115.8605, 1)
++    expected_result = ['0.6', '0.6', '0.6']
++    assert result == expected_result
+diff --git a/tests/test_helper.py b/tests/test_helper.py
+index 15319ea..975b5b7 100644
+--- a/tests/test_helper.py
++++ b/tests/test_helper.py
+@@ -5,6 +5,7 @@ Run pytest: pytest
+ """
+ 
+ import io
++import sys
+ from unittest.mock import patch
+ 
+ from src import cli, helper
+@@ -59,3 +60,36 @@ def test_print_gpt():
+     gpt_info = [None, ""]
+     gpt_response = helper.print_gpt(surf_data, gpt_prompt, gpt_info)
+     assert "gpt works" in gpt_response
++
++
++def test_print_historical_data():
++    """
++    Tests the print_historical_data function for correct output.
++
++    This test verifies that the function prints the expected information
++    from a dictionary containing historical ocean data. It captures the
++    printed output and checks if specific test values are present in
++    the output.
++    """
++
++    # Prepare test data
++    test_ocean_data_dict = {
++        "UV Index one year ago": "test",
++        "Height one year ago": "test",
++        "Swell Direction one year ago": "test",
++        "Period one year ago": "test"
++    }
++
++    # Capture the printed output
++    captured_output = io.StringIO()
++    sys.stdout = captured_output
++
++    # Call the function
++    helper.print_historical_data(test_ocean_data_dict)
++    sys.stdout = sys.__stdout__
++
++    # Get the printed response
++    print_response = captured_output.getvalue().strip()
++
++    # Check if "test" is in the output
++    assert "test" in print_response

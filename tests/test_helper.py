@@ -93,3 +93,65 @@ def test_print_historical_data():
 
     # Check if "test" is in the output
     assert "test" in print_response
+
+
+def test_print_historical_data_no_data():
+    """
+    Tests the print_historical_data function with an empty dictionary.
+
+    This test verifies that the function handles an empty dictionary correctly
+    and prints an appropriate message indicating no data is available.
+    """
+
+    # Prepare test data
+    empty_ocean_data_dict = {}
+
+    # Capture the printed output
+    captured_output = io.StringIO()
+    sys.stdout = captured_output
+
+    # Call the function
+    helper.print_historical_data(empty_ocean_data_dict)
+    sys.stdout = sys.__stdout__
+
+    # Get the printed response
+    print_response = captured_output.getvalue().strip()
+
+    # Check if the appropriate message is in the output
+    assert "No data" in print_response
+
+
+def test_print_historical_data_various_data_types():
+    """
+    Tests the print_historical_data function line by line.
+
+    This test verifies that the function can handle and
+    print various data types
+    (such as integers, and floats) correctly, and ensures that
+    each piece of data is displayed with the appropriate message.
+    """
+
+    # Prepare test data with various data types
+    test_ocean_data_dict = {
+        "UV Index one year ago": 5.2345,
+        "Height one year ago": 4.1123,
+        "Swell Direction one year ago": 230,
+        "Period one year ago": 9.5
+    }
+
+    # Capture the printed output
+    captured_output = io.StringIO()
+    sys.stdout = captured_output
+
+    # Call the function
+    helper.print_historical_data(test_ocean_data_dict)
+    sys.stdout = sys.__stdout__
+
+    # Get the printed response
+    print_response = captured_output.getvalue().strip()
+
+    # Check if the values are correctly formatted in the output
+    assert "UV Index: 5.2" in print_response
+    assert "Wave Height: 4.1" in print_response
+    assert "Wave Direction: 230" in print_response
+    assert "Wave Period: 9.5" in print_response
