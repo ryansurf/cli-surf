@@ -3,12 +3,17 @@ QA tests for api.py
 Make sure pytest is installed: pip install pytest
 Run pytest: pytest
 """
+import unittest
+from openmeteo_requests.Client import OpenMeteoRequestsError
+from unittest.mock import patch
 
 from src.api import (
     forecast,
     gather_data,
     get_coordinates,
     get_uv,
+    get_uv_history,
+    ocean_information_history,
     ocean_information,
     seperate_args_and_get_location,
 )
@@ -77,3 +82,49 @@ def test_seperate_args_and_get_location():
     assert isinstance(lat, (int, float))
     assert isinstance(long, (int, float))
     assert "Pleasure Point" in str(city)
+
+
+class TestGetUVHistory(unittest.TestCase):
+
+    def test_basic_functionality(self):
+        # Test 1: Basic Functionality for Perth
+        uv = get_uv_history(31.9505, 115.8605, 2)  # Perth coordinates
+        self.assertIsInstance(uv, str)
+
+    def test_invalid_coordinates(self):
+        # Test 2: Invalid Coordinates using assertRaises
+        with self.assertRaises(OpenMeteoRequestsError):
+            get_uv_history(1000, -2000, 2)
+
+    @patch('src.api.testing', new=0)  # Set testing variable to 0
+    def test_get_uv_history(self):
+        result = get_uv_history(31.9505, 115.8605, 1)
+        expected_result = '0.6'
+        self.assertEqual(result, expected_result)
+
+class TestGetWaveHistory(unittest.TestCase):
+
+    def test_basic_functionality(self):
+        # Test 1: Basic Functionality for Perth
+        waves = ocean_information_history(31.9505, 115.8605, 2)  # Perth coordinates
+        self.assertIsNotNone(waves[0])
+        self.assertIsNotNone(waves[1])
+        self.assertIsNotNone(waves[2])
+
+    def test_invalid_coordinates(self):
+        # Test 2: Invalid Coordinates using assertRaises
+        with self.assertRaises(OpenMeteoRequestsError):
+            get_uv_history(1000, -2000, 2)
+
+    def test_response_format(self):
+        # Test 4: Response Format
+        waves = ocean_information_history(31.9505, 115.8605, 2)  # Perth coordinates
+        self.assertIsInstance(waves, list)
+        self.assertGreater(len(waves), 0)
+        self.assertEqual(len(waves),3)
+
+    @patch('src.api.testing', new=0)  # Set testing variable to 0
+    def test_ocean_information_history(self):
+        result = ocean_information_history(31.9505, 115.8605, 1)
+        expected_result = ['0.6', '0.6', '0.6']
+        self.assertEqual(result, expected_result)

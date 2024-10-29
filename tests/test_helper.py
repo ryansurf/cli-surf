@@ -5,6 +5,7 @@ Run pytest: pytest
 """
 
 import io
+import sys
 from unittest.mock import patch
 
 from src import cli, helper
@@ -59,3 +60,33 @@ def test_print_gpt():
     gpt_info = [None, ""]
     gpt_response = helper.print_gpt(surf_data, gpt_prompt, gpt_info)
     assert "gpt works" in gpt_response
+
+
+def test_print_historical_data():
+    """
+    Tests function printing
+    """
+
+    # Prepare test data
+    test_ocean_data_dict = {
+        "UV Index one year ago": "test",
+        "Height one year ago": "test",
+        "Swell Direction one year ago": "test",
+        "Period one year ago": "test"
+    }
+
+    # Capture the printed output
+    captured_output = io.StringIO()
+    sys.stdout = captured_output
+
+    # Call the function
+    helper.print_historical_data(test_ocean_data_dict)
+
+    # Reset redirect
+    sys.stdout = sys.__stdout__
+
+    # Get the printed response
+    print_response = captured_output.getvalue().strip()
+
+    # Check if "test" is in the output
+    assert "test" in print_response
