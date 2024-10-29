@@ -2,6 +2,7 @@
 Functions that make API calls stored here
 """
 
+from datetime import datetime, timedelta
 from http import HTTPStatus
 
 import numpy as np
@@ -11,11 +12,11 @@ import requests
 import requests_cache
 from geopy.geocoders import Nominatim
 from retry_requests import retry
-from datetime import datetime, timedelta
 
 from src import helper
 
 testing = 1
+
 
 def get_coordinates(args):
     """
@@ -136,8 +137,6 @@ def get_uv_history(lat, long, decimal, unit="imperial"):
         "timezone": "auto"
     }
 
-    global testing
-
     # For testing purposes if testing equals 1 it will continue
     if testing == 1:
         # Attempt to fetch the UV index data from the API
@@ -249,8 +248,6 @@ def ocean_information_history(lat, long, decimal, unit="imperial"):
         "start_date": formatted_date_one_year_ago,
         "end_date": formatted_date_one_year_ago
     }
-
-    global testing
 
     # For testing purposes if testing equals 1 it will continue
     if testing == 1:

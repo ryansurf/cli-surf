@@ -64,7 +64,12 @@ def test_print_gpt():
 
 def test_print_historical_data():
     """
-    Tests function printing
+    Tests the print_historical_data function for correct output.
+
+    This test verifies that the function prints the expected information
+    from a dictionary containing historical ocean data. It captures the
+    printed output and checks if specific test values are present in
+    the output.
     """
 
     # Prepare test data
@@ -81,8 +86,6 @@ def test_print_historical_data():
 
     # Call the function
     helper.print_historical_data(test_ocean_data_dict)
-
-    # Reset redirect
     sys.stdout = sys.__stdout__
 
     # Get the printed response

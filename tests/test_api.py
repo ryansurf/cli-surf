@@ -3,9 +3,10 @@ QA tests for api.py
 Make sure pytest is installed: pip install pytest
 Run pytest: pytest
 """
-import unittest
-from openmeteo_requests.Client import OpenMeteoRequestsError
 from unittest.mock import patch
+
+import pytest
+from openmeteo_requests.Client import OpenMeteoRequestsError
 
 from src.api import (
     forecast,
@@ -13,8 +14,8 @@ from src.api import (
     get_coordinates,
     get_uv,
     get_uv_history,
-    ocean_information_history,
     ocean_information,
+    ocean_information_history,
     seperate_args_and_get_location,
 )
 from src.helper import arguments_dictionary
@@ -84,47 +85,87 @@ def test_seperate_args_and_get_location():
     assert "Pleasure Point" in str(city)
 
 
-class TestGetUVHistory(unittest.TestCase):
+def test_get_uv_history_basic_functionality():
+    """
+    Test the basic functionality of the get_uv_history function.
 
-    def test_basic_functionality(self):
-        # Test 1: Basic Functionality for Perth
-        uv = get_uv_history(31.9505, 115.8605, 2)  # Perth coordinates
-        self.assertIsInstance(uv, str)
+    This test verifies that the function returns a string
+    when provided with valid latitude and longitude coordinates.
+    """
+    uv = get_uv_history(31.9505, 115.8605, 2)  # Perth coordinates
+    assert isinstance(uv, str)
 
-    def test_invalid_coordinates(self):
-        # Test 2: Invalid Coordinates using assertRaises
-        with self.assertRaises(OpenMeteoRequestsError):
-            get_uv_history(1000, -2000, 2)
 
-    @patch('src.api.testing', new=0)  # Set testing variable to 0
-    def test_get_uv_history(self):
-        result = get_uv_history(31.9505, 115.8605, 1)
-        expected_result = '0.6'
-        self.assertEqual(result, expected_result)
+def test_get_uv_history_invalid_coordinates():
+    """
+    Test get_uv_history with invalid coordinates.
 
-class TestGetWaveHistory(unittest.TestCase):
+    This test checks that the function raises an OpenMeteoRequestsError
+    when provided with latitude and longitude values that are out of range.
+    """
+    with pytest.raises(OpenMeteoRequestsError):
+        get_uv_history(1000, -2000, 2)
 
-    def test_basic_functionality(self):
-        # Test 1: Basic Functionality for Perth
-        waves = ocean_information_history(31.9505, 115.8605, 2)  # Perth coordinates
-        self.assertIsNotNone(waves[0])
-        self.assertIsNotNone(waves[1])
-        self.assertIsNotNone(waves[2])
 
-    def test_invalid_coordinates(self):
-        # Test 2: Invalid Coordinates using assertRaises
-        with self.assertRaises(OpenMeteoRequestsError):
-            get_uv_history(1000, -2000, 2)
+@patch('src.api.testing', new=0)  # Set testing variable to 0
+def test_get_uv_history_api_response():
+    """
+    Test how get_uv_history handles API response.
 
-    def test_response_format(self):
-        # Test 4: Response Format
-        waves = ocean_information_history(31.9505, 115.8605, 2)  # Perth coordinates
-        self.assertIsInstance(waves, list)
-        self.assertGreater(len(waves), 0)
-        self.assertEqual(len(waves),3)
+    This test verifies that the function returns the expected values
+    when called with valid coordinates while patching the API call request.
+    """
+    result = get_uv_history(31.9505, 115.8605, 1)
+    expected_result = '0.6'
+    assert result == expected_result
 
-    @patch('src.api.testing', new=0)  # Set testing variable to 0
-    def test_ocean_information_history(self):
-        result = ocean_information_history(31.9505, 115.8605, 1)
-        expected_result = ['0.6', '0.6', '0.6']
-        self.assertEqual(result, expected_result)
+
+def test_ocean_information_history_basic_functionality():
+    """
+    Test the basic functionality of the ocean_information_history function.
+
+    This test checks that the function returns actual values for
+    the wave data points when provided with valid coordinates.
+    """
+    waves = ocean_information_history(31.9505, 115.8605, 2)
+    assert waves[0] is not None
+    assert waves[1] is not None
+    assert waves[2] is not None
+
+
+def test_ocean_information_history_invalid_coordinates():
+    """
+    Test ocean_information_history with invalid coordinates.
+
+    This test ensures that the function raises an OpenMeteoRequestsError
+    when provided with latitude and longitude values that are out of range.
+    """
+    with pytest.raises(OpenMeteoRequestsError):
+        get_uv_history(1000, -2000, 2)
+
+
+def test_ocean_information_history_response_format():
+    """
+    Test the response format of ocean_information_history.
+
+    This test verifies that the function returns a list with a
+    specific number of elements when called with valid coordinates.
+    """
+    waves = ocean_information_history(31.9505, 115.8605, 2)
+    expected_wave_count = 3
+    assert isinstance(waves, list)
+    assert len(waves) > 0
+    assert len(waves) == expected_wave_count
+
+
+@patch('src.api.testing', new=0)  # Set testing variable to 0
+def test_ocean_information_history():
+    """
+    Test how ocean_information_history handles API response.
+
+    This test verifies that the function returns the expected values
+    when called with valid coordinates while patching the API call request.
+    """
+    result = ocean_information_history(31.9505, 115.8605, 1)
+    expected_result = ['0.6', '0.6', '0.6']
+    assert result == expected_result
