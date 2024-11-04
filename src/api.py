@@ -516,18 +516,7 @@ def gather_data(lat, long, arguments):
         lat, long, arguments["decimal"], arguments["unit"]
     )
 
-    past_ocean_data = ocean_information_history(
-        lat, long, arguments["decimal"], arguments["unit"]
-    )
-
     uv_index = get_uv(lat, long, arguments["decimal"], arguments["unit"])
-
-    past_uv_index = get_uv_history(
-        lat,
-        long,
-        arguments["decimal"],
-        arguments["unit"]
-    )
 
     wind_temp = current_wind_temp(lat, long, arguments["decimal"])
 
@@ -548,13 +537,25 @@ def gather_data(lat, long, arguments):
         "Long": long,
         "Location": arguments["city"],
         "Height": ocean_data[0],
-        "Height one year ago": past_ocean_data[0],
+        "Height one year ago": (
+            ocean_information_history(
+                lat, long, arguments["decimal"], arguments["unit"])[0]
+        ),
         "Swell Direction": ocean_data[1],
-        "Swell Direction one year ago": past_ocean_data[1],
+        "Swell Direction one year ago": (
+            ocean_information_history(
+                lat, long, arguments["decimal"], arguments["unit"])[1]
+        ),
         "Period": ocean_data[2],
-        "Period one year ago": past_ocean_data[2],
+        "Period one year ago": (
+            ocean_information_history(
+                lat, long, arguments["decimal"], arguments["unit"])[2]
+        ),
         "UV Index": uv_index,
-        "UV Index one year ago": past_uv_index,
+        "UV Index one year ago": (
+            get_uv_history(
+                lat, long, arguments["decimal"], arguments["unit"])
+        ),
         "Air Temperature": air_temp,
         "Wind Speed": wind_speed,
         "Wind Direction": wind_dir,
