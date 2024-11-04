@@ -55,6 +55,14 @@ Wave Period:  9.8
 | show_rain_sum / srs   | Show the rain sum   |
 | show_precipitation_prob / spp   | Show the max precipitation chance   |
 | hide_uv / huv    | Hide uv index   | 
+| show_past_uv     | Show past uv index   |
+| hide_past_uv     | Hide past uv index   |
+| show_height_history     | Show past wave height index   |
+| hide_height_history     | Hide past wave height index   |
+| show_direction_history     | Show past wave direction index   |
+| hide_direction_history     | Hide past wave direction index   | 
+| show_period_history     | Show past wave period index   | 
+| hide_period_history     | Hide past wave period index   |
 | hide_height / hh    | Hide surf height   | 
 | hide_direction / hdir    | Hide Swell direction    | 
 | hide_period / hp  | Hide swell period    | 
@@ -73,6 +81,7 @@ Wave Period:  9.8
 * `curl localhost:8000`
 * `curl localhost:8000?location=new_york,hide_height,hide_wave,show_large_wave`
 * `curl localhost:8000?fc=3,hdate,loc=trestles`
+* `curl localhost:8000?show_past_uv,show_height_history,show_direction_history,show_period_history`
 
 **For detailed information you can access the [help](https://github.com/ryansurf/cli-surf/blob/main/help.txt) page**
 

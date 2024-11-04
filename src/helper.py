@@ -66,17 +66,21 @@ def set_output_values(args, arguments_dictionary):  # noqa
         "show_large_wave": ("show_large_wave", 1),
         "slw": ("show_large_wave", 1),
         "hide_uv": ("show_uv", 0),
-        "show_past_uv": ("show_past_uv", 1),
         "huv": ("show_uv", 0),
+        "show_past_uv": ("show_past_uv", 1),
+        "hide_past_uv": ("show_past_uv", 0),
         "hide_height": ("show_height", 0),
-        "show_height_history": ("show_height_history", 1),
         "hh": ("show_height", 0),
+        "show_height_history": ("show_height_history", 1),
+        "hide_height_history": ("show_height_history", 0),
         "hide_direction": ("show_direction", 0),
-        "show_direction_history": ("show_direction_history", 1),
         "hdir": ("show_direction", 0),
+        "show_direction_history": ("show_direction_history", 1),
+        "hide_direction_history": ("show_direction_history", 0),
         "hide_period": ("show_period", 0),
-        "show_period_history": ("show_period_history", 1),
         "hp": ("show_period", 0),
+        "show_period_history": ("show_period_history", 1),
+        "hide_period_history": ("show_period_history", 0),
         "hide_location": ("show_city", 0),
         "hl": ("show_city", 0),
         "hide_date": ("show_date", 0),
@@ -186,35 +190,6 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
     for arg_key, data_key, label in mappings:
         if int(arguments_dict[arg_key]) == 1:
             print(f"{label}{ocean_data_dict[data_key]}")
-
-
-def print_historical_data(ocean_data_dict):
-    """
-    Prints historical ocean data from one year ago, including:
-    - UV Index
-    - Wave Height
-    - Wave Direction
-    - Wave Period
-
-    Args:
-        ocean_data_dict (dict): A dictionary containing ocean data,
-                                 including historical values for UV Index,
-                                 wave height, direction, and period.
-    """
-    # Extract historical data with fallback to "No data" if not available
-    past_uv_index = ocean_data_dict.get("UV Index one year ago", "No data")
-    past_wave_height = ocean_data_dict.get("Height one year ago",
-                                           "No data")
-    past_wave_direction = ocean_data_dict.get("Swell Direction one year ago",
-                                              "No data")
-    past_wave_period = ocean_data_dict.get("Period one year ago", "No data")
-
-    # Display the extracted historical data
-    print("Historical Ocean Data (1 Year Ago):")
-    print(f"UV Index: {past_uv_index}")
-    print(f"Wave Height: {past_wave_height}")
-    print(f"Wave Direction: {past_wave_direction}")
-    print(f"Wave Period: {past_wave_period}")
 
 
 def print_forecast(ocean, forecast):
@@ -336,9 +311,6 @@ def print_outputs(ocean_data_dict, arguments, gpt_prompt, gpt_info):
     )
     # Prints the forecast(if activated in CLI args)
     print_forecast(arguments, forecast)
-
-    # Prints Historical Data
-    print_historical_data(ocean_data_dict)
 
     # Checks if GPT in args, prints GPT response if True
     gpt_response = None
