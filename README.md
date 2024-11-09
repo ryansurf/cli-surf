@@ -55,13 +55,13 @@ Wave Period:  9.8
 | show_rain_sum / srs   | Show the rain sum   |
 | show_precipitation_prob / spp   | Show the max precipitation chance   |
 | hide_uv / huv    | Hide uv index   | 
-| show_past_uv     | Show past uv index   |
+| show_past_uv / spuv   | Show past uv index   |
 | hide_past_uv     | Hide past uv index   |
-| show_height_history     | Show past wave height index   |
+| show_height_history / shh   | Show past wave height index   |
 | hide_height_history     | Hide past wave height index   |
-| show_direction_history     | Show past wave direction index   |
+| show_direction_history / sdh   | Show past wave direction index   |
 | hide_direction_history     | Hide past wave direction index   | 
-| show_period_history     | Show past wave period index   | 
+| show_period_history / sph   | Show past wave period index   | 
 | hide_period_history     | Hide past wave period index   |
 | hide_height / hh    | Hide surf height   | 
 | hide_direction / hdir    | Hide Swell direction    | 
