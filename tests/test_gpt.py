@@ -16,10 +16,8 @@ def test_simple_gpt():
     """
 
     surf_summary = ""
-    gpt_prompt = (
-        """Please output the days of the week in English. What day
+    gpt_prompt = """Please output the days of the week in English. What day
         is your favorite?"""
-        )
 
     gpt_response = gpt.simple_gpt(surf_summary, gpt_prompt).lower()
     expected_response = set([
@@ -27,21 +25,19 @@ def test_simple_gpt():
         "tuesday",
         "wednesday",
         "thursday",
-        "friday"
-        "saturday",
+        "friday" "saturday",
         "sunday",
         "一",
         "二",
         "三",
         "四",
-        "五"
+        "五",
     ])
 
-    # Can case the "gpt_response" string into a list, and 
-    # check for set intersection with the expected response set 
+    # Can case the "gpt_response" string into a list, and
+    # check for set intersection with the expected response set
     gpt_response_set = set(gpt_response.split())
 
-
-    assert (
-        gpt_response_set.intersection(expected_response)
+    assert gpt_response_set.intersection(
+        expected_response
     ), f"Expected '{expected_response}', but got: {gpt_response}"
