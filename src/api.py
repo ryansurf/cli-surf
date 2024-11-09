@@ -134,7 +134,7 @@ def get_uv_history(lat, long, decimal, unit="imperial"):
         "hourly": ["uv_index"],
         "start_date": formatted_date_one_year_ago,
         "end_date": formatted_date_one_year_ago,
-        "timezone": "auto"
+        "timezone": "auto",
     }
 
     # For testing purposes if testing equals 1 it will continue
@@ -246,7 +246,7 @@ def ocean_information_history(lat, long, decimal, unit="imperial"):
         "length_unit": unit,
         "timezone": "auto",
         "start_date": formatted_date_one_year_ago,
-        "end_date": formatted_date_one_year_ago
+        "end_date": formatted_date_one_year_ago,
     }
 
     # For testing purposes if testing equals 1 it will continue
@@ -276,7 +276,7 @@ def ocean_information_history(lat, long, decimal, unit="imperial"):
     return [
         f"{hourly_wave_height[current_hour]:.{decimal}f}",
         f"{hourly_wave_direction[current_hour]:.{decimal}f}",
-        f"{hourly_wave_period[current_hour]:.{decimal}f}"
+        f"{hourly_wave_period[current_hour]:.{decimal}f}",
     ]
 
 
@@ -539,22 +539,24 @@ def gather_data(lat, long, arguments):
         "Height": ocean_data[0],
         "Height one year ago": (
             ocean_information_history(
-                lat, long, arguments["decimal"], arguments["unit"])[0]
+                lat, long, arguments["decimal"], arguments["unit"]
+            )[0]
         ),
         "Swell Direction": ocean_data[1],
         "Swell Direction one year ago": (
             ocean_information_history(
-                lat, long, arguments["decimal"], arguments["unit"])[1]
+                lat, long, arguments["decimal"], arguments["unit"]
+            )[1]
         ),
         "Period": ocean_data[2],
         "Period one year ago": (
             ocean_information_history(
-                lat, long, arguments["decimal"], arguments["unit"])[2]
+                lat, long, arguments["decimal"], arguments["unit"]
+            )[2]
         ),
         "UV Index": uv_index,
         "UV Index one year ago": (
-            get_uv_history(
-                lat, long, arguments["decimal"], arguments["unit"])
+            get_uv_history(lat, long, arguments["decimal"], arguments["unit"])
         ),
         "Air Temperature": air_temp,
         "Wind Speed": wind_speed,

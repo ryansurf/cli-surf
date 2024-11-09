@@ -3,6 +3,7 @@ QA tests for api.py
 Make sure pytest is installed: pip install pytest
 Run pytest: pytest
 """
+
 from unittest.mock import patch
 
 import pytest
@@ -107,7 +108,7 @@ def test_get_uv_history_invalid_coordinates():
         get_uv_history(1000, -2000, 2)
 
 
-@patch('src.api.testing', new=0)  # Set testing variable to 0
+@patch("src.api.testing", new=0)  # Set testing variable to 0
 def test_get_uv_history_api_response():
     """
     Test how get_uv_history handles API response.
@@ -116,7 +117,7 @@ def test_get_uv_history_api_response():
     when called with valid coordinates while patching the API call request.
     """
     result = get_uv_history(31.9505, 115.8605, 1)
-    expected_result = '0.6'
+    expected_result = "0.6"
     assert result == expected_result
 
 
@@ -158,7 +159,7 @@ def test_ocean_information_history_response_format():
     assert len(waves) == expected_wave_count
 
 
-@patch('src.api.testing', new=0)  # Set testing variable to 0
+@patch("src.api.testing", new=0)  # Set testing variable to 0
 def test_ocean_information_history():
     """
     Test how ocean_information_history handles API response.
@@ -167,5 +168,5 @@ def test_ocean_information_history():
     when called with valid coordinates while patching the API call request.
     """
     result = ocean_information_history(31.9505, 115.8605, 1)
-    expected_result = ['0.6', '0.6', '0.6']
+    expected_result = ["0.6", "0.6", "0.6"]
     assert result == expected_result

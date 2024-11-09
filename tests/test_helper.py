@@ -127,10 +127,12 @@ def test_set_output_values_hide_period_history():
 
 
 def test_set_output_values_combined_arguments():
-    args = ["show_past_uv",
-            "show_height_history",
-            "show_direction_history",
-            "show_period_history"]
+    args = [
+        "show_past_uv",
+        "show_height_history",
+        "show_direction_history",
+        "show_period_history",
+    ]
     arguments_dictionary = {}
     expected = {
         "show_past_uv": 1,
