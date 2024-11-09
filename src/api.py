@@ -2,6 +2,7 @@
 Functions that make API calls stored here
 """
 
+from datetime import datetime, timedelta
 from http import HTTPStatus
 
 import numpy as np
@@ -13,6 +14,8 @@ from geopy.geocoders import Nominatim
 from retry_requests import retry
 
 from src import helper
+
+testing = 1
 
 
 def get_coordinates(args):
@@ -90,6 +93,76 @@ def get_uv(lat, long, decimal, unit="imperial"):
     return current_uv_index
 
 
+def get_uv_history(lat, long, decimal, unit="imperial"):
+    """
+    Retrieve the UV index from one year ago for specified coordinates.
+
+    This function accesses the Open-Meteo API to fetch the hourly UV index
+    for the given latitude and longitude. It formats the result based on the
+    specified decimal precision.
+
+    Args:
+        lat (float): Latitude of the location.
+        long (float): Longitude of the location.
+        decimal (int): Number of decimal places to round the output.
+        unit (str): Unit of measurement ('imperial' or 'metric').
+        Defaults to 'imperial'.
+
+    Returns:
+        str: The historical UV index rounded to the specified decimal places,
+              or an error message if no data is found.
+
+    API Documentation:
+    https://open-meteo.com/en/docs/air-quality-api
+    """
+    # Set up the Open-Meteo API client with caching and retry on error
+    cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
+    retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
+    openmeteo = openmeteo_requests.Client(session=retry_session)
+
+    # Calculate the date one year ago and the current hour
+    one_year_ago = datetime.now() - timedelta(days=365)
+    formatted_date_one_year_ago = one_year_ago.strftime("%Y-%m-%d")
+    current_hour = one_year_ago.hour
+
+    # Define the API request parameters
+    url = "https://air-quality-api.open-meteo.com/v1/air-quality"
+    params = {
+        "latitude": lat,
+        "longitude": long,
+        "length_unit": unit,
+        "hourly": ["uv_index"],
+        "start_date": formatted_date_one_year_ago,
+        "end_date": formatted_date_one_year_ago,
+        "timezone": "auto",
+    }
+
+    # For testing purposes if testing equals 1 it will continue
+    if testing == 1:
+        # Attempt to fetch the UV index data from the API
+        try:
+            responses = openmeteo.weather_api(url, params=params)
+
+        except ValueError:
+            return "No data"
+
+        # Process the first response (assuming a single location)
+        response = responses[0]
+
+        # Extract hourly UV index values
+        hourly = response.Hourly()
+        hourly_uv_index = hourly.Variables(0).ValuesAsNumpy()
+
+    else:
+        hourly_uv_index = [0.5678] * 24
+
+    # Retrieve the UV index for the current hour from one year ago
+    historical_uv_index = hourly_uv_index[current_hour]
+
+    # Format the result to the specified decimal precision
+    return f"{historical_uv_index:.{decimal}f}"
+
+
 def ocean_information(lat, long, decimal, unit="imperial"):
     """
     Get Ocean Data at coordinates
@@ -127,6 +200,84 @@ def ocean_information(lat, long, decimal, unit="imperial"):
     # print(f"Current time {current.Time(``)}")
 
     return [current_wave_height, current_wave_direction, current_wave_period]
+
+
+def ocean_information_history(lat, long, decimal, unit="imperial"):
+    """
+    Retrieve ocean data from one year ago for specified coordinates.
+
+    This function accesses the Open-Meteo API to fetch
+    hourly ocean data including wave height,
+    direction, and period for the specified latitude
+    and longitude. It formats the results based on the
+    specified decimal precision.
+
+    Args:
+        lat (float): Latitude of the location.
+        long (float): Longitude of the location.
+        decimal (int): Number of decimal places to round the output.
+        unit (str): Unit of measurement ('imperial' or 'metric').
+                Defaults to 'imperial'.
+
+    Returns:
+        list: A list containing the wave height, direction, and period rounded
+              to the specified decimal places,
+              or an error message if no data is found.
+
+    API Documentation:
+    https://open-meteo.com/en/docs/marine-weather-api
+    """
+    # Set up the Open-Meteo API client with caching and retry on error
+    cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
+    retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
+    openmeteo = openmeteo_requests.Client(session=retry_session)
+
+    # Calculate the date and current hour one year ago
+    one_year_ago = datetime.now() - timedelta(days=365)
+    formatted_date_one_year_ago = one_year_ago.strftime("%Y-%m-%d")
+    current_hour = one_year_ago.hour  # Combined calculation here
+
+    # Define the API request parameters
+    url = "https://marine-api.open-meteo.com/v1/marine"
+    params = {
+        "latitude": lat,
+        "longitude": long,
+        "hourly": ["wave_height", "wave_direction", "wave_period"],
+        "length_unit": unit,
+        "timezone": "auto",
+        "start_date": formatted_date_one_year_ago,
+        "end_date": formatted_date_one_year_ago,
+    }
+
+    # For testing purposes if testing equals 1 it will continue
+    if testing == 1:
+        # Attempt to fetch the UV index data from the API
+        try:
+            responses = openmeteo.weather_api(url, params=params)
+
+        except ValueError:
+            return "No data"
+
+        # Process the first response (assuming a single location)
+        response = responses[0]
+
+        # Extract hourly values for the specified metrics
+        hourly = response.Hourly()
+        hourly_wave_height = hourly.Variables(0).ValuesAsNumpy()
+        hourly_wave_direction = hourly.Variables(1).ValuesAsNumpy()
+        hourly_wave_period = hourly.Variables(2).ValuesAsNumpy()
+
+    else:
+        hourly_wave_height = [0.5678] * 24
+        hourly_wave_direction = [0.5678] * 24
+        hourly_wave_period = [0.5678] * 24
+
+    # Retrieve data for the current hour from one year ago
+    return [
+        f"{hourly_wave_height[current_hour]:.{decimal}f}",
+        f"{hourly_wave_direction[current_hour]:.{decimal}f}",
+        f"{hourly_wave_period[current_hour]:.{decimal}f}",
+    ]
 
 
 def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
@@ -364,6 +515,7 @@ def gather_data(lat, long, arguments):
     ocean_data = ocean_information(
         lat, long, arguments["decimal"], arguments["unit"]
     )
+
     uv_index = get_uv(lat, long, arguments["decimal"], arguments["unit"])
 
     wind_temp = current_wind_temp(lat, long, arguments["decimal"])
@@ -385,9 +537,27 @@ def gather_data(lat, long, arguments):
         "Long": long,
         "Location": arguments["city"],
         "Height": ocean_data[0],
+        "Height one year ago": (
+            ocean_information_history(
+                lat, long, arguments["decimal"], arguments["unit"]
+            )[0]
+        ),
         "Swell Direction": ocean_data[1],
+        "Swell Direction one year ago": (
+            ocean_information_history(
+                lat, long, arguments["decimal"], arguments["unit"]
+            )[1]
+        ),
         "Period": ocean_data[2],
+        "Period one year ago": (
+            ocean_information_history(
+                lat, long, arguments["decimal"], arguments["unit"]
+            )[2]
+        ),
         "UV Index": uv_index,
+        "UV Index one year ago": (
+            get_uv_history(lat, long, arguments["decimal"], arguments["unit"])
+        ),
         "Air Temperature": air_temp,
         "Wind Speed": wind_speed,
         "Wind Direction": wind_dir,
