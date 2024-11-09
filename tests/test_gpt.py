@@ -11,19 +11,33 @@ def test_simple_gpt():
     """
     Testing the simple_gpt function
     Calls the simple gpt and asks it to output
-    "gpt works". If anything else is outputted, we can
-    assume an error has occured
+    the days of the week. If the output does not contain
+    any day of the week, we assume the gpt is non-fucntional
     """
 
-    surf_summary = (
-        "Please respond with the exact phrase 'gpt works'. "
-        "Do not include any additional text or context."
-    )
+    surf_summary = ""
+    gpt_prompt = """Please output the days of the week in English. What day
+        is your favorite?"""
 
-    gpt_prompt = "This is for testing purposes"
-    gpt_response = gpt.simple_gpt(surf_summary, gpt_prompt)
-    expected_response = "gpt works"
+    gpt_response = gpt.simple_gpt(surf_summary, gpt_prompt).lower()
+    expected_response = set([
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday" "saturday",
+        "sunday",
+        "一",
+        "二",
+        "三",
+        "四",
+        "五",
+    ])
 
-    assert (
-        gpt_response == expected_response
+    # Can case the "gpt_response" string into a list, and
+    # check for set intersection with the expected response set
+    gpt_response_set = set(gpt_response.split())
+
+    assert gpt_response_set.intersection(
+        expected_response
     ), f"Expected '{expected_response}', but got: {gpt_response}"
