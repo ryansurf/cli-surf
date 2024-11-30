@@ -4,12 +4,14 @@ Make sure pytest is installed: pip install pytest
 Run pytest: pytest
 """
 
-from unittest.mock import patch
+from http import HTTPStatus
+from unittest.mock import Mock, patch
 
 import pytest
 from openmeteo_requests.Client import OpenMeteoRequestsError
 
 from src.api import (
+    default_location,
     forecast,
     gather_data,
     get_coordinates,
@@ -20,6 +22,38 @@ from src.api import (
     seperate_args_and_get_location,
 )
 from src.helper import arguments_dictionary
+
+
+@pytest.mark.parametrize(
+    ("status_code", "json_data", "expected_result"),
+    [
+        (
+            HTTPStatus.OK,
+            {"loc": "43.03,-72.001", "city": "New York"},
+            ["43.03", "-72.001", "New York"],
+        ),
+        (HTTPStatus.BAD_REQUEST, {}, "No data"),
+    ],
+)
+def test_default_location_mocked(
+    mocker, status_code, json_data, expected_result
+):
+    # Arrange: Mock the response from the API
+    mock_response = Mock()
+    mock_response.status_code = status_code
+    mock_response.json = Mock(return_value=json_data)
+
+    # Mock the 'requests.get' method
+    mock_requests = mocker.patch("requests.get", return_value=mock_response)
+
+    # Act: Call the function
+    result = default_location()
+
+    # Assert: Verify function returns correct location data
+    assert result == expected_result
+
+    # Assert: Verify 'requests.get' is called with correct arguments
+    mock_requests.assert_called_once_with("https://ipinfo.io/json", timeout=10)
 
 
 def test_get_coordinates():
