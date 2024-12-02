@@ -205,6 +205,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "latiffetahaj",
+      "name": "Latif Fetahaj",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20369540?v=4",
+      "profile": "https://github.com/latiffetahaj",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ]
 }
