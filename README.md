@@ -296,6 +296,9 @@ Questions? Comments?
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/macnult"><img src="https://avatars.githubusercontent.com/u/113482585?v=4?s=100" width="100px;" alt="macnult"/><br /><sub><b>macnult</b></sub></a><br /><a href="#code-macnult" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/AITMAR-TAFE"><img src="https://avatars.githubusercontent.com/u/161272848?v=4?s=100" width="100px;" alt="AITMAR-TAFE"/><br /><sub><b>AITMAR-TAFE</b></sub></a><br /><a href="#code-AITMAR-TAFE" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/latiffetahaj"><img src="https://avatars.githubusercontent.com/u/20369540?v=4?s=100" width="100px;" alt="Latif Fetahaj"/><br /><sub><b>Latif Fetahaj</b></sub></a><br /><a href="#code-latiffetahaj" title="Code">💻</a> <a href="#test-latiffetahaj" title="Tests">⚠️</a></td>
+    </tr>
   </tbody>
 </table>
 
