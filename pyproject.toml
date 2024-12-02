@@ -34,6 +34,7 @@ numpy = "^1.26.4"
 # command: `poetry add --group dev <package-name>`
 ruff = "0.4.6"
 pytest = "8.2.1"
+pytest-mock = "*"
 pytest-cov = "5.0.0"
 pre-commit = "3.7.1"
 
