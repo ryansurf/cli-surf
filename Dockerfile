@@ -1,4 +1,5 @@
-FROM python:3.10-slim
+### Build stage
+FROM python:3.10-slim AS builder
 
 #this instruction specifies the "working directory"
 #or the path in the image where files will be copied and commands will be executed.
@@ -14,6 +15,11 @@ COPY .env.example .env
 RUN pip install poetry
 RUN poetry config installer.max-workers 10
 RUN poetry install --no-interaction --no-ansi
+
+### Runtime stage
+FROM python:3.10-slim
+COPY --from=builder /app /app
+WORKDIR /app
 
 # Set the working directory for running the application
 EXPOSE 8000
