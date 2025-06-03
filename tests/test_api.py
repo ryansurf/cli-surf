@@ -9,6 +9,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 from openmeteo_requests.Client import OpenMeteoRequestsError
+from requests.exceptions import Timeout
 
 from src.api import (
     default_location,
@@ -33,6 +34,7 @@ from src.helper import arguments_dictionary
             ["43.03", "-72.001", "New York"],
         ),
         (HTTPStatus.BAD_REQUEST, {}, "No data"),
+        (Timeout, {}, "No data"),
     ],
 )
 def test_default_location_mocked(
@@ -45,6 +47,10 @@ def test_default_location_mocked(
 
     # Mock the 'requests.get' method
     mock_requests = mocker.patch("requests.get", return_value=mock_response)
+
+    # Check for Timeout and set side effect
+    if status_code == Timeout:
+        mock_requests.side_effect = Timeout("Test Timeout")
 
     # Act: Call the function
     result = default_location()
