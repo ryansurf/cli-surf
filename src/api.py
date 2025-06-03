@@ -52,17 +52,18 @@ def default_location():
     """
     try:
         response = requests.get("https://ipinfo.io/json", timeout=10)
-
-        if response.status_code == HTTPStatus.OK:
-            data = response.json()
-            location = data["loc"].split(",")
-            lat = location[0]
-            long = location[1]
-            city = data["city"]
-            return [lat, long, city]
-        return "No data"
+        response.raise_for_status()
     except requests.exceptions.Timeout:
         return "No data"
+
+    if response.status_code == HTTPStatus.OK:
+        data = response.json()
+        location = data["loc"].split(",")
+        lat = location[0]
+        long = location[1]
+        city = data["city"]
+        return [lat, long, city]
+    return "No data"
 
 
 def get_uv(lat, long, decimal, unit="imperial"):
