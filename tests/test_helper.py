@@ -125,7 +125,6 @@ def test_set_output_values_hide_period_history():
     result = set_output_values(args, arguments_dictionary)
     assert result == expected
 
-
 def test_set_output_values_combined_arguments():
     args = [
         "show_past_uv",
@@ -142,3 +141,20 @@ def test_set_output_values_combined_arguments():
     }
     result = set_output_values(args, arguments_dictionary)
     assert result == expected
+
+def test_round_decimal():
+    rounded = helper.round_decimal([2.4345, 30.2789], 2)
+    assert rounded == [2.43, 30.28]
+
+def test_print_location_show_city_false():
+    with patch("sys.stdout", new=io.StringIO()) as fake_stdout:
+        helper.print_location("Not a City", 0)
+        output = fake_stdout.getvalue()
+        assert output.strip() == ""
+
+def test_get_forecast_days_valid():
+    args = ["forecast=3"]
+    assert helper.get_forecast_days(args) == 3
+
+def test_get_forecast_days_default():
+    assert helper.get_forecast_days([]) == 0
