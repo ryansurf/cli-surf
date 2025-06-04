@@ -143,8 +143,25 @@ def test_set_output_values_combined_arguments():
     assert result == expected
 
 def test_round_decimal():
+    # Standard rounding
     rounded = helper.round_decimal([2.4345, 30.2789], 2)
     assert rounded == [2.43, 30.28]
+
+    # Empty input
+    assert helper.round_decimal([], 2) == []
+
+    # Rounding to zero decimals
+    assert helper.round_decimal([2.5, 3.7, -1.2], 0) == [2.0, 4.0, -1.0]
+
+    # Midpoint values
+    assert helper.round_decimal([2.5], 0) == [2.0] or helper.round_decimal([2.5], 0) == [3.0]  # Depending on rounding method
+    assert helper.round_decimal([2.45], 1) == [2.4] or helper.round_decimal([2.45], 1) == [2.5]  # Depending on rounding method
+
+    # Negative numbers
+    assert helper.round_decimal([-2.555, -3.444], 2) == [-2.56, -3.44]
+
+    # Integer inputs
+    assert helper.round_decimal([1, 2, 3], 2) == [1.0, 2.0, 3.0]
 
 def test_print_location_show_city_false():
     with patch("sys.stdout", new=io.StringIO()) as fake_stdout:
