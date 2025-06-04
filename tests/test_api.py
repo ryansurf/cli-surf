@@ -36,8 +36,8 @@ HTTP_TIMEOUT = 999
             ["43.03", "-72.001", "New York"],
             None,
         ),
-        (HTTPStatus.BAD_REQUEST, {}, "No data", None,),
-        (HTTP_TIMEOUT, {}, "No data", Timeout("Test Timeout"),),
+        (HTTPStatus.BAD_REQUEST, {}, "No data", None),
+        (HTTP_TIMEOUT, {}, "No data", Timeout("Test Timeout")),
     ],
 )
 def test_default_location_mocked(
