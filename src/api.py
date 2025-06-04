@@ -55,6 +55,8 @@ def default_location():
         response.raise_for_status()
     except requests.exceptions.Timeout:
         return "No data"
+    except requests.exceptions.RequestException:
+        return "No data"
 
     if response.status_code == HTTPStatus.OK:
         data = response.json()
