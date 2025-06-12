@@ -125,6 +125,7 @@ def test_set_output_values_hide_period_history():
     result = set_output_values(args, arguments_dictionary)
     assert result == expected
 
+
 def test_set_output_values_combined_arguments():
     args = [
         "show_past_uv",
@@ -142,6 +143,7 @@ def test_set_output_values_combined_arguments():
     result = set_output_values(args, arguments_dictionary)
     assert result == expected
 
+
 def test_round_decimal():
     # Standard rounding
     rounded = helper.round_decimal([2.4345, 30.2789], 2)
@@ -154,8 +156,10 @@ def test_round_decimal():
     assert helper.round_decimal([2.5, 3.7, -1.2], 0) == [2.0, 4.0, -1.0]
 
     # Midpoint values
-    assert helper.round_decimal([2.5], 0) == [2.0] or helper.round_decimal([2.5], 0) == [3.0]  # Depending on rounding method
-    assert helper.round_decimal([2.45], 1) == [2.4] or helper.round_decimal([2.45], 1) == [2.5]  # Depending on rounding method
+    # Depending on rounding method
+    assert helper.round_decimal([2.5], 0) in ([2.0], [3.0])
+    # Depending on rounding method
+    assert helper.round_decimal([2.45], 1) in ([2.4], [2.5])
 
     # Negative numbers
     assert helper.round_decimal([-2.555, -3.444], 2) == [-2.56, -3.44]
@@ -163,15 +167,19 @@ def test_round_decimal():
     # Integer inputs
     assert helper.round_decimal([1, 2, 3], 2) == [1.0, 2.0, 3.0]
 
+
 def test_print_location_show_city_false():
     with patch("sys.stdout", new=io.StringIO()) as fake_stdout:
         helper.print_location("Not a City", 0)
         output = fake_stdout.getvalue()
-        assert output.strip() == ""
+        assert not output.strip()
+
 
 def test_get_forecast_days_valid():
+    FORECAST_DAYS = 3
     args = ["forecast=3"]
-    assert helper.get_forecast_days(args) == 3
+    assert helper.get_forecast_days(args) == FORECAST_DAYS
+
 
 def test_get_forecast_days_default():
     assert helper.get_forecast_days([]) == 0
