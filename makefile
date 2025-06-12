@@ -4,7 +4,6 @@ sources = src tests
 .PHONY: install
 install:
 	poetry install
-	poetry shell
 	pre-commit install
 
 .PHONY: run
