@@ -107,7 +107,7 @@ To use cli-surf, clone the project locally and install the necessary dependencie
 
 4. Run the project. For example, if the entry point is `server.py`, use the following command.
     ```bash
-    python src/server.py
+    poetry run python src/server.py
 
     # Alternatively, you can run the project using `Makefile`
     make run
