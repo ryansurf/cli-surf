@@ -4,7 +4,6 @@ Make sure pytest is installed: pip install pytest
 Run pytest: pytest
 """
 
-from src import gpt
 
 # // TODO: mock this api call, bad practice to actually make a call
 # commenting out because this is breaking the ci/cd pipeline
