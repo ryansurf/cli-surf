@@ -298,6 +298,7 @@ Questions? Comments?
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/latiffetahaj"><img src="https://avatars.githubusercontent.com/u/20369540?v=4?s=100" width="100px;" alt="Latif Fetahaj"/><br /><sub><b>Latif Fetahaj</b></sub></a><br /><a href="#code-latiffetahaj" title="Code">💻</a> <a href="#test-latiffetahaj" title="Tests">⚠️</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://www.kimcodes.lol"><img src="https://avatars.githubusercontent.com/u/139509384?v=4?s=100" width="100px;" alt="Kim"/><br /><sub><b>Kim</b></sub></a><br /><a href="#test-kimmustcode" title="Tests">⚠️</a> <a href="#code-kimmustcode" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
