@@ -215,6 +215,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "kimmustcode",
+      "name": "Kim",
+      "avatar_url": "https://avatars.githubusercontent.com/u/139509384?v=4",
+      "profile": "http://www.kimcodes.lol",
+      "contributions": [
+        "test",
+        "code"
+      ]
     }
   ]
 }
