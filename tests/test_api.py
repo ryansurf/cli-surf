@@ -9,7 +9,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 from openmeteo_requests.Client import OpenMeteoRequestsError
-from requests.exceptions import Timeout
+from requests.exceptions import RequestException, Timeout
 
 from src.api import (
     default_location,
@@ -25,6 +25,7 @@ from src.api import (
 from src.helper import arguments_dictionary
 
 HTTP_TIMEOUT = 999
+HTTP_REQUEST_EXCEPTION = 998
 
 
 @pytest.mark.parametrize(
@@ -38,6 +39,12 @@ HTTP_TIMEOUT = 999
         ),
         (HTTPStatus.BAD_REQUEST, {}, "No data", None),
         (HTTP_TIMEOUT, {}, "No data", Timeout("Test Timeout")),
+        (
+            HTTP_REQUEST_EXCEPTION,
+            {},
+            "No data",
+            RequestException("Test RequestException"),
+        ),
     ],
 )
 def test_default_location_mocked(
