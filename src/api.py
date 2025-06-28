@@ -52,7 +52,6 @@ def default_location():
     """
     try:
         response = requests.get("https://ipinfo.io/json", timeout=10)
-        response.raise_for_status()
     except requests.exceptions.Timeout:
         return "No data"
     except requests.exceptions.RequestException:
