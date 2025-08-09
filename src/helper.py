@@ -10,7 +10,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from src import api, art, gpt
 
-# At the top of helper.py, add a constant dict for default args:
+# At the top of helper.py, add a constant dict for default args;
 
 DEFAULT_ARGUMENTS = {
     "show_wave": 1,
