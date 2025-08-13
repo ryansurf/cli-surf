@@ -61,7 +61,6 @@ def arguments_dictionary(lat, long, city, args):
     return arguments
 
 
-
 def set_output_values(args, arguments_dictionary):  # noqa
     """
     Takes a list of command line arguments(args)
