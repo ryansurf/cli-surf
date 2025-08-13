@@ -10,45 +10,54 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from src import api, art, gpt
 
+# At the top of helper.py, add a constant dict for default args;
+
+DEFAULT_ARGUMENTS = {
+    "show_wave": 1,
+    "show_large_wave": 0,
+    "show_uv": 1,
+    "show_past_uv": 0,
+    "show_height": 1,
+    "show_direction": 1,
+    "show_period": 1,
+    "show_height_history": 0,
+    "show_direction_history": 0,
+    "show_period_history": 0,
+    "show_city": 1,
+    "show_date": 1,
+    "show_air_temp": 0,
+    "show_wind_speed": 0,
+    "show_wind_direction": 0,
+    "json_output": 0,
+    "show_rain_sum": 0,
+    "show_precipitation_prob": 0,
+    "unit": "imperial",
+    "gpt": 0,
+    "show_cloud_cover": 0,
+    "show_visibility": 0,
+}
+
 
 def arguments_dictionary(lat, long, city, args):
     """
-    Dictionary to keep cli argument values.
-    Returns the arguments dictionary, updated with
-    command line arguments
+    Create argument dict with defaults, updated with location and CLI args.
     """
+    # Start with location and default args
     arguments = {
         "lat": lat,
         "long": long,
         "city": city,
-        "show_wave": 1,
-        "show_large_wave": 0,
-        "show_uv": 1,
-        "show_past_uv": 0,
-        "show_height": 1,
-        "show_direction": 1,
-        "show_period": 1,
-        "show_height_history": 0,
-        "show_direction_history": 0,
-        "show_period_history": 0,
-        "show_city": 1,
-        "show_date": 1,
-        "show_air_temp": 0,
-        "show_wind_speed": 0,
-        "show_wind_direction": 0,
-        "json_output": 0,
-        "show_rain_sum": 0,
-        "show_precipitation_prob": 0,
-        "unit": "imperial",
-        "decimal": extract_decimal(args),
-        "forecast_days": get_forecast_days(args),
-        "color": get_color(args),
-        "gpt": 0,
-        "show_cloud_cover": 0,
-        "show_visibility": 0,
+        **DEFAULT_ARGUMENTS,
     }
-    # Updates the arguments dict with the values from the CLI args
+
+    # Extract dynamic values from args
+    arguments["decimal"] = extract_decimal(args)
+    arguments["forecast_days"] = get_forecast_days(args)
+    arguments["color"] = get_color(args)
+
+    # Override default flags with CLI args like "hide_wave", "json", etc.
     arguments = set_output_values(args, arguments)
+
     return arguments
 
 
