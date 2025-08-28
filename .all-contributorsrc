@@ -225,6 +225,15 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "hebentod",
+      "name": "Devon Hebenton",
+      "avatar_url": "https://avatars.githubusercontent.com/u/148008436?v=4",
+      "profile": "https://github.com/hebentod",
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }
