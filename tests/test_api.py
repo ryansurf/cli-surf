@@ -176,7 +176,7 @@ def test_ocean_information_history_invalid_coordinates():
     when provided with latitude and longitude values that are out of range.
     """
     with pytest.raises(OpenMeteoRequestsError):
-        get_uv_history(1000, -2000, 2)
+        ocean_information_history(1000, -2000, 2)
 
 
 def test_ocean_information_history_response_format():
