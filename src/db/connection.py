@@ -1,18 +1,17 @@
 from pymongo import MongoClient
-from src.settings import DatabaseSettings
-from src.db import connection
 
+from src.settings import DatabaseSettings
 
 
 class Database:
-    # Manages the MongoDB connection 
+    # Manages the MongoDB connection
     def __init__(self):
         settings = DatabaseSettings()
         self.db_uri = settings.DB_URI
         self.client = None
         self.db = None
-    
-    def connect(self, db_name='surf'):
+
+    def connect(self, db_name="surf"):
         if not self.client:
             try:
                 self.client = MongoClient(self.db_uri)
@@ -24,12 +23,12 @@ class Database:
         return self.db
 
     def disconnect(self):
-        # Close the connection 
+        # Close the connection
         if self.client:
             self.client.close()
-            self.client = None 
+            self.client = None
             self.db = None
             print("Database connection closed")
 
+
 db_manager = Database()
-    

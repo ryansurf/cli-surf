@@ -2,11 +2,11 @@ from src.db.connection import db_manager
 
 
 class SurfReportDatabaseOps:
-    # Handles operations to the db 
+    # Handles operations to the db
     def __init__(self):
         self.db = db_manager.connect()
-        self.collection = self.db['surfReports']
-    
+        self.collection = self.db["surfReports"]
+
     def insert_report(self, report_document):
         try:
             rec = self.collection.insert_one(report_document)

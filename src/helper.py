@@ -295,7 +295,7 @@ def round_decimal(round_list, decimal):
     return rounded_list
 
 
-def json_output(data_dict, print_output = True):
+def json_output(data_dict, print_output=True):
     """
     If JSON=TRUE in .args, we print and return the JSON data
     Data dict includes current & forecast data

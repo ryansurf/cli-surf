@@ -5,7 +5,7 @@ Main module
 import sys
 
 from src import api, helper, settings
-from src.db import connection, operations
+from src.db import operations
 
 # Load environment variables from .env file
 env = settings.GPTSettings()
