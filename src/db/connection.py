@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+import logging
 
 from src.settings import DatabaseSettings
 
@@ -16,9 +17,9 @@ class Database:
             try:
                 self.client = MongoClient(self.db_uri)
                 self.db = self.client[db_name]
-                print("Database connected successfully")
+                logging.info("Database connected successfully")
             except Exception as e:
-                print("Could not connect to MongoDB: ", e)
+                logging.warning("Could not connect to MongoDB: ", e)
                 raise
         return self.db
 
@@ -28,7 +29,7 @@ class Database:
             self.client.close()
             self.client = None
             self.db = None
-            print("Database connection closed")
+            logging.info("Database connection closed")
 
 
 db_manager = Database()
