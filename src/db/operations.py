@@ -1,5 +1,6 @@
-from src.db.connection import db_manager
 import logging
+
+from src.db.connection import db_manager
 
 
 class SurfReportDatabaseOps:
@@ -11,8 +12,8 @@ class SurfReportDatabaseOps:
     def insert_report(self, report_document):
         try:
             rec = self.collection.insert_one(report_document)
-            logging.info("Document inserted with ID: ", rec.inserted_id)
+            logging.info(f"Document inserted with ID: {rec.inserted_id}")
             return rec.inserted_id
         except Exception as e:
-            logging.error("Error inserting to the db: ", e)
+            logging.error(f"Error inserting to the db: {e}")
             return None

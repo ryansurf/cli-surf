@@ -1,5 +1,6 @@
-from pymongo import MongoClient
 import logging
+
+from pymongo import MongoClient
 
 from src.settings import DatabaseSettings
 
@@ -19,7 +20,7 @@ class Database:
                 self.db = self.client[db_name]
                 logging.info("Database connected successfully")
             except Exception as e:
-                logging.warning("Could not connect to MongoDB: ", e)
+                logging.warning(f"Could not connect to MongoDB: {e}")
                 raise
         return self.db
 
