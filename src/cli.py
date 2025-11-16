@@ -5,12 +5,19 @@ Main module
 import sys
 
 from src import api, helper, settings
+from src.db import operations
 
 # Load environment variables from .env file
 env = settings.GPTSettings()
 gpt_prompt = env.GPT_PROMPT
 api_key = env.API_KEY
 model = env.GPT_MODEL
+
+# Check for DB
+env_db = settings.DatabaseSettings()
+db_uri = env_db.DB_URI
+if db_uri:
+    db_handler = operations.SurfReportDatabaseOps()
 
 gpt_info = [api_key, model]
 
@@ -48,11 +55,17 @@ def run(lat=0, long=0, args=None):
         response = helper.print_outputs(
             ocean_data_dict, arguments, gpt_prompt, gpt_info
         )
+        # insert to db
+        if db_uri:
+            json_output = helper.json_output(ocean_data_dict, False)
+            db_handler.insert_report(json_output)
         # Returns ocean data, GPT response
         return ocean_data_dict, response
     else:
-        # print the output in json format!
-        json_output = helper.json_output(ocean_data_dict)
+        json_output = helper.json_output(ocean_data_dict, False)
+        # insert to db
+        if db_uri:
+            db_handler.insert_report(json_output)
         return json_output
 
 

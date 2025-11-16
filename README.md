@@ -158,6 +158,7 @@ Note that when starting with Docker, the `.env` file will be automatically creat
 | `GPT_PROMPT`  | Given the surf data (height, swell direction, etc.), you can tell the GPT what kind of report you would like. For example: `With this data, recommend what size board I should ride and nearby surf spots that may be better with the given conditions.` |
 | `API_KEY`  | Your OpenAI API key. Optional, the default GPT does not need an API key (and has slighly worse performance). Create one [here](https://platform.openai.com/api-keys) |
 | `GPT_MODEL`  | The OpenAI GPT model. Default = `gpt-3.5-turbo` (if possible, using `gpt-4o` is recommended.) Explore other models [here](https://platform.openai.com/docs/overview)|
+| `DB_URI`  | MongoDB URI |
 
 
 ### Email Server
@@ -175,6 +176,12 @@ make send_email
 make send_email_docker
 ```
 Note that the Flask server must be running in order to send emails.
+
+### MongoDB
+
+Optional, stores all request output into a MongoDB database.
+
+See [get started](https://www.mongodb.com/docs/get-started/?language=python) to learn how to set this up!
 
 ### Frontend
 
