@@ -16,4 +16,4 @@ class SurfReportDatabaseOps:
             return rec.inserted_id
         except Exception as e:
             logging.error(f"Error inserting to the db: {e}")
-            return None
+            raise
