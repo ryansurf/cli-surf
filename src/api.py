@@ -50,7 +50,12 @@ def default_location():
     If no location specified in cli, find user's location
     Make a GET request to the API endpoint
     """
-    response = requests.get("https://ipinfo.io/json", timeout=10)
+    try:
+        response = requests.get("https://ipinfo.io/json", timeout=10)
+    except requests.exceptions.Timeout:
+        return "No data"
+    except requests.exceptions.RequestException:
+        return "No data"
 
     if response.status_code == HTTPStatus.OK:
         data = response.json()
