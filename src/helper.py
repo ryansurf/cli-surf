@@ -353,15 +353,10 @@ def set_location(location):
 
 
 def forecast_to_json(forecast_data, decimal):
-    """
-    Takes forecast_data from forecast() as input
-    and returns it in JSON format
-    """
-    # Formatting into JSON
     forecasts = []
-    for i in range(len(forecast_data["date"])):
-        forecast = {
-            "date": str(forecast_data["date"][i].date()),
+    for i, d in enumerate(forecast_data["date"]):
+        forecasts.append({
+            "date": str(d.date()),
             "surf height": round(
                 float(forecast_data["wave_height_max"][i]), decimal
             ),
@@ -380,21 +375,27 @@ def forecast_to_json(forecast_data, decimal):
             "temperature_2m_min": round(
                 float(forecast_data["temperature_2m_min"][i]), decimal
             ),
-            "rain_sum": round(float(forecast_data["rain_sum"][i]), decimal),
+            "rain_sum": round(
+                float(forecast_data["rain_sum"][i]), decimal
+            ),
             "daily_precipitation_probability": round(
-                float(forecast_data["precipitation_probability_max"][i]),
-                decimal,
+                float(
+                    forecast_data["precipitation_probability_max"][i]
+                ),
+                decimal
             ),
             "wind_speed_max": round(
                 float(forecast_data["wind_speed_10m_max"][i]), decimal
             ),
             "wind_direction_10m_dominant": round(
-                float(forecast_data["wind_direction_10m_dominant"][i]), decimal
+                float(
+                    forecast_data["wind_direction_10m_dominant"][i]
+                ),
+                decimal
             ),
-        }
-        forecasts.append(forecast)
-
+        })
     return forecasts
+
 
 
 def surf_summary(surf_data):
