@@ -1,6 +1,8 @@
+import subprocess
+
 from src.server import create_app
 from src.settings import ServerSettings
-import subprocess
+
 
 def test_root_returns_200_with_mock(monkeypatch):
     env = ServerSettings()
@@ -20,4 +22,3 @@ def test_root_returns_200_with_mock(monkeypatch):
 
     assert resp.status_code == 200
     assert b"ok" in resp.data
-
