@@ -1,4 +1,5 @@
 import subprocess
+from http import HTTPStatus
 
 from src.server import create_app
 from src.settings import ServerSettings
@@ -20,5 +21,5 @@ def test_root_returns_200_with_mock(monkeypatch):
     client = app.test_client()
     resp = client.get("/")
 
-    assert resp.status_code == 200
+    assert resp.status_code == HTTPStatus.OK
     assert b"ok" in resp.data
