@@ -4,9 +4,6 @@ Make sure pytest is installed: pip install pytest
 Run pytest: pytest
 """
 
-from src import settings
-from src.server import create_app
-
 
 # TODO: fix broken test
 

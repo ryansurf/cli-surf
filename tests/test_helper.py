@@ -7,7 +7,7 @@ Run pytest: pytest
 import io
 from unittest.mock import patch
 
-from src import cli, helper
+from src import helper
 from src.helper import set_output_values
 
 
@@ -28,6 +28,7 @@ def test_default_input():
     """
     decimal = helper.extract_decimal([])
     assert 1 == decimal
+
 
 # TODO: fix broken test. Probably need to mock out API calls
 

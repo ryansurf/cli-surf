@@ -4,10 +4,6 @@ Make sure pytest is installed: pip install pytest
 Run pytest: pytest
 """
 
-import time
-
-from src import cli
-
 
 # TODO: fix broken test
 
