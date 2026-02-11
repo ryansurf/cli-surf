@@ -37,6 +37,8 @@ nav:
     - Developers:
       - Installation: install.md
       - Setup: setup.md
+      - Tooling: tooling.md
+      - Storage: storage.md
     - Contributing:
       - Styling: styling.md
       - Tests: tests.md

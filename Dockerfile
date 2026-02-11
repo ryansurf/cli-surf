@@ -10,6 +10,12 @@ COPY . .
 # Copy in the .env file
 COPY .env.example .env
 
+# Install the tool the dependencies need
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libkrb5-dev \ 
+    && rm -rf /var/lib/apt/lists/*
+
 # Install the application dependencies
 RUN pip install poetry
 RUN poetry config installer.max-workers 10

@@ -8,3 +8,27 @@ services:
       - "8000:8000"
     volumes:
     - .:/app
+    depends_on:
+      - mongodb
+  
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb_local
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8080:8080
+
+volumes:
+  mongo_data:
+
