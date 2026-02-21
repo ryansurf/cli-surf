@@ -9,6 +9,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 from openmeteo_requests.Client import OpenMeteoRequestsError
+from requests.exceptions import RequestException, Timeout
 
 from src.api import (
     default_location,
@@ -23,20 +24,31 @@ from src.api import (
 )
 from src.helper import arguments_dictionary
 
+HTTP_TIMEOUT = 999
+HTTP_REQUEST_EXCEPTION = 998
+
 
 @pytest.mark.parametrize(
-    ("status_code", "json_data", "expected_result"),
+    ("status_code", "json_data", "expected_result", "side_effect"),
     [
         (
             HTTPStatus.OK,
             {"loc": "43.03,-72.001", "city": "New York"},
             ["43.03", "-72.001", "New York"],
+            None,
         ),
-        (HTTPStatus.BAD_REQUEST, {}, "No data"),
+        (HTTPStatus.BAD_REQUEST, {}, "No data", None),
+        (HTTP_TIMEOUT, {}, "No data", Timeout("Test Timeout")),
+        (
+            HTTP_REQUEST_EXCEPTION,
+            {},
+            "No data",
+            RequestException("Test RequestException"),
+        ),
     ],
 )
 def test_default_location_mocked(
-    mocker, status_code, json_data, expected_result
+    mocker, status_code, json_data, expected_result, side_effect
 ):
     # Arrange: Mock the response from the API
     mock_response = Mock()
@@ -45,6 +57,9 @@ def test_default_location_mocked(
 
     # Mock the 'requests.get' method
     mock_requests = mocker.patch("requests.get", return_value=mock_response)
+
+    # Set side effect
+    mock_requests.side_effect = side_effect
 
     # Act: Call the function
     result = default_location()
