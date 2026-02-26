@@ -47,7 +47,9 @@ def run(lat=0, long=0, args=None):
     json_out = helper.json_output(ocean_data_dict, print_output=False)
 
     if arguments["json_output"] == 0:
-        response = helper.print_outputs(ocean_data_dict, arguments, gpt_prompt, gpt_info)
+        response = helper.print_outputs(
+            ocean_data_dict, arguments, gpt_prompt, gpt_info
+        )
         if db_uri:
             db_handler.insert_report(json_out)
         return ocean_data_dict, response

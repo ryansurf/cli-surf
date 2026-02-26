@@ -156,10 +156,13 @@ def extract_decimal(args):
     """
     Extract decimal precision from CLI args. Defaults to 1.
     """
-    value = _extract_arg(args, ["decimal", "dec"], default=None, cast=int)
-    if value is None:
-        return 1
-    return value
+    for arg in args:
+        if arg.startswith("decimal=") or arg.startswith("dec="):
+            try:
+                return int(arg.split("=")[1])
+            except (ValueError, IndexError):
+                print("Invalid value for decimal. Please provide an integer.")
+    return 1
 
 
 def get_forecast_days(args):
@@ -198,7 +201,11 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
         ("show_uv", "UV Index", "UV index: "),
         ("show_past_uv", "UV Index one year ago", "UV Index one year ago: "),
         ("show_height", "Height", "Wave Height: "),
-        ("show_height_history", "Height one year ago", "Wave Height one year ago: "),
+        (
+            "show_height_history",
+            "Height one year ago",
+            "Wave Height one year ago: ",
+        ),
         ("show_direction", "Swell Direction", "Wave Direction: "),
         (
             "show_direction_history",
@@ -334,12 +341,18 @@ def forecast_to_json(forecast_data, decimal):
     for i, date in enumerate(forecast_data["date"]):
         forecast = {
             "date": str(date.date()),
-            "surf height": round(float(forecast_data["wave_height_max"][i]), decimal),
+            "surf height": round(
+                float(forecast_data["wave_height_max"][i]), decimal
+            ),
             "swell direction": round(
                 float(forecast_data["wave_direction_dominant"][i]), decimal
             ),
-            "swell period": round(float(forecast_data["wave_period_max"][i]), decimal),
-            "uv index": round(float(forecast_data["uv_index_max"][i]), decimal),
+            "swell period": round(
+                float(forecast_data["wave_period_max"][i]), decimal
+            ),
+            "uv index": round(
+                float(forecast_data["uv_index_max"][i]), decimal
+            ),
             "temperature_2m_max": round(
                 float(forecast_data["temperature_2m_max"][i]), decimal
             ),
@@ -348,7 +361,8 @@ def forecast_to_json(forecast_data, decimal):
             ),
             "rain_sum": round(float(forecast_data["rain_sum"][i]), decimal),
             "daily_precipitation_probability": round(
-                float(forecast_data["precipitation_probability_max"][i]), decimal
+                float(forecast_data["precipitation_probability_max"][i]),
+                decimal,
             ),
             "wind_speed_max": round(
                 float(forecast_data["wind_speed_10m_max"][i]), decimal
