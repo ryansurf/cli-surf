@@ -308,6 +308,7 @@ Questions? Comments?
       <td align="center" valign="top" width="14.28%"><a href="http://www.kimcodes.lol"><img src="https://avatars.githubusercontent.com/u/139509384?v=4?s=100" width="100px;" alt="Kim"/><br /><sub><b>Kim</b></sub></a><br /><a href="#test-kimmustcode" title="Tests">⚠️</a> <a href="#code-kimmustcode" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/hebentod"><img src="https://avatars.githubusercontent.com/u/148008436?v=4?s=100" width="100px;" alt="Devon Hebenton"/><br /><sub><b>Devon Hebenton</b></sub></a><br /><a href="#code-hebentod" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/AristosKass"><img src="https://avatars.githubusercontent.com/u/147042897?v=4?s=100" width="100px;" alt="AristosKass"/><br /><sub><b>AristosKass</b></sub></a><br /><a href="#test-AristosKass" title="Tests">⚠️</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/raza-khan0108"><img src="https://avatars.githubusercontent.com/u/110333158?v=4?s=100" width="100px;" alt="Raza Khan"/><br /><sub><b>Raza Khan</b></sub></a><br /><a href="#code-raza-khan0108" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
