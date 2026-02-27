@@ -26,47 +26,37 @@ def run(lat=0, long=0, args=None):
     """
     Main function
     """
-    # Seperates the cli args into a list
     if args is None:
-        args = helper.seperate_args(sys.argv)
+        args = helper.separate_args(sys.argv)
     else:
-        args = helper.seperate_args(args)
+        args = helper.separate_args(args)
 
-    #  return coordinates, lat, long, city
     location = api.seperate_args_and_get_location(args)
 
-    # Set location returns: city, lat, long
-    set_location = helper.set_location(location)
-    city = set_location[0]
-
-    # Check if lat and long are set to defaults(no argumentes passed in main())
+    city, loc_lat, loc_long = helper.set_location(location)
     if lat == 0 and long == 0:
-        lat, long = set_location[1], set_location[2]
+        lat, long = loc_lat, loc_long
 
-    # Sets arguments = dictionary with all the CLI args(show_wave, city, ect.)
+    # Sets arguments = dictionary with all the CLI args (show_wave, city, etc.)
     arguments = helper.arguments_dictionary(lat, long, city, args)
 
-    # Makes calls to the apis(ocean, UV) and returns the values in a dictionary
+    # Makes API calls (ocean, UV) and returns the values in a dictionary
     ocean_data_dict = api.gather_data(lat, long, arguments)
 
-    # Non-JSON output
+    # Build JSON output once — used by both branches and optional DB insert
+    json_out = helper.json_output(ocean_data_dict, print_output=False)
+
     if arguments["json_output"] == 0:
-        # Response prints all the outputs & returns the GPT response
         response = helper.print_outputs(
             ocean_data_dict, arguments, gpt_prompt, gpt_info
         )
-        # insert to db
         if db_uri:
-            json_output = helper.json_output(ocean_data_dict, False)
-            db_handler.insert_report(json_output)
-        # Returns ocean data, GPT response
+            db_handler.insert_report(json_out)
         return ocean_data_dict, response
     else:
-        json_output = helper.json_output(ocean_data_dict, False)
-        # insert to db
         if db_uri:
-            db_handler.insert_report(json_output)
-        return json_output
+            db_handler.insert_report(json_out)
+        return json_out
 
 
 if __name__ == "__main__":

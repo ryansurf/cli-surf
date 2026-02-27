@@ -42,7 +42,6 @@ def arguments_dictionary(lat, long, city, args):
     """
     Create argument dict with defaults, updated with location and CLI args.
     """
-    # Start with location and default args
     arguments = {
         "lat": lat,
         "long": long,
@@ -50,12 +49,10 @@ def arguments_dictionary(lat, long, city, args):
         **DEFAULT_ARGUMENTS,
     }
 
-    # Extract dynamic values from args
     arguments["decimal"] = extract_decimal(args)
     arguments["forecast_days"] = get_forecast_days(args)
     arguments["color"] = get_color(args)
 
-    # Override default flags with CLI args like "hide_wave", "json", etc.
     arguments = set_output_values(args, arguments)
 
     return arguments
@@ -63,12 +60,11 @@ def arguments_dictionary(lat, long, city, args):
 
 def set_output_values(args, arguments_dictionary):  # noqa
     """
-    Takes a list of command line arguments(args)
-    and sets the appropritate values in the
-    arguments_dictionary(show_wave = 1, etc).
-    Returns the arguments_dictionary dict with the updated CLI args
+    Takes a list of command line arguments (args)
+    and sets the appropriate values in the
+    arguments_dictionary (show_wave = 1, etc).
+    Returns the arguments_dictionary dict with the updated CLI args.
     """
-    # map of arguments to dictionary keys & values
     mappings = {
         "hide_wave": ("show_wave", 0),
         "hw": ("show_wave", 0),
@@ -120,9 +116,6 @@ def set_output_values(args, arguments_dictionary):  # noqa
         "sv": ("show_visibility", 1),
     }
 
-    # Update arguments_dictionary based on the cli arguments in args
-    # Ex: If "hide_uv" in args,
-    # "show_uv" will be set to 0 in arguments_dictionary
     for arg in args:
         if arg in mappings:
             key, value = mappings[arg]
@@ -131,35 +124,69 @@ def set_output_values(args, arguments_dictionary):  # noqa
     return arguments_dictionary
 
 
-def seperate_args(args):
+def separate_args(args):
     """
-    Args are seperated by commas in input. Seperate them and return list
+    Args are separated by commas in input. Separate them and return list.
     """
     if len(args) > 1:
-        new_args = args[1].split(",")
-        return new_args
+        return args[1].split(",")
     return []
+
+
+# Keep old name as an alias for backwards compatibility
+seperate_args = separate_args
+
+
+def _extract_arg(args, keys, default, cast=str):
+    """
+    Scan args for the first token matching 'key=value' where key is in keys.
+    Parses the value with cast and returns it, or returns default on failure.
+    """
+    for arg in args:
+        arg_str = str(arg)
+        if any(arg_str.startswith(f"{k}=") for k in keys):
+            try:
+                return cast(arg_str.split("=", 1)[1])
+            except (ValueError, IndexError):
+                print(f"Invalid value for {keys[0]}. Using default.")
+    return default
+
+
+def extract_decimal(args):
+    """
+    Extract decimal precision from CLI args. Defaults to 1.
+    """
+    for arg in args:
+        if arg.startswith("decimal=") or arg.startswith("dec="):
+            try:
+                return int(arg.split("=")[1])
+            except (ValueError, IndexError):
+                print("Invalid value for decimal. Please provide an integer.")
+    return 1
 
 
 def get_forecast_days(args):
     """
-    Checks to see if forecast in cli args. Defaults to 0
+    Extract forecast day count from CLI args. Defaults to 0. Max is 7.
     """
     MAX_VALUE = 7
-    for arg in args:
-        arg_str = str(arg)
-        if arg_str.startswith("forecast=") or arg_str.startswith("fc="):
-            forecast = int(arg_str.split("=")[1])
-            if forecast < 0 or forecast > MAX_VALUE:
-                print("Must choose a non-negative number >= 7 in forecast!")
-                break
-            return forecast
-    return 0
+    value = _extract_arg(args, ["forecast", "fc"], default=0, cast=int)
+    if value < 0 or value > MAX_VALUE:
+        print("Must choose a non-negative number <= 7 in forecast!")
+        return 0
+    return value
+
+
+def get_color(args):
+    """
+    Extract color from CLI args. Defaults to 'blue'.
+    """
+    return _extract_arg(args, ["color", "c"], default="blue")
 
 
 def print_location(city, show_city):
     """
-    Prints location
+    Prints location.
     """
     if int(show_city) == 1:
         print("Location: ", city)
@@ -168,10 +195,8 @@ def print_location(city, show_city):
 
 def print_ocean_data(arguments_dict, ocean_data_dict):
     """
-    Prints ocean data(height, wave direction, period, etc)
+    Prints ocean data (height, wave direction, period, etc).
     """
-
-    # List of tuples mapping argument keys to ocean data keys and labels
     mappings = [
         ("show_uv", "UV Index", "UV index: "),
         ("show_past_uv", "UV Index one year ago", "UV Index one year ago: "),
@@ -206,9 +231,6 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
         ("show_visibility", "Visibility", "Visibility: "),
     ]
 
-    # arg_key example: "show_height : 1" from arguments_dict
-    # data_key example: "Height : 2.4" from ocean_data_dict
-    # Label example: "Wave Period: "
     for arg_key, data_key, label in mappings:
         if int(arguments_dict[arg_key]) == 1:
             print(f"{label}{ocean_data_dict[data_key]}")
@@ -216,12 +238,9 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
 
 def print_forecast(ocean, forecast):
     """
-    Takes in dict of forecast data and prints.
-    forecast = list of lists detailed forecast data (should be a dict?)
-    Each "day" is a tuple of data for that forecasted day
+    Prints forecast data for each forecasted day.
+    forecast is a dict of lists, one entry per day.
     """
-    # List of tuples mapping argument keys to ocean data keys and labels
-
     mappings = [
         ("show_date", "date", "Date: "),
         ("show_uv", "uv_index_max", "UV Index: "),
@@ -244,9 +263,7 @@ def print_forecast(ocean, forecast):
         ),
     ]
 
-    forecast_days = ocean["forecast_days"]
-
-    for day in range(forecast_days):
+    for day in range(ocean["forecast_days"]):
         for arg_key, data_key, label in mappings:
             if int(ocean[arg_key]) == 1:
                 try:
@@ -258,47 +275,17 @@ def print_forecast(ocean, forecast):
         print("\n")
 
 
-def extract_decimal(args):
-    """
-    Function to extract decimal value from command-line arguments
-    Default is 1
-    """
-    for arg in args:
-        if arg.startswith("decimal=") or arg.startswith("dec="):
-            try:
-                decimal_value = int(arg.split("=")[1])
-                return decimal_value
-            except (ValueError, IndexError):
-                print("Invalid value for decimal. Please provide an integer.")
-    return 1
-
-
-def get_color(args):
-    """
-    Gets the color in the cli args
-    """
-    for arg in args:
-        arg_str = str(arg)
-        if arg_str.startswith("color=") or arg_str.startswith("c="):
-            color_name = arg_str.split("=")[1]
-            return color_name
-    return "blue"
-
-
 def round_decimal(round_list, decimal):
     """
-    Takes a list as input and rounds each of the elements to the decimal
+    Rounds each element of round_list to the given decimal precision.
     """
-    rounded_list = []
-    for num in round_list:
-        rounded_list.append(round(num, decimal))
-    return rounded_list
+    return [round(num, decimal) for num in round_list]
 
 
 def json_output(data_dict, print_output=True):
     """
-    If JSON=TRUE in .args, we print and return the JSON data
-    Data dict includes current & forecast data
+    If JSON=TRUE in .args, we print and return the JSON data.
+    Data dict includes current & forecast data.
     """
     json_out = json.dumps(data_dict, indent=4)
     if print_output:
@@ -308,34 +295,30 @@ def json_output(data_dict, print_output=True):
 
 def print_outputs(ocean_data_dict, arguments, gpt_prompt, gpt_info):
     """
-    Basically the main printing function,
-    calls all the other printing functions
+    Main printing function; calls all the other printing functions.
     """
     print("\n")
     if ocean_data_dict["Height"] == "No data":
         print(ocean_data_dict["Lat"], ocean_data_dict["Long"])
         print("No ocean data at this location.")
     else:
-        # Location is found, print details
         print_location(arguments["city"], arguments["show_city"])
         art.print_wave(
             arguments["show_wave"],
             arguments["show_large_wave"],
             arguments["color"],
         )
-        # Prints(Height: <>, Period: <>, etc.)
         print_ocean_data(arguments, ocean_data_dict)
     print("\n")
+
     forecast = api.forecast(
         ocean_data_dict["Lat"],
         ocean_data_dict["Long"],
         arguments["decimal"],
         arguments["forecast_days"],
     )
-    # Prints the forecast(if activated in CLI args)
     print_forecast(arguments, forecast)
 
-    # Checks if GPT in args, prints GPT response if True
     gpt_response = None
     if arguments["gpt"] == 1:
         gpt_response = print_gpt(ocean_data_dict, gpt_prompt, gpt_info)
@@ -345,23 +328,19 @@ def print_outputs(ocean_data_dict, arguments, gpt_prompt, gpt_info):
 
 def set_location(location):
     """
-    Sets locations variables
+    Unpacks location dict into (city, lat, long).
     """
-    city = location["city"]
-    lat, long = location["lat"], location["long"]
-    return city, lat, long
+    return location["city"], location["lat"], location["long"]
 
 
 def forecast_to_json(forecast_data, decimal):
     """
-    Takes forecast_data from forecast() as input
-    and returns it in JSON format
+    Converts forecast_data from forecast() into a list of day dicts.
     """
-    # Formatting into JSON
     forecasts = []
-    for i in range(len(forecast_data["date"])):
+    for i, date in enumerate(forecast_data["date"]):
         forecast = {
-            "date": str(forecast_data["date"][i].date()),
+            "date": str(date.date()),
             "surf height": round(
                 float(forecast_data["wave_height_max"][i]), decimal
             ),
@@ -397,34 +376,18 @@ def forecast_to_json(forecast_data, decimal):
     return forecasts
 
 
-def surf_summary(surf_data):
-    """
-    Outputs a simple summary of the surf data.
-    Useed by the GPT as input
-    """
-    location = surf_data["Location"]
-    height = surf_data["Height"]
-    direction = surf_data["Swell Direction"]
-    period = surf_data["Period"]
-    unit = surf_data["Unit"]
-    report = f"""
-    Today at {location}, the surf height is {height} {unit}, the direction
-    of the swell is {direction} degrees and the swell period is {period}
-    seconds.
-    """
-    return report
-
-
 def print_gpt(surf_data, gpt_prompt, gpt_info):
     """
-    Returns the GPT response
+    Builds a surf summary and returns the GPT response.
     """
-    summary = surf_summary(surf_data)
-    api_key = gpt_info[0]
-    gpt_model = gpt_info[1]
-    minumum_key_length = 5
-    if api_key is None or not api_key or len(api_key) < minumum_key_length:
-        gpt_response = gpt.simple_gpt(summary, gpt_prompt)
-    else:
-        gpt_response = gpt.openai_gpt(summary, gpt_prompt, api_key, gpt_model)
-    return gpt_response
+    summary = (
+        f"Today at {surf_data['Location']}, the surf height is "
+        f"{surf_data['Height']} {surf_data['Unit']}, the direction of the "
+        f"swell is {surf_data['Swell Direction']} degrees and the swell "
+        f"period is {surf_data['Period']} seconds."
+    )
+    api_key, gpt_model = gpt_info
+    MIN_KEY_LEN = 5
+    if not api_key or len(api_key) < MIN_KEY_LEN:
+        return gpt.simple_gpt(summary, gpt_prompt)
+    return gpt.openai_gpt(summary, gpt_prompt, api_key, gpt_model)
