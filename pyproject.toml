@@ -50,6 +50,17 @@ pythonpath = "."
 addopts = '-p no:warnings'  # disable pytest warnings
 log_format = '%(name)s %(levelname)s: %(message)s'
 
+# coverage settings
+[tool.coverage.run]
+source = ["src"]
+
+[tool.coverage.report]
+omit = ["src/dev_streamlit.py"]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+]
+
 # ruff global settings
 [tool.ruff]
 line-length = 79

@@ -2,62 +2,89 @@
 Main module
 """
 
+import logging
 import sys
 
 from src import api, helper, settings
 from src.db import operations
 
-# Load environment variables from .env file
-env = settings.GPTSettings()
-gpt_prompt = env.GPT_PROMPT
-api_key = env.API_KEY
-model = env.GPT_MODEL
-
-# Check for DB
-env_db = settings.DatabaseSettings()
-db_uri = env_db.DB_URI
-if db_uri:
-    db_handler = operations.SurfReportDatabaseOps()
-
-gpt_info = [api_key, model]
+logger = logging.getLogger(__name__)
 
 
-def run(lat=0, long=0, args=None):
+class SurfReport:
     """
-    Main function
+    Orchestrates fetching, persisting, and displaying a surf report.
+
+    Initializes settings and optional database connection on construction,
+    then exposes a run() method to execute a full report cycle.
     """
-    if args is None:
-        args = helper.separate_args(sys.argv)
-    else:
-        args = helper.separate_args(args)
 
-    location = api.seperate_args_and_get_location(args)
+    def __init__(self):
+        gpt_env = settings.GPTSettings()
+        self.gpt_prompt = gpt_env.GPT_PROMPT
+        self.gpt_info = (gpt_env.API_KEY, gpt_env.GPT_MODEL)
+        self.db_handler = self._init_db()
 
-    city, loc_lat, loc_long = helper.set_location(location)
-    if lat == 0 and long == 0:
-        lat, long = loc_lat, loc_long
+    @staticmethod
+    def _init_db():
+        """Initializes the database handler, or returns None if unavailable."""
+        db_env = settings.DatabaseSettings()
+        if not db_env.DB_URI:
+            return None
+        try:
+            return operations.SurfReportDatabaseOps()
+        except Exception:
+            logger.warning(
+                "Could not connect to database. Reports will not be saved."
+            )
+            return None
 
-    # Sets arguments = dictionary with all the CLI args (show_wave, city, etc.)
-    arguments = helper.arguments_dictionary(lat, long, city, args)
+    def run(self, lat=None, long=None, args=None):
+        """
+        Fetches surf data for the given coordinates or parsed location,
+        optionally persists the report, and renders output.
 
-    # Makes API calls (ocean, UV) and returns the values in a dictionary
-    ocean_data_dict = api.gather_data(lat, long, arguments)
+        Returns the ocean data dict, plus the GPT response when in text mode.
+        """
+        args = helper.separate_args(args if args is not None else sys.argv)
 
-    # Build JSON output once — used by both branches and optional DB insert
-    json_out = helper.json_output(ocean_data_dict, print_output=False)
+        location = api.separate_args_and_get_location(args)
+        city, loc_lat, loc_long = helper.set_location(location)
 
-    if arguments["json_output"] == 0:
-        response = helper.print_outputs(
-            ocean_data_dict, arguments, gpt_prompt, gpt_info
-        )
-        if db_uri:
-            db_handler.insert_report(json_out)
-        return ocean_data_dict, response
-    else:
-        if db_uri:
-            db_handler.insert_report(json_out)
-        return json_out
+        if lat is None or long is None:
+            lat, long = loc_lat, loc_long
+
+        arguments = helper.arguments_dictionary(lat, long, city, args)
+        ocean_data_dict = api.gather_data(lat, long, arguments)
+
+        self._save_report(ocean_data_dict)
+        return self._render_output(ocean_data_dict, arguments)
+
+    def _save_report(self, ocean_data_dict):
+        """Persists the report to the database if a handler is available."""
+        if self.db_handler:
+            self.db_handler.insert_report(ocean_data_dict)
+
+    def _render_output(self, ocean_data_dict, arguments):
+        """Renders JSON or human-readable output based on arguments."""
+        if not arguments["json_output"]:
+            response = helper.print_outputs(
+                ocean_data_dict, arguments, self.gpt_prompt, self.gpt_info
+            )
+            return ocean_data_dict, response
+        helper.json_output(ocean_data_dict)
+        return ocean_data_dict
 
 
-if __name__ == "__main__":
+def run(lat=None, long=None, args=None):
+    """Module-level entry point; delegates to SurfReport for convenience."""
+    return SurfReport().run(lat=lat, long=long, args=args)
+
+
+if __name__ == "__main__":  # pragma: no cover
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
     run()

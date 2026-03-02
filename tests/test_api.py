@@ -4,6 +4,7 @@ Make sure pytest is installed: pip install pytest
 Run pytest: pytest
 """
 
+import logging
 from http import HTTPStatus
 from unittest.mock import Mock, patch
 
@@ -204,3 +205,62 @@ def test_ocean_information_history():
     result = ocean_information_history(31.9505, 115.8605, 1)
     expected_result = ["0.6", "0.6", "0.6"]
     assert result == expected_result
+
+
+# ---------------------------------------------------------------------------
+# Error / fallback paths
+# ---------------------------------------------------------------------------
+
+
+def test_get_coordinates_no_args_falls_back_to_default(mocker):
+    """get_coordinates falls back to default when no location= arg is given."""
+    mocker.patch(
+        "src.api.default_location", return_value=[0.0, 0.0, "Default City"]
+    )
+    result = get_coordinates([])
+    assert result == [0.0, 0.0, "Default City"]
+
+
+def test_get_coordinates_invalid_location_falls_back_to_default(
+    mocker, caplog
+):
+    """get_coordinates logs a warning and falls back when geocoding fails."""
+    mock_geo = mocker.patch("src.api.Nominatim")
+    mock_geo.return_value.geocode.return_value = None
+    mocker.patch(
+        "src.api.default_location", return_value=[0.0, 0.0, "Default City"]
+    )
+
+    with caplog.at_level(logging.WARNING, logger="src.api"):
+        result = get_coordinates(["location=nowhere_xyz_invalid"])
+
+    assert result == [0.0, 0.0, "Default City"]
+    assert "Invalid location" in caplog.text
+
+
+def test_get_uv_returns_no_data_on_value_error(mocker):
+    """get_uv returns 'No data' when Open-Meteo client raises ValueError."""
+    mock_client = mocker.patch("src.api._create_openmeteo_client")
+    mock_client.return_value.weather_api.side_effect = ValueError("bad coords")
+    assert get_uv(1000, -2000, 2) == "No data"
+
+
+def test_get_uv_history_returns_no_data_on_value_error(mocker):
+    """get_uv_history returns 'No data' when the API raises ValueError."""
+    mock_client = mocker.patch("src.api._create_openmeteo_client")
+    mock_client.return_value.weather_api.side_effect = ValueError("bad coords")
+    assert get_uv_history(31.9505, 115.8605, 2) == "No data"
+
+
+def test_ocean_information_returns_no_data_on_value_error(mocker):
+    """ocean_information returns 'No data' when the API raises ValueError."""
+    mock_client = mocker.patch("src.api._create_openmeteo_client")
+    mock_client.return_value.weather_api.side_effect = ValueError("bad coords")
+    assert ocean_information(1000, -2000, 2) == "No data"
+
+
+def test_ocean_information_history_returns_no_data_on_value_error(mocker):
+    """ocean_information_history returns 'No data' on ValueError."""
+    mock_client = mocker.patch("src.api._create_openmeteo_client")
+    mock_client.return_value.weather_api.side_effect = ValueError("bad coords")
+    assert ocean_information_history(1000, -2000, 2) == "No data"
