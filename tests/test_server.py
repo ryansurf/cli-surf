@@ -1,30 +1,43 @@
 """
-QA tests for server.py
-Make sure pytest is installed: pip install pytest
-Run pytest: pytest
+Tests for server.py
 """
 
+import subprocess
+from http import HTTPStatus
+from unittest.mock import patch
 
-# TODO: fix broken test
+from src.server import create_app
+from src.settings import ServerSettings
 
-# def test_routes():
-#     """
-#     Test that the routes are able to be retrieved
-#     /home, /help, /
-#     When a page is requested (GET)
-#     THEN check if the response is valid (200)
-#     """
-#     env = settings.ServerSettings()
-#     flask_app = create_app(env)
-#     OK = 200
 
-#     # Create a test client using the Flask application configured for testing
-#     with flask_app.test_client() as test_client:
-#         response_help = test_client.get("/help")
-#         assert response_help.status_code == OK
+def _make_app():
+    return create_app(ServerSettings())
 
-#         response_home = test_client.get("/home")
-#         assert response_home.status_code == OK
 
-#         response_root = test_client.get("/")
-#         assert response_root.status_code == OK
+def test_serve_index_returns_200(monkeypatch):
+    """GET /home renders the index template and returns 200."""
+    app = _make_app()
+    with patch("src.server.render_template", return_value="<html>home</html>"):
+        resp = app.test_client().get("/home")
+    assert resp.status_code == HTTPStatus.OK
+    assert b"<html>home</html>" in resp.data
+
+
+def test_serve_script_returns_200(monkeypatch):
+    """GET /script.js serves the JavaScript file and returns 200."""
+    app = _make_app()
+    with patch("src.server.send_file", return_value="console.log('ok')"):
+        resp = app.test_client().get("/script.js")
+    assert resp.status_code == HTTPStatus.OK
+
+
+def test_root_subprocess_error_returns_500(monkeypatch):
+    """GET / returns 500 and logs the error when the subprocess fails."""
+    app = _make_app()
+
+    def fail_run(*args, **kwargs):
+        raise subprocess.CalledProcessError(1, "cmd", stderr="boom")
+
+    monkeypatch.setattr(subprocess, "run", fail_run)
+    resp = app.test_client().get("/")
+    assert resp.status_code == HTTPStatus.INTERNAL_SERVER_ERROR

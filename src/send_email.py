@@ -2,6 +2,7 @@
 Module to send surf report emails
 """
 
+import logging
 import smtplib
 import subprocess
 from email.mime.multipart import MIMEMultipart
@@ -9,40 +10,45 @@ from email.mime.text import MIMEText
 
 from src.settings import EmailSettings
 
-# Load environment variables from .env file
-env = EmailSettings()
-
-# Create a multipart message and set headers
-message = MIMEMultipart()
-message["From"] = env.EMAIL
-message["To"] = env.EMAIL_RECEIVER
-message["Subject"] = env.SUBJECT
+logger = logging.getLogger(__name__)
 
 
 def send_user_email():
     """
-    Sends user an email
+    Fetches the current surf report via curl and sends it as an email.
     """
-    SURF = subprocess.run(
-        ["curl", env.COMMAND],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    if SURF.returncode == 0:  # Check if command executed successfully
-        BODY = SURF.stdout
-    else:
-        BODY = "Failed to execute curl command."
-    message.attach(MIMEText(BODY, "plain"))
+    env = EmailSettings()
 
-    # Connect to the SMTP server
+    message = MIMEMultipart()
+    message["From"] = env.EMAIL
+    message["To"] = env.EMAIL_RECEIVER
+    message["Subject"] = env.SUBJECT
+
+    try:
+        result = subprocess.run(
+            ["curl", env.COMMAND],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        body = result.stdout
+    except subprocess.CalledProcessError as e:
+        logger.error("Failed to fetch surf report via curl: %s", e.stderr)
+        body = "Failed to fetch surf report."
+
+    message.attach(MIMEText(body, "plain"))
+
     with smtplib.SMTP(env.SMTP_SERVER, env.SMTP_PORT) as server:
-        server.starttls()  # Secure the connection
+        server.starttls()
         server.login(env.EMAIL, env.EMAIL_PW)
-        text = message.as_string()
-        server.sendmail(env.EMAIL, env.EMAIL_RECEIVER, text)
-        print("Email sent successfully.")
+        server.sendmail(env.EMAIL, env.EMAIL_RECEIVER, message.as_string())
+        logger.info("Email sent successfully.")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
     send_user_email()

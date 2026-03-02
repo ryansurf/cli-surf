@@ -41,15 +41,13 @@ class EmailSettings(ServerSettings):
     EMAIL: EmailStr  # required
     EMAIL_PW: str  # required
     EMAIL_RECEIVER: EmailStr  # required
-    COMMAND: str = Field(
-        default_factory=lambda cls: f"{cls.IP_ADDRESS}:{cls.PORT}"
-    )
+    COMMAND: str = Field(default="localhost:8000")
     SUBJECT: str = Field(default="Surf Report")
 
 
 class GPTSettings(CommonSettings):
     """
-    Class for defining server env settings.
+    Class for defining GPT env settings.
     """
 
     GPT_PROMPT: str = Field(
@@ -69,4 +67,4 @@ class DatabaseSettings(CommonSettings):
     Class for defining database env settings
     """
 
-    DB_URI: str
+    DB_URI: str = Field(default="")

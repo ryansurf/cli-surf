@@ -1,44 +1,68 @@
 """
-QA tests for gpt.py
-Make sure pytest is installed: pip install pytest
-Run pytest: pytest
+Tests for gpt.py
 """
 
+from unittest.mock import Mock
 
-# // TODO: mock this api call, bad practice to actually make a call
-# commenting out because this is breaking the ci/cd pipeline
+from src import gpt
 
-# def test_simple_gpt():
-#     """
-#     Testing the simple_gpt function
-#     Calls the simple gpt and asks it to output
-#     the days of the week. If the output does not contain
-#     any day of the week, we assume the gpt is non-fucntional
-#     """
 
-#     surf_summary = ""
-#     gpt_prompt = """Please output the days of the week in English. What day
-#         is your favorite?"""
+def _make_chat_response(content):
+    """Build a minimal chat completion response mock."""
+    message = Mock()
+    message.content = content
+    choice = Mock()
+    choice.message = message
+    response = Mock()
+    response.choices = [choice]
+    return response
 
-#     gpt_response = gpt.simple_gpt(surf_summary, gpt_prompt).lower()
-#     expected_response = set([
-#         "monday",
-#         "tuesday",
-#         "wednesday",
-#         "thursday",
-#         "friday" "saturday",
-#         "sunday",
-#         "一",
-#         "二",
-#         "三",
-#         "四",
-#         "五",
-#     ])
 
-#     # Can case the "gpt_response" string into a list, and
-#     # check for set intersection with the expected response set
-#     gpt_response_set = set(gpt_response.split())
+def test_simple_gpt_returns_model_content(mocker):
+    """simple_gpt returns the text content from the g4f response."""
+    mock_client = Mock()
+    mock_client.chat.completions.create.return_value = _make_chat_response(
+        "Great surf day!"
+    )
+    mocker.patch("src.gpt.Client", return_value=mock_client)
 
-#     assert gpt_response_set.intersection(
-#         expected_response
-#     ), f"Expected '{expected_response}', but got: {gpt_response}"
+    result = gpt.simple_gpt("surf is 4ft", "what board should I ride?")
+
+    assert result == "Great surf day!"
+    mock_client.chat.completions.create.assert_called_once()
+
+
+def test_simple_gpt_returns_fallback_on_exception(mocker):
+    """simple_gpt returns the error string when the g4f client raises."""
+    mocker.patch("src.gpt.Client", side_effect=Exception("API down"))
+
+    result = gpt.simple_gpt("surf is 4ft", "what board?")
+
+    assert result == "Unable to generate GPT response."
+
+
+def test_openai_gpt_returns_model_content(mocker):
+    """openai_gpt returns the text content from the OpenAI response."""
+    mock_client = Mock()
+    mock_client.chat.completions.create.return_value = _make_chat_response(
+        "Bring your longboard."
+    )
+    mocker.patch("src.gpt.OpenAI", return_value=mock_client)
+
+    result = gpt.openai_gpt(
+        "surf is 2ft", "recommend a board", "sk-testkey", "gpt-4"
+    )
+
+    assert result == "Bring your longboard."
+    mock_client.chat.completions.create.assert_called_once()
+
+
+def test_openai_gpt_returns_fallback_on_exception(mocker):
+    """openai_gpt returns the error string when the OpenAI client raises."""
+    mocker.patch("src.gpt.OpenAI", side_effect=Exception("quota exceeded"))
+
+    result = gpt.openai_gpt(
+        "surf is 2ft", "recommend a board", "sk-key", "gpt-4"
+    )
+
+    assert result == "Unable to generate GPT response."

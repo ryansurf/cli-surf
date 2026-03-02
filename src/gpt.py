@@ -2,8 +2,12 @@
 GPT Functions stored here
 """
 
+import logging
+
 from g4f.client import Client
 from openai import OpenAI
+
+logger = logging.getLogger(__name__)
 
 
 def simple_gpt(surf_summary, gpt_prompt):
@@ -13,12 +17,16 @@ def simple_gpt(surf_summary, gpt_prompt):
     report the user wants, loaded in from the environment vars
     Using: https://github.com/xtekky/gpt4free
     """
-    client = Client()
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": surf_summary + gpt_prompt}],
-    )
-    return response.choices[0].message.content
+    try:
+        client = Client()
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": surf_summary + gpt_prompt}],
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        logger.error("GPT (free) request failed: %s", e)
+        return "Unable to generate GPT response."
 
 
 def openai_gpt(surf_summary, gpt_prompt, api_key, model):
@@ -29,17 +37,18 @@ def openai_gpt(surf_summary, gpt_prompt, api_key, model):
     Uses openai's GPT, needs an API key
     https://platform.openai.com/docs/api-reference/introduction
     """
-    client = OpenAI(
-        # This is the default and can be omitted
-        api_key=api_key,
-    )
-    chat_completion = client.chat.completions.create(
-        messages=[
-            {
-                "role": "user",
-                "content": surf_summary + gpt_prompt,
-            }
-        ],
-        model=model,
-    )
-    return chat_completion.choices[0].message.content
+    try:
+        client = OpenAI(api_key=api_key)
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": surf_summary + gpt_prompt,
+                }
+            ],
+            model=model,
+        )
+        return chat_completion.choices[0].message.content
+    except Exception as e:
+        logger.error("OpenAI request failed: %s", e)
+        return "Unable to generate GPT response."

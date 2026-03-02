@@ -2,13 +2,8 @@
 Helper functions for the streamlit frontend
 """
 
-import sys
-from pathlib import Path
-
 import folium
 import pandas as pd
-
-sys.path.append(str(Path(__file__).parent.parent))
 
 from src import cli
 
@@ -16,29 +11,26 @@ from src import cli
 def extra_args(gpt):
     """
     By default, the location is the only argument when cli.run()
-    is ran. Extra args outputs and other arguments the user wants,
-    like using the GPT function
+    is run. Extra args outputs and other arguments the user wants,
+    like using the GPT function.
     """
-    # Arguments
-    extra_args = ""
+    args = ""
 
     if gpt:
-        extra_args += ",gpt"
+        args += ",gpt"
 
-    return extra_args
+    return args
 
 
 def get_report(location, extra_args):
     """
-    Executes cli.run(), retrns the report dictionary,
-    gpt response, lat and long
+    Executes cli.run(), returns the report dictionary,
+    gpt response, lat and long.
     """
-    gpt_response = None
     args = "location=" + location
     if extra_args:
         args += extra_args
-    surf_report = cli.run(args=["placeholder", args])
-    report_dict, gpt_response = surf_report[0], surf_report[1]
+    report_dict, gpt_response = cli.run(args=["placeholder", args])
     lat, long = report_dict["Lat"], report_dict["Long"]
 
     return report_dict, gpt_response, lat, long

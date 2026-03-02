@@ -2,6 +2,10 @@
 All ASCII art in this file
 """
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 # ASCII text colors
 colors = {
     "end": "\033[0m",
@@ -12,7 +16,7 @@ colors = {
     "blue": "\033[0;34m",
     "purple": "\033[0;35m",
     "teal": "\033[0;36m",
-    "light_blue": "\033[0;34m",
+    "light_blue": "\033[0;94m",
     "white": "\033[0;37m",
     "bold_red": "\033[1;31m",
     "bold_green": "\033[1;32m",
@@ -29,10 +33,10 @@ def print_wave(show_wave, show_large_wave, color):
     Prints Wave
     """
     if color is not None and color.lower() not in colors:
-        print("Not a valid color")
+        logger.warning("Invalid color '%s'. Using default 'blue'.", color)
         color = "blue"
 
-    if int(show_large_wave) == 1:
+    if show_large_wave:
         print(
             colors[color]
             + """
@@ -48,7 +52,7 @@ def print_wave(show_wave, show_large_wave, color):
 """
             + colors["end"]
         )
-    elif int(show_wave) == 1:
+    elif show_wave:
         print(
             colors[color]
             + """

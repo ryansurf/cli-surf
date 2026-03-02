@@ -3,38 +3,37 @@ General helper functions
 """
 
 import json
-import sys
-from pathlib import Path
-
-sys.path.append(str(Path(__file__).parent.parent))
+import logging
 
 from src import api, art, gpt
 
-# At the top of helper.py, add a constant dict for default args;
+logger = logging.getLogger(__name__)
+
+MAX_FORECAST_DAYS = 7
 
 DEFAULT_ARGUMENTS = {
-    "show_wave": 1,
-    "show_large_wave": 0,
-    "show_uv": 1,
-    "show_past_uv": 0,
-    "show_height": 1,
-    "show_direction": 1,
-    "show_period": 1,
-    "show_height_history": 0,
-    "show_direction_history": 0,
-    "show_period_history": 0,
-    "show_city": 1,
-    "show_date": 1,
-    "show_air_temp": 0,
-    "show_wind_speed": 0,
-    "show_wind_direction": 0,
-    "json_output": 0,
-    "show_rain_sum": 0,
-    "show_precipitation_prob": 0,
+    "show_wave": True,
+    "show_large_wave": False,
+    "show_uv": True,
+    "show_past_uv": False,
+    "show_height": True,
+    "show_direction": True,
+    "show_period": True,
+    "show_height_history": False,
+    "show_direction_history": False,
+    "show_period_history": False,
+    "show_city": True,
+    "show_date": True,
+    "show_air_temp": False,
+    "show_wind_speed": False,
+    "show_wind_direction": False,
+    "json_output": False,
+    "show_rain_sum": False,
+    "show_precipitation_prob": False,
     "unit": "imperial",
-    "gpt": 0,
-    "show_cloud_cover": 0,
-    "show_visibility": 0,
+    "gpt": False,
+    "show_cloud_cover": False,
+    "show_visibility": False,
 }
 
 
@@ -58,70 +57,69 @@ def arguments_dictionary(lat, long, city, args):
     return arguments
 
 
-def set_output_values(args, arguments_dictionary):  # noqa
+def set_output_values(args, args_dict):  # noqa
     """
-    Takes a list of command line arguments (args)
-    and sets the appropriate values in the
-    arguments_dictionary (show_wave = 1, etc).
-    Returns the arguments_dictionary dict with the updated CLI args.
+    Takes a list of command line arguments (args) and sets the appropriate
+    values in args_dict (show_wave = True, etc).
+    Returns args_dict with the updated CLI args.
     """
     mappings = {
-        "hide_wave": ("show_wave", 0),
-        "hw": ("show_wave", 0),
-        "show_large_wave": ("show_large_wave", 1),
-        "slw": ("show_large_wave", 1),
-        "hide_uv": ("show_uv", 0),
-        "huv": ("show_uv", 0),
-        "show_past_uv": ("show_past_uv", 1),
-        "spuv": ("show_past_uv", 1),
-        "hide_past_uv": ("show_past_uv", 0),
-        "hide_height": ("show_height", 0),
-        "hh": ("show_height", 0),
-        "show_height_history": ("show_height_history", 1),
-        "shh": ("show_height_history", 1),
-        "hide_height_history": ("show_height_history", 0),
-        "hide_direction": ("show_direction", 0),
-        "hdir": ("show_direction", 0),
-        "show_direction_history": ("show_direction_history", 1),
-        "sdh": ("show_direction_history", 1),
-        "hide_direction_history": ("show_direction_history", 0),
-        "hide_period": ("show_period", 0),
-        "hp": ("show_period", 0),
-        "show_period_history": ("show_period_history", 1),
-        "sph": ("show_period_history", 1),
-        "hide_period_history": ("show_period_history", 0),
-        "hide_location": ("show_city", 0),
-        "hl": ("show_city", 0),
-        "hide_date": ("show_date", 0),
-        "hdate": ("show_date", 0),
+        "hide_wave": ("show_wave", False),
+        "hw": ("show_wave", False),
+        "show_large_wave": ("show_large_wave", True),
+        "slw": ("show_large_wave", True),
+        "hide_uv": ("show_uv", False),
+        "huv": ("show_uv", False),
+        "show_past_uv": ("show_past_uv", True),
+        "spuv": ("show_past_uv", True),
+        "hide_past_uv": ("show_past_uv", False),
+        "hide_height": ("show_height", False),
+        "hh": ("show_height", False),
+        "show_height_history": ("show_height_history", True),
+        "shh": ("show_height_history", True),
+        "hide_height_history": ("show_height_history", False),
+        "hide_direction": ("show_direction", False),
+        "hdir": ("show_direction", False),
+        "show_direction_history": ("show_direction_history", True),
+        "sdh": ("show_direction_history", True),
+        "hide_direction_history": ("show_direction_history", False),
+        "hide_period": ("show_period", False),
+        "hp": ("show_period", False),
+        "show_period_history": ("show_period_history", True),
+        "sph": ("show_period_history", True),
+        "hide_period_history": ("show_period_history", False),
+        "hide_location": ("show_city", False),
+        "hl": ("show_city", False),
+        "hide_date": ("show_date", False),
+        "hdate": ("show_date", False),
         "metric": ("unit", "metric"),
         "m": ("unit", "metric"),
-        "json": ("json_output", 1),
-        "j": ("json_output", 1),
-        "gpt": ("gpt", 1),
-        "g": ("gpt", 1),
-        "show_air_temp": ("show_air_temp", 1),
-        "sat": ("show_air_temp", 1),
-        "show_wind_speed": ("show_wind_speed", 1),
-        "sws": ("show_wind_speed", 1),
-        "show_wind_direction": ("show_wind_direction", 1),
-        "swd": ("show_wind_direction", 1),
-        "show_rain_sum": ("show_rain_sum", 1),
-        "srs": ("show_rain_sum", 1),
-        "show_precipitation_prob": ("show_precipitation_prob", 1),
-        "spp": ("show_precipitation_prob", 1),
-        "show_cloud_cover": ("show_cloud_cover", 1),
-        "scc": ("show_cloud_cover", 1),
-        "show_visibility": ("show_visibility", 1),
-        "sv": ("show_visibility", 1),
+        "json": ("json_output", True),
+        "j": ("json_output", True),
+        "gpt": ("gpt", True),
+        "g": ("gpt", True),
+        "show_air_temp": ("show_air_temp", True),
+        "sat": ("show_air_temp", True),
+        "show_wind_speed": ("show_wind_speed", True),
+        "sws": ("show_wind_speed", True),
+        "show_wind_direction": ("show_wind_direction", True),
+        "swd": ("show_wind_direction", True),
+        "show_rain_sum": ("show_rain_sum", True),
+        "srs": ("show_rain_sum", True),
+        "show_precipitation_prob": ("show_precipitation_prob", True),
+        "spp": ("show_precipitation_prob", True),
+        "show_cloud_cover": ("show_cloud_cover", True),
+        "scc": ("show_cloud_cover", True),
+        "show_visibility": ("show_visibility", True),
+        "sv": ("show_visibility", True),
     }
 
     for arg in args:
         if arg in mappings:
             key, value = mappings[arg]
-            arguments_dictionary[key] = value
+            args_dict[key] = value
 
-    return arguments_dictionary
+    return args_dict
 
 
 def separate_args(args):
@@ -148,7 +146,7 @@ def _extract_arg(args, keys, default, cast=str):
             try:
                 return cast(arg_str.split("=", 1)[1])
             except (ValueError, IndexError):
-                print(f"Invalid value for {keys[0]}. Using default.")
+                logger.warning("Invalid value for %s. Using default.", keys[0])
     return default
 
 
@@ -161,7 +159,9 @@ def extract_decimal(args):
             try:
                 return int(arg.split("=")[1])
             except (ValueError, IndexError):
-                print("Invalid value for decimal. Please provide an integer.")
+                logger.warning(
+                    "Invalid value for decimal. Please provide an integer."
+                )
     return 1
 
 
@@ -169,10 +169,12 @@ def get_forecast_days(args):
     """
     Extract forecast day count from CLI args. Defaults to 0. Max is 7.
     """
-    MAX_VALUE = 7
     value = _extract_arg(args, ["forecast", "fc"], default=0, cast=int)
-    if value < 0 or value > MAX_VALUE:
-        print("Must choose a non-negative number <= 7 in forecast!")
+    if value < 0 or value > MAX_FORECAST_DAYS:
+        logger.warning(
+            "Forecast days must be between 0 and %d. Using default.",
+            MAX_FORECAST_DAYS,
+        )
         return 0
     return value
 
@@ -188,7 +190,7 @@ def print_location(city, show_city):
     """
     Prints location.
     """
-    if int(show_city) == 1:
+    if show_city:
         print("Location: ", city)
         print("\n")
 
@@ -232,7 +234,7 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
     ]
 
     for arg_key, data_key, label in mappings:
-        if int(arguments_dict[arg_key]) == 1:
+        if arguments_dict[arg_key]:
             print(f"{label}{ocean_data_dict[data_key]}")
 
 
@@ -265,7 +267,7 @@ def print_forecast(ocean, forecast):
 
     for day in range(ocean["forecast_days"]):
         for arg_key, data_key, label in mappings:
-            if int(ocean[arg_key]) == 1:
+            if ocean[arg_key]:
                 try:
                     data = forecast[data_key][day]
                     formatted = round(float(data), ocean["decimal"])
@@ -284,12 +286,11 @@ def round_decimal(round_list, decimal):
 
 def json_output(data_dict, print_output=True):
     """
-    If JSON=TRUE in .args, we print and return the JSON data.
-    Data dict includes current & forecast data.
+    Serializes data_dict to JSON. Prints to stdout if print_output is True.
+    Returns the original dict for programmatic use.
     """
-    json_out = json.dumps(data_dict, indent=4)
     if print_output:
-        print(json_out)
+        print(json.dumps(data_dict, indent=4))
     return data_dict
 
 
@@ -320,7 +321,7 @@ def print_outputs(ocean_data_dict, arguments, gpt_prompt, gpt_info):
     print_forecast(arguments, forecast)
 
     gpt_response = None
-    if arguments["gpt"] == 1:
+    if arguments["gpt"]:
         gpt_response = print_gpt(ocean_data_dict, gpt_prompt, gpt_info)
         print(gpt_response)
     return gpt_response
