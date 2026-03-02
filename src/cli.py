@@ -63,7 +63,10 @@ class SurfReport:
     def _save_report(self, ocean_data_dict):
         """Persists the report to the database if a handler is available."""
         if self.db_handler:
-            self.db_handler.insert_report(ocean_data_dict)
+            try:
+                self.db_handler.insert_report(ocean_data_dict)
+            except Exception:
+                logger.warning("Failed to save report to database.")
 
     def _render_output(self, ocean_data_dict, arguments):
         """Renders JSON or human-readable output based on arguments."""
