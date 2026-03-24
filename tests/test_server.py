@@ -4,9 +4,7 @@ Tests for server.py
 
 import subprocess
 from http import HTTPStatus
-from unittest.mock import patch
 
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from src.server import create_app

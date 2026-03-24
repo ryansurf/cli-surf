@@ -7,12 +7,11 @@ import subprocess
 import sys
 from pathlib import Path
 
-from fastapi import FastAPI, Request, HTTPException
+import uvicorn
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.templating import Jinja2Templates
-from fastapi.middleware.cors import CORSMiddleware
-
-import uvicorn
 
 from src.settings import ServerSettings
 
@@ -24,6 +23,7 @@ CLI_PATH = BASE_DIR / "src" / "cli.py"
 
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
+
 def create_app(env):
     """
     Application factory function
@@ -31,17 +31,14 @@ def create_app(env):
     app = FastAPI()
 
     # define which "origins" (frontend urls) can talk to this api
-    origins = [
-        "http://localhost:8501",
-        "http://127.0.0.1:8501"
-    ]
+    origins = ["http://localhost:8501", "http://127.0.0.1:8501"]
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins = origins,
+        allow_origins=origins,
         allow_credentials=True,
         allow_methods=["GET"],
-        allow_headers=["*"]
+        allow_headers=["*"],
     )
 
     @app.get("/help")
@@ -49,7 +46,6 @@ def create_app(env):
         """Serves the help.txt file."""
         HELP_FILE_PATH = BASE_DIR / "help.txt"
         return FileResponse(path=HELP_FILE_PATH, media_type="text/plain")
-
 
     @app.get("/", response_class=PlainTextResponse)
     async def default_route(request: Request):
@@ -73,6 +69,7 @@ def create_app(env):
             raise HTTPException(status_code=500, detail="Internal CLI Error")
 
     return app
+
 
 env = ServerSettings()
 app = create_app(env)
