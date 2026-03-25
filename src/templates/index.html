@@ -86,8 +86,8 @@
       </div>
     </div>
     <script>
-      // load .env variables from Flask server
-      const env = {{ env_vars|tojson }};
+      // load .env variables from FastAPI server
+      const env = {{ env_vars | safe }};
     </script>
     <script src="{{ url_for('serve_script') }}"></script>
   </body>

@@ -28,7 +28,6 @@ class ServerSettings(CommonSettings):
     IP_ADDRESS: Union[IPvAnyAddress | Literal["localhost"]] = Field(
         default="localhost"
     )
-    DEBUG: bool = Field(default=True)
 
 
 class EmailSettings(ServerSettings):

@@ -1,66 +1,64 @@
 """
-Flask Server!
+FastAPI Server!
 """
 
 import logging
 import subprocess
 import sys
-import urllib.parse
 from pathlib import Path
 
-from flask import (
-    Flask,
-    render_template,
-    request,
-    send_file,
-    send_from_directory,
-)
-from flask_cors import CORS
+import uvicorn
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, PlainTextResponse
+from fastapi.templating import Jinja2Templates
 
 from src.settings import ServerSettings
 
 logger = logging.getLogger(__name__)
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+TEMPLATES_DIR = BASE_DIR / "src" / "templates"
+CLI_PATH = BASE_DIR / "src" / "cli.py"
+
+templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
 
 def create_app(env):
     """
     Application factory function
     """
-    app = Flask(__name__)
-    CORS(app)
+    app = FastAPI()
 
-    @app.route("/help")
-    def serve_help():
+    # define which "origins" (frontend urls) can talk to this api
+    origins = ["http://localhost:8501", "http://127.0.0.1:8501"]
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["GET"],
+        allow_headers=["*"],
+    )
+
+    @app.get("/help")
+    async def serve_help():
         """Serves the help.txt file."""
-        return send_from_directory(
-            Path(__file__).resolve().parents[1], "help.txt"
-        )
+        HELP_FILE_PATH = BASE_DIR / "help.txt"
+        return FileResponse(path=HELP_FILE_PATH, media_type="text/plain")
 
-    @app.route("/home")
-    def serve_index():
-        """Serves index.html."""
-        return render_template("index.html", env_vars=env.model_dump())
-
-    @app.route("/script.js")
-    def serve_script():
-        """Serves the frontend JavaScript."""
-        return send_file("static/script.js")
-
-    @app.route("/")
-    def default_route():
+    @app.get("/", response_class=PlainTextResponse)
+    async def default_route(request: Request):
         """Serves the surf report."""
-        query_parameters = urllib.parse.parse_qsl(
-            request.query_string.decode(), keep_blank_values=True
-        )
         parsed_parameters = [
             f"{key}={value}" if value else key
-            for key, value in query_parameters
+            for key, value in request.query_params.items()
         ]
         args = ",".join(parsed_parameters)
 
         try:
             result = subprocess.run(
-                [sys.executable, Path("src") / "cli.py", args],
+                [sys.executable, str(CLI_PATH), args],
                 capture_output=True,
                 text=True,
                 check=True,
@@ -68,10 +66,13 @@ def create_app(env):
             return result.stdout
         except subprocess.CalledProcessError as e:
             logger.error("Subprocess error: %s", e.stderr)
-            raise
+            raise HTTPException(status_code=500, detail="Internal CLI Error")
 
     return app
 
+
+env = ServerSettings()
+app = create_app(env)
 
 if __name__ == "__main__":  # pragma: no cover
     logging.basicConfig(
@@ -79,6 +80,5 @@ if __name__ == "__main__":  # pragma: no cover
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
-    env = ServerSettings()
-    app = create_app(env)
-    app.run(host="0.0.0.0", port=env.PORT, debug=env.DEBUG)
+
+    uvicorn.run(app, host=str(env.IP_ADDRESS), port=env.PORT)
