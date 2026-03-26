@@ -127,7 +127,7 @@ def separate_args(args):
     Args are separated by commas in input. Separate them and return list.
     """
     if len(args) > 1:
-        return args[1].split(",")
+        return args.split(",")
     return []
 
 

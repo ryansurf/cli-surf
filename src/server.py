@@ -2,17 +2,18 @@
 FastAPI Server!
 """
 
+import io
 import logging
-import subprocess
-import sys
+from contextlib import redirect_stdout
 from pathlib import Path
 
 import uvicorn
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.templating import Jinja2Templates
 
+from src import cli
 from src.settings import ServerSettings
 
 logger = logging.getLogger(__name__)
@@ -20,6 +21,8 @@ logger = logging.getLogger(__name__)
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = BASE_DIR / "src" / "templates"
 CLI_PATH = BASE_DIR / "src" / "cli.py"
+
+surf = cli.SurfReport()
 
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
@@ -54,19 +57,13 @@ def create_app(env):
             f"{key}={value}" if value else key
             for key, value in request.query_params.items()
         ]
-        args = ",".join(parsed_parameters)
+        passed_args = ",".join(parsed_parameters)
 
-        try:
-            result = subprocess.run(
-                [sys.executable, str(CLI_PATH), args],
-                capture_output=True,
-                text=True,
-                check=True,
-            )
-            return result.stdout
-        except subprocess.CalledProcessError as e:
-            logger.error("Subprocess error: %s", e.stderr)
-            raise HTTPException(status_code=500, detail="Internal CLI Error")
+        # get stdout from print function (probably not ideal but whatever)
+        f = io.StringIO()
+        with redirect_stdout(f):
+            surf.run(args=passed_args)
+        return f.getvalue()
 
     return app
 

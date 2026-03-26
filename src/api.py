@@ -4,13 +4,16 @@ Functions that make API calls stored here
 
 import logging
 from datetime import datetime, timedelta
+from functools import lru_cache
 from http import HTTPStatus
+from threading import Lock
 
 import numpy as np
 import openmeteo_requests
 import pandas as pd
 import requests
 import requests_cache
+from cachetools import TTLCache, cached
 from geopy.geocoders import Nominatim
 from retry_requests import retry
 
@@ -20,15 +23,28 @@ logger = logging.getLogger(__name__)
 
 testing = 1
 
+# data expires after 600 seconds (10 min)
+_TTL = 600
+_ocean_cache = TTLCache(maxsize=300, ttl=_TTL)
+_uv_cache = TTLCache(maxsize=300, ttl=_TTL)
+uv_history_cache = TTLCache(maxsize=300, ttl=_TTL)
+_ocean_history_cache = TTLCache(maxsize=300, ttl=_TTL)
+_wind_temp_cache = TTLCache(maxsize=300, ttl=_TTL)
+_rain_cache = TTLCache(maxsize=300, ttl=_TTL)
+_forecast_cache = TTLCache(maxsize=300, ttl=_TTL)
+_hourly_forecast_cache = TTLCache(maxsize=300, ttl=_TTL)
+_ocean_lock = Lock()
 
-def _create_openmeteo_client():
+
+def _create_openmeteo_client() -> openmeteo_requests.Client:
     """Creates a cached, retry-enabled Open-Meteo API client."""
     cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
     retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
     return openmeteo_requests.Client(session=retry_session)
 
 
-def get_coordinates(args):
+@lru_cache(maxsize=128)
+def get_coordinates(args: tuple) -> list | str:
     """
     Takes a location (city or address) and returns the coordinates: [lat, long]
     If no location is specified or the location is invalid, default_location()
@@ -55,7 +71,7 @@ def get_coordinates(args):
     return default_location()
 
 
-def default_location():
+def default_location() -> list | str:
     """
     If no location specified in cli, find user's location
     Make a GET request to the API endpoint
@@ -72,7 +88,10 @@ def default_location():
     return "No data"
 
 
-def get_uv(lat, long, decimal, unit="imperial"):
+@cached(_uv_cache, lock=_ocean_lock)
+def get_uv(
+    lat: float, long: float, decimal: int, unit: str = "imperial"
+) -> float | str:
     """
     Get UV at coordinates (lat, long)
     Calling the API here: https://open-meteo.com/en/docs
@@ -100,7 +119,10 @@ def get_uv(lat, long, decimal, unit="imperial"):
     return current_uv_index
 
 
-def get_uv_history(lat, long, decimal, unit="imperial"):
+@cached(uv_history_cache, lock=_ocean_lock)
+def get_uv_history(
+    lat: float, long: float, decimal: int, unit: str = "imperial"
+) -> str:
     """
     Retrieve the UV index from one year ago for specified coordinates.
 
@@ -167,7 +189,10 @@ def get_uv_history(lat, long, decimal, unit="imperial"):
     return f"{historical_uv_index:.{decimal}f}"
 
 
-def ocean_information(lat, long, decimal, unit="imperial"):
+@cached(_ocean_cache, lock=_ocean_lock)
+def ocean_information(
+    lat: float, long: float, decimal: int, unit: str = "imperial"
+) -> list | str:
     """
     Get Ocean Data at coordinates
     API: https://open-meteo.com/en/docs/marine-weather-api
@@ -201,7 +226,10 @@ def ocean_information(lat, long, decimal, unit="imperial"):
     return [current_wave_height, current_wave_direction, current_wave_period]
 
 
-def ocean_information_history(lat, long, decimal, unit="imperial"):
+@cached(_ocean_history_cache, lock=_ocean_lock)
+def ocean_information_history(
+    lat: float, long: float, decimal: int, unit: str = "imperial"
+) -> list | str:
     """
     Retrieve ocean data from one year ago for specified coordinates.
 
@@ -276,7 +304,10 @@ def ocean_information_history(lat, long, decimal, unit="imperial"):
     ]
 
 
-def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
+@cached(_wind_temp_cache, lock=_ocean_lock)
+def current_wind_temp(
+    lat: float, long: float, decimal: int, temp_unit: str = "fahrenheit"
+) -> list:
     """
     Gathers the wind and temperature data
     """
@@ -307,7 +338,8 @@ def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
     ]
 
 
-def get_rain(lat, long):
+@cached(_rain_cache, lock=_ocean_lock)
+def get_rain(lat: float, long: float) -> tuple[float, float]:
     """
     Get rain data at coordinates (lat, long)
     Calling the API here: https://open-meteo.com/en/docs
@@ -335,7 +367,8 @@ def get_rain(lat, long):
     )
 
 
-def forecast(lat, long, decimal, days=0):
+@cached(_forecast_cache, lock=_ocean_lock)
+def forecast(lat: float, long: float, decimal: int, days: int = 0) -> dict:
     """
     Number of forecast days. Max is 7
     API: https://open-meteo.com/en/docs/marine-weather-api
@@ -433,7 +466,10 @@ def forecast(lat, long, decimal, days=0):
     return forecast_data
 
 
-def get_hourly_forecast(lat, long, days=1, unit="fahrenheit"):
+@cached(_hourly_forecast_cache, lock=_ocean_lock)
+def get_hourly_forecast(
+    lat: float, long: float, days: int = 1, unit: str = "fahrenheit"
+) -> dict:
     """
     Gets hourly weather data
     """
@@ -480,7 +516,7 @@ def get_hourly_forecast(lat, long, days=1, unit="fahrenheit"):
     return curr_hour_data
 
 
-def gather_data(lat, long, arguments):
+def gather_data(lat: float | str, long: float | str, arguments: dict) -> dict:
     """
     Calls APIs though python files,
     returns all the ocean data(height, period...)
@@ -537,13 +573,13 @@ def gather_data(lat, long, arguments):
     return ocean_data_dict
 
 
-def separate_args_and_get_location(args):
+def separate_args_and_get_location(args: list) -> dict:
     """
     Gets user's coordinates from either
     the argument(location=) or, if none,
     the default coordinates(default_location())
     """
-    coordinates = get_coordinates(args)
+    coordinates = get_coordinates(tuple(args))
     location_data = {
         "coordinates": coordinates,
         "lat": coordinates[0],
