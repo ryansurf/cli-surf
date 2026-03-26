@@ -27,8 +27,6 @@ surf = cli.SurfReport()
 
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
-debugpy.listen(5678)
-
 
 def create_app(env):
     """
