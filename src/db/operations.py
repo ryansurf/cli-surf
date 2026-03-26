@@ -14,7 +14,7 @@ class SurfReportDatabaseOps:
 
     def insert_report(self, report_document):
         try:
-            rec = self.collection.insert_one(report_document)
+            rec = self.collection.insert_one(report_document.copy())
             logger.info("Document inserted with ID: %s", rec.inserted_id)
             return rec.inserted_id
         except Exception as e:
