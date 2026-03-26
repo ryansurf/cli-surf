@@ -4,19 +4,17 @@ FastAPI Server!
 
 import io
 import logging
-import subprocess
-import sys
 from contextlib import redirect_stdout
 from pathlib import Path
-import debugpy
-from src import cli
 
+import debugpy
 import uvicorn
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.templating import Jinja2Templates
 
+from src import cli
 from src.settings import ServerSettings
 
 logger = logging.getLogger(__name__)
@@ -63,7 +61,6 @@ def create_app(env):
             for key, value in request.query_params.items()
         ]
         passed_args = ",".join(parsed_parameters)
-
 
         # get stdout from print function (probably not ideal but whatever)
         f = io.StringIO()

@@ -21,6 +21,7 @@ from src.api import (
     ocean_information,
     ocean_information_history,
     seperate_args_and_get_location,
+    uv_history_cache,
 )
 from src.helper import arguments_dictionary
 
@@ -58,7 +59,7 @@ def test_default_location_mocked(
 
 
 def test_get_coordinates():
-    coordinates = get_coordinates(["loc=santa_cruz"])
+    coordinates = get_coordinates(tuple(["loc=santa_cruz"]))
     lat = coordinates[0]
     long = coordinates[1]
     assert isinstance(lat, (int, float))
@@ -217,7 +218,7 @@ def test_get_coordinates_no_args_falls_back_to_default(mocker):
     mocker.patch(
         "src.api.default_location", return_value=[0.0, 0.0, "Default City"]
     )
-    result = get_coordinates([])
+    result = get_coordinates(())
     assert result == [0.0, 0.0, "Default City"]
 
 
@@ -232,7 +233,7 @@ def test_get_coordinates_invalid_location_falls_back_to_default(
     )
 
     with caplog.at_level(logging.WARNING, logger="src.api"):
-        result = get_coordinates(["location=nowhere_xyz_invalid"])
+        result = get_coordinates(tuple(["location=nowhere_xyz_invalid"]))
 
     assert result == [0.0, 0.0, "Default City"]
     assert "Invalid location" in caplog.text
@@ -247,6 +248,7 @@ def test_get_uv_returns_no_data_on_value_error(mocker):
 
 def test_get_uv_history_returns_no_data_on_value_error(mocker):
     """get_uv_history returns 'No data' when the API raises ValueError."""
+    uv_history_cache.clear()
     mock_client = mocker.patch("src.api._create_openmeteo_client")
     mock_client.return_value.weather_api.side_effect = ValueError("bad coords")
     assert get_uv_history(31.9505, 115.8605, 2) == "No data"

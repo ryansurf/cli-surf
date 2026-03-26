@@ -4,15 +4,16 @@ Functions that make API calls stored here
 
 import logging
 from datetime import datetime, timedelta
-from http import HTTPStatus
-
 from functools import lru_cache
+from http import HTTPStatus
+from threading import Lock
 
 import numpy as np
 import openmeteo_requests
 import pandas as pd
 import requests
 import requests_cache
+from cachetools import TTLCache, cached
 from geopy.geocoders import Nominatim
 from retry_requests import retry
 
@@ -22,12 +23,25 @@ logger = logging.getLogger(__name__)
 
 testing = 1
 
+# data expires after 600 seconds (10 min)
+_TTL = 600
+_ocean_cache = TTLCache(maxsize=300, ttl=_TTL)
+_uv_cache = TTLCache(maxsize=300, ttl=_TTL)
+uv_history_cache = TTLCache(maxsize=300, ttl=_TTL)
+_ocean_history_cache = TTLCache(maxsize=300, ttl=_TTL)
+_wind_temp_cache = TTLCache(maxsize=300, ttl=_TTL)
+_rain_cache = TTLCache(maxsize=300, ttl=_TTL)
+_forecast_cache = TTLCache(maxsize=300, ttl=_TTL)
+_hourly_forecast_cache = TTLCache(maxsize=300, ttl=_TTL)
+_ocean_lock = Lock()
+
 
 def _create_openmeteo_client():
     """Creates a cached, retry-enabled Open-Meteo API client."""
     cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
     retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
     return openmeteo_requests.Client(session=retry_session)
+
 
 @lru_cache(maxsize=128)
 def get_coordinates(args):
@@ -74,6 +88,7 @@ def default_location():
     return "No data"
 
 
+@cached(_uv_cache, lock=_ocean_lock)
 def get_uv(lat, long, decimal, unit="imperial"):
     """
     Get UV at coordinates (lat, long)
@@ -102,6 +117,7 @@ def get_uv(lat, long, decimal, unit="imperial"):
     return current_uv_index
 
 
+@cached(uv_history_cache, lock=_ocean_lock)
 def get_uv_history(lat, long, decimal, unit="imperial"):
     """
     Retrieve the UV index from one year ago for specified coordinates.
@@ -169,6 +185,7 @@ def get_uv_history(lat, long, decimal, unit="imperial"):
     return f"{historical_uv_index:.{decimal}f}"
 
 
+@cached(_ocean_cache, lock=_ocean_lock)
 def ocean_information(lat, long, decimal, unit="imperial"):
     """
     Get Ocean Data at coordinates
@@ -203,6 +220,7 @@ def ocean_information(lat, long, decimal, unit="imperial"):
     return [current_wave_height, current_wave_direction, current_wave_period]
 
 
+@cached(_ocean_history_cache, lock=_ocean_lock)
 def ocean_information_history(lat, long, decimal, unit="imperial"):
     """
     Retrieve ocean data from one year ago for specified coordinates.
@@ -278,6 +296,7 @@ def ocean_information_history(lat, long, decimal, unit="imperial"):
     ]
 
 
+@cached(_wind_temp_cache, lock=_ocean_lock)
 def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
     """
     Gathers the wind and temperature data
@@ -309,6 +328,7 @@ def current_wind_temp(lat, long, decimal, temp_unit="fahrenheit"):
     ]
 
 
+@cached(_rain_cache, lock=_ocean_lock)
 def get_rain(lat, long):
     """
     Get rain data at coordinates (lat, long)
@@ -337,6 +357,7 @@ def get_rain(lat, long):
     )
 
 
+@cached(_forecast_cache, lock=_ocean_lock)
 def forecast(lat, long, decimal, days=0):
     """
     Number of forecast days. Max is 7
@@ -435,6 +456,7 @@ def forecast(lat, long, decimal, days=0):
     return forecast_data
 
 
+@cached(_hourly_forecast_cache, lock=_ocean_lock)
 def get_hourly_forecast(lat, long, days=1, unit="fahrenheit"):
     """
     Gets hourly weather data

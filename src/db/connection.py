@@ -19,7 +19,9 @@ class Database:
     def connect(self, db_name="surf"):
         if not self.client:
             try:
-                self.client = MongoClient(self.db_uri, serverSelectionTimeoutMS=100)
+                self.client = MongoClient(
+                    self.db_uri, serverSelectionTimeoutMS=100
+                )
                 self.db = self.client[db_name]
                 logger.info("Database connected successfully")
             except Exception as e:

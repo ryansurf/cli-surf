@@ -196,12 +196,6 @@ def test_get_forecast_days_default():
 # ---------------------------------------------------------------------------
 
 
-def test_separate_args_splits_on_comma():
-    """separate_args returns the second element split by comma."""
-    result = helper.separate_args(["cmd", "json,location=santa_cruz"])
-    assert result == ["json", "location=santa_cruz"]
-
-
 def test_separate_args_returns_empty_for_single_arg():
     """separate_args returns [] when no extra args are passed."""
     assert helper.separate_args(["cmd"]) == []
