@@ -7,7 +7,6 @@ import logging
 from contextlib import redirect_stdout
 from pathlib import Path
 
-import debugpy
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware

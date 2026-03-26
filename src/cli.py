@@ -19,14 +19,14 @@ class SurfReport:
     then exposes a run() method to execute a full report cycle.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         gpt_env = settings.GPTSettings()
         self.gpt_prompt = gpt_env.GPT_PROMPT
         self.gpt_info = (gpt_env.API_KEY, gpt_env.GPT_MODEL)
         self.db_handler = self._init_db()
 
     @staticmethod
-    def _init_db():
+    def _init_db() -> operations.SurfReportDatabaseOps | None:
         """Initializes the database handler, or returns None if unavailable."""
         db_env = settings.DatabaseSettings()
         if not db_env.DB_URI:
@@ -39,7 +39,12 @@ class SurfReport:
             )
             return None
 
-    def run(self, lat=None, long=None, args=None):
+    def run(
+        self,
+        lat: float | None = None,
+        long: float | None = None,
+        args: list[str] | None = None,
+    ):
         """
         Fetches surf data for the given coordinates or parsed location,
         optionally persists the report, and renders output.
@@ -60,7 +65,7 @@ class SurfReport:
         self._save_report(ocean_data_dict)
         return self._render_output(ocean_data_dict, arguments)
 
-    def _save_report(self, ocean_data_dict):
+    def _save_report(self, ocean_data_dict) -> None:
         """Persists the report to the database if a handler is available."""
         if self.db_handler:
             try:
