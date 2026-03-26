@@ -6,6 +6,8 @@ import logging
 from datetime import datetime, timedelta
 from http import HTTPStatus
 
+from functools import lru_cache
+
 import numpy as np
 import openmeteo_requests
 import pandas as pd
@@ -27,7 +29,7 @@ def _create_openmeteo_client():
     retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
     return openmeteo_requests.Client(session=retry_session)
 
-
+@lru_cache(maxsize=128)
 def get_coordinates(args):
     """
     Takes a location (city or address) and returns the coordinates: [lat, long]
@@ -543,7 +545,7 @@ def separate_args_and_get_location(args):
     the argument(location=) or, if none,
     the default coordinates(default_location())
     """
-    coordinates = get_coordinates(args)
+    coordinates = get_coordinates(tuple(args))
     location_data = {
         "coordinates": coordinates,
         "lat": coordinates[0],

@@ -65,22 +65,11 @@ def create_app(env):
         passed_args = ",".join(parsed_parameters)
 
 
+        # get stdout from print function (probably not ideal but whatever)
         f = io.StringIO()
         with redirect_stdout(f):
             surf.run(args=passed_args)
         return f.getvalue()
-
-        # try:
-        #     result = subprocess.run(
-        #         [sys.executable, str(CLI_PATH), args],
-        #         capture_output=True,
-        #         text=True,
-        #         check=True,
-        #     )
-        #     return result.stdout
-        # except subprocess.CalledProcessError as e:
-        #     logger.error("Subprocess error: %s", e.stderr)
-        #     raise HTTPException(status_code=500, detail="Internal CLI Error")
 
     return app
 
