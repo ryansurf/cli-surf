@@ -4,6 +4,7 @@ Main module
 
 import logging
 import sys
+import argparse
 
 from src import api, helper, settings
 from src.db import operations
@@ -89,10 +90,82 @@ def run(lat=None, long=None, args=None):
     return SurfReport().run(lat=lat, long=long, args=args)
 
 
+# FOR CLI TOOL USAGE (no server, invoked via cli)
+def _build_args_string(ns):
+    tokens = []
+    if ns.location:
+        tokens.append(f"location={ns.location.replace(' ', '_')}")
+    if ns.forecast is not None:
+        tokens.append(f"forecast={ns.forecast}")
+    if ns.decimal is not None:
+        tokens.append(f"decimal={ns.decimal}")
+    if ns.color:
+        tokens.append(f"color={ns.color}")
+    if ns.metric:
+        tokens.append("metric")
+    if ns.imperial:
+        tokens.append("imperial")
+    flag_map = {
+        "json": "json", "gpt": "gpt",
+        "hide_wave": "hide_wave", "hide_uv": "hide_uv",
+        "hide_height": "hide_height", "hide_direction": "hide_direction",
+        "hide_period": "hide_period", "hide_location": "hide_location",
+        "hide_date": "hide_date",
+        "show_large_wave": "show_large_wave", "show_past_uv": "show_past_uv",
+        "show_height_history": "show_height_history",
+        "show_direction_history": "show_direction_history",
+        "show_period_history": "show_period_history",
+        "show_air_temp": "show_air_temp", "show_wind_speed": "show_wind_speed",
+        "show_wind_direction": "show_wind_direction",
+        "show_rain_sum": "show_rain_sum",
+        "show_precipitation_prob": "show_precipitation_prob",
+        "show_cloud_cover": "show_cloud_cover",
+        "show_visibility": "show_visibility",
+    }
+    for attr, token in flag_map.items():
+        if getattr(ns, attr, False):
+            tokens.append(token)
+    return ",".join(tokens)
+
+
+def cli_main():
+    parser = argparse.ArgumentParser(prog="surf", description="Get a surf report.")
+    parser.add_argument("--location", "--loc", metavar="LOCATION")
+    parser.add_argument("--forecast", "--fc", type=int, metavar="DAYS")
+    parser.add_argument("--decimal", "--dec", type=int, metavar="N")
+    parser.add_argument("--color", "-c", metavar="COLOR")
+    unit = parser.add_mutually_exclusive_group()
+    unit.add_argument("--metric", "-m", action="store_true")
+    unit.add_argument("--imperial", "-i", action="store_true")
+    parser.add_argument("--json", "-j", action="store_true")
+    parser.add_argument("--gpt", "-g", action="store_true")
+    parser.add_argument("--hide-wave", action="store_true")
+    parser.add_argument("--hide-uv", action="store_true")
+    parser.add_argument("--hide-height", action="store_true")
+    parser.add_argument("--hide-direction", action="store_true")
+    parser.add_argument("--hide-period", action="store_true")
+    parser.add_argument("--hide-location", action="store_true")
+    parser.add_argument("--hide-date", action="store_true")
+    parser.add_argument("--show-large-wave", action="store_true")
+    parser.add_argument("--show-past-uv", action="store_true")
+    parser.add_argument("--show-height-history", action="store_true")
+    parser.add_argument("--show-direction-history", action="store_true")
+    parser.add_argument("--show-period-history", action="store_true")
+    parser.add_argument("--show-air-temp", action="store_true")
+    parser.add_argument("--show-wind-speed", action="store_true")
+    parser.add_argument("--show-wind-direction", action="store_true")
+    parser.add_argument("--show-rain-sum", action="store_true")
+    parser.add_argument("--show-precipitation-prob", action="store_true")
+    parser.add_argument("--show-cloud-cover", action="store_true")
+    parser.add_argument("--show-visibility", action="store_true")
+    ns = parser.parse_args()
+    run(args=_build_args_string(ns))
+
+
 if __name__ == "__main__":  # pragma: no cover
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
-    run()
+    cli_main()

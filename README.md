@@ -19,7 +19,27 @@ Inspired by [wttr.in](https://github.com/chubin/wttr.in)
 
 ## 💻 Usage
 
-Using your browser or command-line interface you can access the service.
+There are two ways to use cli-surf: install it as a CLI tool via pipx, or run the server and access it via API/browser.
+
+### Installing via [pipx](https://pipx.pypa.io/stable/) ([pypi](https://pypi.org/project/cli-surf/))
+
+```bash
+brew install pipx
+pipx install cli-surf
+```
+
+```bash
+surf --help
+surf --location scripps_pier --forecast 4
+```
+
+<p align="center">
+    <img src="images/cli.gif" alt="cli-surf gif" style="width: 700px; height: auto;">
+</p>
+
+### Running the server and using via API
+
+Start the server locally (see [Setup](#️-setup) below), then query it from your browser or CLI:
 
 ```
 $ curl localhost:8000
@@ -37,12 +57,7 @@ Wave Period:  9.8
 
 ```
 
-<p align="center">
-    <img src="images/cli.gif" alt="cli-surf gif" style="width: 700px; height: auto;">
-</p>
-
-
-**Arguments**
+**API Arguments**
 | Argument    | Description|
 | -------- | ------- |
 | location / loc  | Specify the location of your forecast. Ex: `location=new_york_city` **or** `location=nyc`.    |
@@ -76,8 +91,8 @@ Wave Period:  9.8
 | show_cloud_cover / scc   | Show the hourly cloud cover   |
 | show_visibility / sv   | Show the hourly visibility   |
  
-**Examples**
-* Arguments are seperated by commas.
+**API Examples**
+* Arguments are separated by commas.
 * `curl localhost:8000`
 * `curl localhost:8000?location=new_york,hide_height,hide_wave,show_large_wave`
 * `curl localhost:8000?fc=3,hdate,loc=trestles`

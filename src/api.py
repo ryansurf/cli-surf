@@ -53,7 +53,7 @@ def get_coordinates(args: tuple) -> list | str:
     for arg in args:
         arg_str = str(arg)
         if arg_str.startswith("location=") or arg_str.startswith("loc="):
-            address = arg.split("=")[1]
+            address = arg.split("=")[1].replace("_", " ")
             geolocator = Nominatim(user_agent="cli-surf")
             location = geolocator.geocode(address)
             if location is not None:

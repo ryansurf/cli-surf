@@ -1,10 +1,24 @@
 [tool.poetry]
 name = "cli-surf"
-version = "0.1.0"
-description = ""
+version = "0.1.1"
+description = "Command-line surf report tool"
+license = "MIT"
 authors = ["ryansurf <your@email.com>"] # TODO: email
 readme = "README.md"
+homepage = "https://github.com/ryansurf/cli-surf"
+repository = "https://github.com/ryansurf/cli-surf"
+keywords = ["surf", "weather", "ocean", "cli", "terminal"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Utilities",
+]
 packages = [{ include = "src" }]
+
+[tool.poetry.scripts]
+surf = "src.cli:cli_main"
 
 [tool.poetry.dependencies]
 # command: `poetry add <package-name>`
@@ -26,7 +40,7 @@ openai = "^1.30.5"
 curl-cffi = "^0.7.1"
 streamlit = "^1.35.0"
 streamlit-folium = "^0.22.0"
-matplotlib = "3.9.0"
+matplotlib = ">=3.9.0"
 seaborn = "^0.13.2"
 numpy = "^1.26.4"
 pymongo = {extras = ["gssapi", "snappy", "srv", "tls"], version = "^4.15.4"}
