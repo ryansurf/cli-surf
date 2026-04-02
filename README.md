@@ -17,6 +17,10 @@ Inspired by [wttr.in](https://github.com/chubin/wttr.in)
 
 [Documentation](https://ryansurf.github.io/cli-surf/) | [Discord](https://discord.gg/He2UpxRuJP)
 
+<p align="center">
+    <img src="images/cli.gif" alt="cli-surf gif" style="width: 700px; height: auto;">
+</p>
+
 ## 💻 Usage
 
 There are two ways to use cli-surf: install it as a CLI tool via pipx, or run the server and access it via API/browser.
@@ -32,10 +36,6 @@ pipx install cli-surf
 surf --help
 surf --location scripps_pier --forecast 4
 ```
-
-<p align="center">
-    <img src="images/cli.gif" alt="cli-surf gif" style="width: 700px; height: auto;">
-</p>
 
 ### Running the server and using via API
 

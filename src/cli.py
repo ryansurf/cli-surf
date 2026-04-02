@@ -2,9 +2,9 @@
 Main module
 """
 
+import argparse
 import logging
 import sys
-import argparse
 
 from src import api, helper, settings
 from src.db import operations
@@ -106,16 +106,22 @@ def _build_args_string(ns):
     if ns.imperial:
         tokens.append("imperial")
     flag_map = {
-        "json": "json", "gpt": "gpt",
-        "hide_wave": "hide_wave", "hide_uv": "hide_uv",
-        "hide_height": "hide_height", "hide_direction": "hide_direction",
-        "hide_period": "hide_period", "hide_location": "hide_location",
+        "json": "json",
+        "gpt": "gpt",
+        "hide_wave": "hide_wave",
+        "hide_uv": "hide_uv",
+        "hide_height": "hide_height",
+        "hide_direction": "hide_direction",
+        "hide_period": "hide_period",
+        "hide_location": "hide_location",
         "hide_date": "hide_date",
-        "show_large_wave": "show_large_wave", "show_past_uv": "show_past_uv",
+        "show_large_wave": "show_large_wave",
+        "show_past_uv": "show_past_uv",
         "show_height_history": "show_height_history",
         "show_direction_history": "show_direction_history",
         "show_period_history": "show_period_history",
-        "show_air_temp": "show_air_temp", "show_wind_speed": "show_wind_speed",
+        "show_air_temp": "show_air_temp",
+        "show_wind_speed": "show_wind_speed",
         "show_wind_direction": "show_wind_direction",
         "show_rain_sum": "show_rain_sum",
         "show_precipitation_prob": "show_precipitation_prob",
@@ -129,7 +135,9 @@ def _build_args_string(ns):
 
 
 def cli_main():
-    parser = argparse.ArgumentParser(prog="surf", description="Get a surf report.")
+    parser = argparse.ArgumentParser(
+        prog="surf", description="Get a surf report."
+    )
     parser.add_argument("--location", "--loc", metavar="LOCATION")
     parser.add_argument("--forecast", "--fc", type=int, metavar="DAYS")
     parser.add_argument("--decimal", "--dec", type=int, metavar="N")
