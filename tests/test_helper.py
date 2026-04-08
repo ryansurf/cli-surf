@@ -51,7 +51,6 @@ def test_default_input():
 #     assert isinstance(json_output["Location"], str)
 
 
-
 def test_set_output_values_show_past_uv():
     args = ["show_past_uv"]
     arguments_dictionary = {}
