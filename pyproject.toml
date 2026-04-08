@@ -7,7 +7,7 @@ authors = ["ryansurf <your@email.com>"] # TODO: email
 readme = "README.md"
 homepage = "https://github.com/ryansurf/cli-surf"
 repository = "https://github.com/ryansurf/cli-surf"
-keywords = ["surf", "weather", "ocean", "cli", "terminal"]
+keywords = ["surf", "surfing", "weather", "ocean", "cli", "terminal"]
 classifiers = [
     "Environment :: Console",
     "Intended Audience :: End Users/Desktop",
