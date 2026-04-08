@@ -7,19 +7,37 @@
   <img src="./images/cli-surf_logo.png" width="550">
 </p>
 
+**cli-surf** is a real-time ocean data and surf forecasting tool for the command line.
 
+- Live wave height, swell direction, period, UV index, wind, and more
+- Forecasts up to 7 days out
+- Use as a CLI tool (`surf`) or query via HTTP API / browser
+- Optional GPT-powered surf reports
+- Supports metric and imperial units, custom colors, and JSON output
 
-Surfs up!
-
-cli-surf is a real time ocean data and forecasting service used in the command line.
-
-Inspired by [wttr.in](https://github.com/chubin/wttr.in)
-
-[Documentation](https://ryansurf.github.io/cli-surf/) | [Discord](https://discord.gg/He2UpxRuJP)
+Inspired by [wttr.in](https://github.com/chubin/wttr.in) · [Documentation](https://ryansurf.github.io/cli-surf/) · [Discord](https://discord.gg/He2UpxRuJP)
 
 <p align="center">
     <img src="images/cli.gif" alt="cli-surf gif" style="width: 700px; height: auto;">
 </p>
+
+---
+
+## Table of Contents
+
+- [Usage](#-usage)
+- [Setup](#️-setup)
+  - [Poetry](#how-to-start-locally-with-poetry)
+  - [Docker](#how-to-start-with-docker)
+  - [Environment Variables](#variables)
+  - [Email Server](#email-server)
+  - [MongoDB](#mongodb)
+- [GPT Surf Report](#-gpt-surf-report)
+- [Tech Stack](#-tech-stack)
+- [Contributing](#-contributing)
+- [Contributors](#-contributors)
+
+---
 
 ## 💻 Usage
 
@@ -49,7 +67,7 @@ Location:  San Diego
       .-``'.
     .`   .`
 _.-'     '._ 
-        
+
 UV index:  6.4
 Wave Height:  3.9
 Wave Direction:  238.0
@@ -57,55 +75,79 @@ Wave Period:  9.8
 
 ```
 
-**API Arguments**
-| Argument    | Description|
-| -------- | ------- |
-| location / loc  | Specify the location of your forecast. Ex: `location=new_york_city` **or** `location=nyc`.    |
-| forecast / fc  | Number of forecast days. Max = 7, default = 0  |
-| hide_wave / hw | Hide the default wave art    |
-| show_large_wave / slw   | Show the large wave art   | 
-| show_air_temp / sat   | Show the air temp   | 
-| show_wind_speed / sws   | Show the wind speed   | 
-| show_wind_direction / swd   | Show the wind direction   | 
-| show_rain_sum / srs   | Show the rain sum   |
-| show_precipitation_prob / spp   | Show the max precipitation chance   |
-| hide_uv / huv    | Hide uv index   | 
-| show_past_uv / spuv   | Show past uv index   |
-| hide_past_uv     | Hide past uv index   |
-| show_height_history / shh   | Show past wave height index   |
-| hide_height_history     | Hide past wave height index   |
-| show_direction_history / sdh   | Show past wave direction index   |
-| hide_direction_history     | Hide past wave direction index   | 
-| show_period_history / sph   | Show past wave period index   | 
-| hide_period_history     | Hide past wave period index   |
-| hide_height / hh    | Hide surf height   | 
-| hide_direction / hdir    | Hide Swell direction    | 
-| hide_period / hp  | Hide swell period    | 
-| hide_location / hl    | Hide location   | 
-| hide_date / hdate  | Hide date in forecast   | 
-| metric / m  | Numbers in Metric units. Defaults to Imperial   | 
-| decimal / dec   | Specify decimal points in output   | 
-| color / c   | Choose color of wave art. Ex: `color=light_blue`   | 
-| json / j   | Output the data in JSON format. Must be the only argument  | 
-| gpt / g   | Activates the GPT surf report. Change the `GPT_PROMPT` variable in `.env` to customize responses. Default = off  |
-| show_cloud_cover / scc   | Show the hourly cloud cover   |
-| show_visibility / sv   | Show the hourly visibility   |
- 
 **API Examples**
-* Arguments are separated by commas.
-* `curl localhost:8000`
-* `curl localhost:8000?location=new_york,hide_height,hide_wave,show_large_wave`
-* `curl localhost:8000?fc=3,hdate,loc=trestles`
-* `curl localhost:8000?show_past_uv,show_height_history,show_direction_history,show_period_history`
+> Arguments are separated by commas.
 
-**For detailed information you can access the [help](https://github.com/ryansurf/cli-surf/blob/main/help.txt) page**
+```bash
+curl localhost:8000
+curl localhost:8000?location=new_york,hide_height,hide_wave,show_large_wave
+curl localhost:8000?fc=3,hdate,loc=trestles,c=light_blue
+curl localhost:8000?show_past_uv,show_height_history,show_direction_history,show_period_history
+curl localhost:8000?loc=malibu,gpt,color=yellow
+curl localhost:8000?loc=nazare,json
+```
 
-* `curl localhost:8000/help`
+For the full argument reference, see below or run:
+```bash
+curl localhost:8000/help
+```
 
+**API Arguments**
+
+*Display*
+
+| Argument | Shorthand | Description |
+|---|---|---|
+| `location` | `loc` | Location for the forecast. Ex: `loc=new_york_city` or `loc=nyc` |
+| `hide_wave` | `hw` | Hide the default wave art |
+| `show_large_wave` | `slw` | Show the large wave art |
+| `color` | `c` | Color of wave art. Ex: `color=light_blue` |
+| `hide_location` | `hl` | Hide location name |
+| `hide_date` | `hdate` | Hide date in forecast |
+| `metric` | `m` | Use metric units (default: imperial) |
+| `decimal` | `dec` | Specify decimal places in output |
+| `json` | `j` | Output data as JSON. Must be the only argument |
+
+*Surf Conditions*
+
+| Argument | Shorthand | Description |
+|---|---|---|
+| `hide_height` | `hh` | Hide wave height |
+| `hide_direction` | `hdir` | Hide swell direction |
+| `hide_period` | `hp` | Hide swell period |
+| `hide_uv` | `huv` | Hide UV index |
+| `show_air_temp` | `sat` | Show air temperature |
+| `show_wind_speed` | `sws` | Show wind speed |
+| `show_wind_direction` | `swd` | Show wind direction |
+| `show_rain_sum` | `srs` | Show rain sum |
+| `show_precipitation_prob` | `spp` | Show max precipitation chance |
+| `show_cloud_cover` | `scc` | Show hourly cloud cover |
+| `show_visibility` | `sv` | Show hourly visibility |
+
+*Historical Data*
+
+| Argument | Shorthand | Description |
+|---|---|---|
+| `show_past_uv` | `spuv` | Show past UV index |
+| `hide_past_uv` | — | Hide past UV index |
+| `show_height_history` | `shh` | Show past wave height |
+| `hide_height_history` | — | Hide past wave height |
+| `show_direction_history` | `sdh` | Show past wave direction |
+| `hide_direction_history` | — | Hide past wave direction |
+| `show_period_history` | `sph` | Show past wave period |
+| `hide_period_history` | — | Hide past wave period |
+
+*GPT*
+
+| Argument | Shorthand | Description |
+|---|---|---|
+| `gpt` | `g` | Activate GPT surf report. Customize via `GPT_PROMPT` in `.env`. Default: off |
+
+---
 
 ## 🛠️ Setup
+
 ### How to Start Locally with `Poetry`
-To use cli-surf, clone the project locally and install the necessary dependencies via `poetry`.
 
 1. Install [Poetry](https://python-poetry.org/docs/#installation).
 
@@ -115,172 +157,194 @@ To use cli-surf, clone the project locally and install the necessary dependencie
     cd cli-surf
     ```
 
-3. Install dependencies and Activate the virtual environment.
+3. Install dependencies and activate the virtual environment.
     ```bash
     make install
     ```
 
-4. Run the project. For example, if the entry point is `server.py`, use the following command.
+4. Start the server.
     ```bash
     poetry run python src/server.py
 
-    # Alternatively, you can run the project using `Makefile`
+    # Or via Makefile
     make run
     ```
 
 ### How to Start with `Docker`
-If you do not have Poetry installed or do not want to pollute your local environment, you can also start the project using Docker Compose.
 
-1. Install [Docker](https://docs.docker.com/engine/install/).
-2. Install [Docker Compose](https://docs.docker.com/compose/install/).
+1. Install [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/).
 
-3. Clone the repository.
+2. Clone the repository.
     ```bash
     git clone https://github.com/ryansurf/cli-surf.git
     cd cli-surf
     ```
 
-4. Docker compose up.
+3. Start the container.
     ```bash
     docker compose up -d
 
-    # Alternatively, you can run the project using `Makefile`
+    # Or via Makefile
     make run_docker
     ```
 
-
 ### Variables
 
-When running locally with Poetry, create a `.env` file from the `.env.example` file.
+When running locally with Poetry, create a `.env` file from the example:
 ```bash
 cp .env.example .env
 ```
 
-Note that when starting with Docker, the `.env` file will be automatically created from `.env.example` during the image build.
+When starting with Docker, the `.env` file is created automatically from `.env.example` during the image build.
 
+**General**
 
-| Variable    | Description|
-| -------- | ------- | 
-| `PORT`  | The port you want to open to run the application. Default = `8000` |
-| `IP_ADDRESS`  | The ip your server is running on. Default = `localhost` |
-| `SMTP_SERVER`  | The email server you are using. Default = smtp.gmail.com |
-| `SMTP_PORT`  | The email server port you are using. Default = `587` |
-| `EMAIL`  | The email you will send the report from. |
-| `EMAIL_PW`  | The sending email's password |
-| `EMAIL_RECEIVER`  | The email that will receive the report (your personal email) |
-| `COMMAND`  | The command that will be ran and shown in the email. Default = `localhost:8000` |
-| `SUBJECT`  | The email's subject. Default = Surf Report |
-| `GPT_PROMPT`  | Given the surf data (height, swell direction, etc.), you can tell the GPT what kind of report you would like. For example: `With this data, recommend what size board I should ride and nearby surf spots that may be better with the given conditions.` |
-| `API_KEY`  | Your OpenAI API key. Optional, the default GPT does not need an API key (and has slighly worse performance). Create one [here](https://platform.openai.com/api-keys) |
-| `GPT_MODEL`  | The OpenAI GPT model. Default = `gpt-3.5-turbo` (if possible, using `gpt-4o` is recommended.) Explore other models [here](https://platform.openai.com/docs/overview)|
-| `DB_URI`  | MongoDB URI |
+| Variable | Description |
+|---|---|
+| `PORT` | Port to run the application on. Default: `8000` |
+| `IP_ADDRESS` | IP address the server runs on. Default: `localhost` |
 
+**Email** *(optional — see [Email Server](#email-server))*
+
+| Variable | Description |
+|---|---|
+| `SMTP_SERVER` | Email server. Default: `smtp.gmail.com` |
+| `SMTP_PORT` | Email server port. Default: `587` |
+| `EMAIL` | Address to send the report from |
+| `EMAIL_PW` | Sending email's password |
+| `EMAIL_RECEIVER` | Address to receive the report |
+| `COMMAND` | Command shown in the email. Default: `localhost:8000` |
+| `SUBJECT` | Email subject line. Default: `Surf Report` |
+
+**GPT** *(optional — see [GPT Surf Report](#-gpt-surf-report))*
+
+| Variable | Description |
+|---|---|
+| `GPT_PROMPT` | Prompt sent to the model along with surf data. Ex: `With this data, recommend what size board I should ride.` |
+| `API_KEY` | OpenAI API key. Create one [here](https://platform.openai.com/api-keys) |
+| `GPT_MODEL` | OpenAI model to use. Default: `gpt-3.5-turbo` (recommended: `gpt-4o`). See all models [here](https://platform.openai.com/docs/overview) |
+
+**Database** *(optional — see [MongoDB](#mongodb))*
+
+| Variable | Description |
+|---|---|
+| `DB_URI` | MongoDB connection URI |
 
 ### Email Server
 
-Optional, sends a surf report to a specified email.
+Optional — sends a surf report to a specified email on a schedule.
 
-You will need to setup an email account that is able to utilize SMTP services. Gmail can be used, following Method #1 outlined [here](https://www.cubebackup.com/blog/how-to-use-google-smtp-service-to-send-emails-for-free/). After doing this, change the variables in `.env`
+You'll need an email account with SMTP access. Gmail works; follow Method #1 [here](https://www.cubebackup.com/blog/how-to-use-google-smtp-service-to-send-emails-for-free/), then update the email variables in `.env`.
 
-The Email Server can be executed using one of the following methods.
+> Note: The FastAPI server must be running to send emails.
+
 ```bash
-# Send Email locally using Poetry
+# Send email locally (Poetry)
 make send_email
 
-# Send Email in a Docker container
+# Send email via Docker
 make send_email_docker
 ```
-Note that the Flask server must be running in order to send emails.
 
 ### MongoDB
 
-Optional, stores all request output into a MongoDB database.
+Optional — stores all request output in a MongoDB database.
 
-See [get started](https://www.mongodb.com/docs/get-started/?language=python) to learn how to set this up!
+See the [MongoDB get started guide](https://www.mongodb.com/docs/get-started/?language=python) for setup, then set `DB_URI` in your `.env`.
 
 ### Frontend
+
+<details>
+<summary>Note: The frontend is no longer maintained</summary>
 
 <p align="center">
     <img src="images/streamlit.gif" alt="cli-surf_website gif" style="width: 700px; height: auto;">
 </p>
 
-Although this application was made with the cli in mind, there is a frontend.
+Although this application was made with the CLI in mind, a frontend exists.
 
 **Streamlit Frontend**
 
-[Streamlit](https://streamlit.io/) is used! 
+```bash
+streamlit run src/dev_streamlit.py
+# Available at http://localhost:8502
+```
 
-To run streamlit: `streamlit run src/dev_streamlit.py`
+**HTML/JS/CSS Frontend** *(legacy, no longer actively developed)*
 
-You will be able to find the frontend here: `http://localhost:8502`
+Available at `http://localhost:8000/home` or `<ip_of_host>:<port>/home`.
 
-**HTML/JS/CSS Frontend**
+You may need to set `IP_ADDRESS` in `.env` to match the host's IP.
 
-> [!NOTE]
-> Streamlit is now the main focus for the frontend. This legacy frontend is no longer being actively developed.
+</details>
 
-`http://localhost:8000/home` **or** `<ip_of_host>:<port>/home` if the application is running on a different host or you have changed the default port.
+---
 
-You may need to change `IP_ADDRESS` in `.env` to match the ip of the host running the machine.
+## 🧠 GPT Surf Report
 
-Now, running `python3 server.py` will launch the website!
+cli-surf can generate personalized surf reports using OpenAI's GPT models.
 
+**Setup**
 
-### 🧠 GPT Surf Report
+1. Get an OpenAI API key at [platform.openai.com](https://platform.openai.com/api-keys). Make sure a payment method is added.
 
-**cli-surf** can generate personalized surf reports using OpenAI's GPT models. This section is for those that choose to not rely on gpt4free as the repo faces pending legal action.
-
-**Enabling GPT Reports**
-
-1. **Obtain an OpenAI API Key**:
-
-   - Sign up at [OpenAI](https://beta.openai.com/signup/).
-   - Navigate to the API section and create a new API key.
-   - Make sure to add a payment method.
-
-2. **Update `.env` File**:
-
+2. Update `.env`:
    ```bash
-   GPT_PROMPT=With this data, recommend what size board I should ride and nearby surf spots that may be better with the given conditions.
    API_KEY=your_openai_api_key_here
-   GPT_MODEL=gpt-3.5-turbo  # Or use gpt-4 for better results
+   GPT_MODEL=gpt-3.5-turbo   # gpt-4o recommended for better results
+   GPT_PROMPT=With this data, recommend what size board I should ride and nearby surf spots that may be better with the given conditions.
    ```
 
-3. **Use the GPT Argument:**:
-    - Example Usage:
-  ```bash
-  curl localhost:8000?location=Malibu,gpt
-  ```
+3. Use the `gpt` argument:
+   ```bash
+   curl localhost:8000?location=Malibu,gpt
+   ```
 
-**Customizing the GPT Prompt**
-You can tailor the response by changing the GPT_PROMPT in your .env file to get different types of reports.
+**Customizing the prompt**
 
-   - Common Examples:
-      ```bash
-        GPT_PROMPT="Analyze the surf conditions and suggest the best time of day to surf."
-       ```
-       ```bash
-        GPT_PROMPT="What are some good places to eat around this surf spot"
-       ```
+Change `GPT_PROMPT` in `.env` to get different types of reports:
+```bash
+GPT_PROMPT="Analyze the surf conditions and suggest the best time of day to surf."
+GPT_PROMPT="What are some good places to eat around this surf spot?"
+```
 
-**Notes on Usage**
-  - Common Issue: Without a payment method, this feature will not work as OpenAI will deny API requests from these accounts.
-  - API Costs: Using the GPT feature will consume tokens from your OpenAI account based on the size of your custom prompt and the responses.
-  - Response Time: Generating GPT responses may take longer than standard outputs, especially if there are outages.
-  - Model Selection: Using gpt-4 provides better results but may be slower and more expensive than gpt-3.5-turbo.
+**Notes**
+- A payment method is required — OpenAI will reject requests from free accounts.
+- GPT responses consume tokens based on prompt and response size.
+- Response time may be slower than standard output, especially during OpenAI outages.
+- `gpt-4o` gives better results than `gpt-3.5-turbo` but costs more.
 
+---
+
+## 🔧 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Language | Python 3.10+ |
+| Web framework | FastAPI + Uvicorn |
+| CLI | Click |
+| Weather data | [Open-Meteo API](https://open-meteo.com/) |
+| Optional AI | OpenAI GPT API |
+| Optional database | MongoDB (pymongo) |
+| Optional frontend | Streamlit |
+| Packaging | Poetry, pipx |
+| Containerization | Docker / Docker Compose |
+
+---
 
 ## 📈 Contributing
 
 Thank you for considering contributing to cli-surf!
 
-See [CONTRIBUTING.md](https://github.com/ryansurf/cli-surf/blob/main/CONTRIBUTING.md) to get an idea of how contributions work.
+See [CONTRIBUTING.md](https://github.com/ryansurf/cli-surf/blob/main/CONTRIBUTING.md) to get started.
 
 Questions? Comments?
 
 * [Discord](https://discord.gg/He2UpxRuJP)
 * [Discussions](https://github.com/ryansurf/cli-surf/discussions)
 * [GitHub](https://github.com/ryansurf)
+
+---
 
 ## ✨ Contributors
 
@@ -332,7 +396,6 @@ Questions? Comments?
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
-
 
 ## License
 [![License](https://img.shields.io/:license-mit-blue.svg?style=flat-square)](https://badges.mit-license.org)
