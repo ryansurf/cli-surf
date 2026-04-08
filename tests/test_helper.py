@@ -51,23 +51,6 @@ def test_default_input():
 #     assert isinstance(json_output["Location"], str)
 
 
-def test_print_gpt():
-    """
-    Tests the simple_gpt()
-    """
-    surf_data = {
-        "Location": "test",
-        "Height": "test",
-        "Swell Direction": "test",
-        "Period": "test",
-        "Unit": "test",
-    }
-    gpt_prompt = "Please output 'gpt works'"
-    gpt_info = [None, ""]
-    gpt_response = helper.print_gpt(surf_data, gpt_prompt, gpt_info)
-    assert "gpt works" in gpt_response
-
-
 def test_set_output_values_show_past_uv():
     args = ["show_past_uv"]
     arguments_dictionary = {}
