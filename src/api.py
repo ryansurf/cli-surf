@@ -168,7 +168,6 @@ def get_uv_history(
         # Attempt to fetch the UV index data from the API
         try:
             responses = openmeteo.weather_api(url, params=params)
-
         except ValueError:
             return "No data"
 
