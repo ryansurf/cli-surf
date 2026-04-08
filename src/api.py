@@ -28,11 +28,11 @@ _TTL = 600
 _ocean_cache = TTLCache(maxsize=300, ttl=_TTL)
 _uv_cache = TTLCache(maxsize=300, ttl=_TTL)
 uv_history_cache = TTLCache(maxsize=300, ttl=_TTL)
-_ocean_history_cache = TTLCache(maxsize=300, ttl=_TTL)
+ocean_history_cache = TTLCache(maxsize=300, ttl=_TTL)
 _wind_temp_cache = TTLCache(maxsize=300, ttl=_TTL)
 _rain_cache = TTLCache(maxsize=300, ttl=_TTL)
-_forecast_cache = TTLCache(maxsize=300, ttl=_TTL)
-_hourly_forecast_cache = TTLCache(maxsize=300, ttl=_TTL)
+forecast_cache = TTLCache(maxsize=300, ttl=_TTL)
+_hourlyforecast_cache = TTLCache(maxsize=300, ttl=_TTL)
 _ocean_lock = Lock()
 
 
@@ -225,7 +225,7 @@ def ocean_information(
     return [current_wave_height, current_wave_direction, current_wave_period]
 
 
-@cached(_ocean_history_cache, lock=_ocean_lock)
+@cached(ocean_history_cache, lock=_ocean_lock)
 def ocean_information_history(
     lat: float, long: float, decimal: int, unit: str = "imperial"
 ) -> list | str:
@@ -366,7 +366,7 @@ def get_rain(lat: float, long: float) -> tuple[float, float]:
     )
 
 
-@cached(_forecast_cache, lock=_ocean_lock)
+@cached(forecast_cache, lock=_ocean_lock)
 def forecast(lat: float, long: float, decimal: int, days: int = 0) -> dict:
     """
     Number of forecast days. Max is 7
@@ -465,7 +465,7 @@ def forecast(lat: float, long: float, decimal: int, days: int = 0) -> dict:
     return forecast_data
 
 
-@cached(_hourly_forecast_cache, lock=_ocean_lock)
+@cached(_hourlyforecast_cache, lock=_ocean_lock)
 def get_hourly_forecast(
     lat: float, long: float, days: int = 1, unit: str = "fahrenheit"
 ) -> dict:

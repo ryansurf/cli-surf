@@ -6,23 +6,21 @@ Run pytest: pytest
 
 import logging
 from http import HTTPStatus
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import MagicMock, Mock, patch
 
 import numpy as np
 import pytest
 from openmeteo_requests.Client import OpenMeteoRequestsError
 
-from src import api
-
 from src.api import (
-    _forecast_cache,
-    _ocean_history_cache,
     default_location,
     forecast,
+    forecast_cache,
     gather_data,
     get_coordinates,
     get_uv,
     get_uv_history,
+    ocean_history_cache,
     ocean_information,
     ocean_information_history,
     seperate_args_and_get_location,
@@ -62,6 +60,7 @@ def test_default_location_mocked(
     # Assert: Verify 'requests.get' is called with correct arguments
     mock_requests.assert_called_once_with("https://ipinfo.io/json", timeout=10)
 
+
 """
 return [
                     location.latitude,
@@ -69,6 +68,7 @@ return [
                     location.raw["name"],
                 ]
 """
+
 
 @patch("src.api.Nominatim")
 def test_get_coordinates(mock_nominatim):
@@ -92,11 +92,12 @@ def test_get_coordinates(mock_nominatim):
 
 @patch("src.api._create_openmeteo_client")
 def test_get_uv(mock_create_client):
+    UV_INDEX = 5.0
     mock_variable = MagicMock()
-    mock_variable.Value.return_value = 5.0  # real number so round() works
+    mock_variable.Value.return_value = UV_INDEX  # real number so round() works
 
     mock_current = MagicMock()
-    mock_current.Variables.return_value = mock_variable  # .Variables(0) → mock_variable
+    mock_current.Variables.return_value = mock_variable
 
     mock_response = MagicMock()
     mock_response.Current.return_value = mock_current
@@ -107,10 +108,8 @@ def test_get_uv(mock_create_client):
 
     result = get_uv(31.41, -84.92, 2, "imperial")
 
-    assert result == 5.0
+    assert result == UV_INDEX
     assert isinstance(result, float)
-
-
 
 
 @patch("src.api._create_openmeteo_client")
@@ -173,26 +172,40 @@ def test_forecast(mock_create_client):
     ]
     mock_create_client.return_value = mock_client
 
-    _forecast_cache.clear()
+    forecast_cache.clear()
     fc = forecast(26.705, -80.036, 1, 7)
 
-    assert len(fc["wave_height_max"]) == 7
-    assert len(fc["wave_direction_dominant"]) == 7
-    assert len(fc["wave_period_max"]) == 7
+    FORECAST_LENGTH = 7
+
+    assert len(fc["wave_height_max"]) == FORECAST_LENGTH
+    assert len(fc["wave_direction_dominant"]) == FORECAST_LENGTH
+    assert len(fc["wave_period_max"]) == FORECAST_LENGTH
 
 
 @patch("src.api.ocean_information", return_value=[3.5, 180.0, 12.0])
 @patch("src.api.get_uv", return_value=5.0)
-@patch("src.api.get_hourly_forecast", return_value={"cloud_cover": 50.0, "visibility": 10.0})
+@patch(
+    "src.api.get_hourly_forecast",
+    return_value={"cloud_cover": 50.0, "visibility": 10.0},
+)
 @patch("src.api.current_wind_temp", return_value=[70.0, 10.0, 180.0])
 @patch("src.api.get_rain", return_value=(0.1, 30.0))
 @patch("src.api.forecast", return_value={})
-@patch("src.api.ocean_information_history", return_value=["3.5", "180.0", "12.0"])
+@patch(
+    "src.api.ocean_information_history", return_value=["3.5", "180.0", "12.0"]
+)
 @patch("src.api.get_uv_history", return_value="5.0")
 @patch("src.helper.forecast_to_json", return_value={})
-def test_gather_data(
-    mock_ftj, mock_uv_hist, mock_ocean_hist, mock_fc,
-    mock_rain, mock_wind, mock_hourly, mock_uv, mock_ocean,
+def test_gather_data(  # noqa: PLR0913, PLR0917
+    mock_ftj,
+    mock_uv_hist,
+    mock_ocean_hist,
+    mock_fc,
+    mock_rain,
+    mock_wind,
+    mock_hourly,
+    mock_uv,
+    mock_ocean,
 ):
     """
     Gather data needs the arguments dictionary as input,
@@ -261,7 +274,9 @@ def test_get_uv_history_invalid_coordinates(mock_create_client):
     when provided with latitude and longitude values that are out of range.
     """
     mock_client = MagicMock()
-    mock_client.weather_api.side_effect = OpenMeteoRequestsError("out of range")
+    mock_client.weather_api.side_effect = OpenMeteoRequestsError(
+        "out of range"
+    )  # noqa: E501
     mock_create_client.return_value = mock_client
 
     uv_history_cache.clear()
@@ -303,7 +318,7 @@ def test_ocean_information_history_basic_functionality(mock_create_client):
     mock_client.weather_api.return_value = [mock_response]
     mock_create_client.return_value = mock_client
 
-    _ocean_history_cache.clear()
+    ocean_history_cache.clear()
     waves = ocean_information_history(31.9505, 115.8605, 2)
     assert waves[0] is not None
     assert waves[1] is not None
@@ -319,10 +334,12 @@ def test_ocean_information_history_invalid_coordinates(mock_create_client):
     when provided with latitude and longitude values that are out of range.
     """
     mock_client = MagicMock()
-    mock_client.weather_api.side_effect = OpenMeteoRequestsError("out of range")
+    mock_client.weather_api.side_effect = OpenMeteoRequestsError(
+        "out of range"
+    )  # noqa: E501
     mock_create_client.return_value = mock_client
 
-    _ocean_history_cache.clear()
+    ocean_history_cache.clear()
     with pytest.raises(OpenMeteoRequestsError):
         ocean_information_history(1000, -2000, 2)
 
@@ -344,7 +361,7 @@ def test_ocean_information_history_response_format(mock_create_client):
     mock_client.weather_api.return_value = [mock_response]
     mock_create_client.return_value = mock_client
 
-    _ocean_history_cache.clear()
+    ocean_history_cache.clear()
     waves = ocean_information_history(31.9505, 115.8605, 2)
     expected_wave_count = 3
     assert isinstance(waves, list)
@@ -363,7 +380,7 @@ def test_ocean_information_history(mock_create_client):
     """
     mock_create_client.return_value = MagicMock()
 
-    _ocean_history_cache.clear()
+    ocean_history_cache.clear()
     result = ocean_information_history(31.9505, 115.8605, 1)
     expected_result = ["0.6", "0.6", "0.6"]
     assert result == expected_result
