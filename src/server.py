@@ -78,4 +78,4 @@ if __name__ == "__main__":  # pragma: no cover
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-    uvicorn.run(app, host=str(env.IP_ADDRESS), port=env.PORT)
+    uvicorn.run(app, host="0.0.0.0", port=env.PORT)

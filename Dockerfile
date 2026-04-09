@@ -24,5 +24,5 @@ RUN poetry install --no-interaction --no-ansi
 # Set the working directory for running the application
 EXPOSE 8000
 
-# Command to run the Flask application
+# Command to run the fastapi application
 CMD ["poetry", "run", "python", "src/server.py"]

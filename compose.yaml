@@ -1,5 +1,5 @@
 services:
-  flask:
+  fastapi:
     build: .
     container_name: cli-surf
     hostname: cli-surf
