@@ -332,6 +332,10 @@ GPT_PROMPT="What are some good places to eat around this surf spot?"
 
 ---
 
+## 👷🏻‍♀️ Architecture
+
+[Architecture](docs/architecture.png)
+
 ## 📈 Contributing
 
 Thank you for considering contributing to cli-surf!
