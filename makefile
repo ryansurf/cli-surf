@@ -65,3 +65,38 @@ clean:
 
 .PHONY: all
 all: format lint test
+
+.PHONY: lambda-zip
+lambda-zip:
+	poetry export -f requirements.txt --output requirements.txt --without-hashes
+	pip install -r requirements.txt -t ./package
+	cp -r src/ ./package/src/
+	cd package && zip -r ../terraform/lambda.zip . && cd ..
+
+ECR_REGION ?= us-west-1
+ECR_ACCOUNT_ID ?= $(shell aws sts get-caller-identity --query Account --output text)
+ECR_REPO = $(ECR_ACCOUNT_ID).dkr.ecr.$(ECR_REGION).amazonaws.com/cli-surf
+
+.PHONY: ecr-login
+ecr-login:
+	aws ecr get-login-password --region $(ECR_REGION) | docker login --username AWS --password-stdin $(ECR_ACCOUNT_ID).dkr.ecr.$(ECR_REGION).amazonaws.com
+
+.PHONY: docker-build
+docker-build:
+	docker build --platform linux/amd64 --provenance=false -f Dockerfile.lambda -t cli-surf:latest .
+
+.PHONY: docker-push
+docker-push: ecr-login docker-build
+	docker tag cli-surf:latest $(ECR_REPO):latest
+	docker push $(ECR_REPO):latest
+
+.PHONY: update-lambda
+update-lambda:
+	$(eval DIGEST := $(shell aws ecr describe-images --repository-name cli-surf --region $(ECR_REGION) --query 'sort_by(imageDetails, &imagePushedAt)[-1].imageDigest' --output text))
+	aws lambda update-function-code --function-name cli-surf --region $(ECR_REGION) --image-uri $(ECR_REPO)@$(DIGEST)
+
+.PHONY: deploy
+deploy: docker-push update-lambda
+	terraform -chdir=terraform apply
+
+

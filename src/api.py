@@ -38,7 +38,7 @@ _ocean_lock = Lock()
 
 def _create_openmeteo_client() -> openmeteo_requests.Client:
     """Creates a cached, retry-enabled Open-Meteo API client."""
-    cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
+    cache_session = requests_cache.CachedSession("/tmp/.cache", expire_after=3600)
     retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
     return openmeteo_requests.Client(session=retry_session)
 
