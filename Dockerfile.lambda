@@ -1,0 +1,15 @@
+FROM public.ecr.aws/lambda/python:3.12
+
+WORKDIR /var/task
+
+COPY pyproject.toml poetry.lock ./
+COPY .env.example .env
+
+RUN pip install poetry && \
+    poetry config virtualenvs.create false && \
+    poetry install --no-interaction --no-ansi --without dev --no-root
+
+COPY src/ ./src/
+COPY help.txt ./
+
+CMD ["src/handler.handler"]

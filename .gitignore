@@ -163,3 +163,22 @@ cython_debug/
 
 *.cache.sqlite
 *.pyc
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+*.tfvars
+!*.tfvars.example
+
+# Lambda build artifacts
+terraform/lambda.zip
+package/
+requirements.txt
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/

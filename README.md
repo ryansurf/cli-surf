@@ -34,6 +34,7 @@ Inspired by [wttr.in](https://github.com/chubin/wttr.in) · [Documentation](http
   - [MongoDB](#mongodb)
 - [GPT Surf Report](#-gpt-surf-report)
 - [Tech Stack](#-tech-stack)
+- [Architecture](#-architecture)
 - [Contributing](#-contributing)
 - [Contributors](#-contributors)
 
@@ -331,6 +332,10 @@ GPT_PROMPT="What are some good places to eat around this surf spot?"
 | Containerization | Docker / Docker Compose |
 
 ---
+
+## 📐 Architecture
+
+[Architecture](docs/architecture.png)
 
 ## 📈 Contributing
 
