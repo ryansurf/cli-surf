@@ -42,7 +42,7 @@ Inspired by [wttr.in](https://github.com/chubin/wttr.in) · [Documentation](http
 
 ## 💻 Usage
 
-There are two ways to use cli-surf: install it as a CLI tool via pipx, or run the server and access it via API/browser.
+There are several ways to use cli-surf: install it as a CLI tool via pipx, hit the public API, or run the server locally and access it via API/browser.
 
 ### Installing via [pipx](https://pipx.pypa.io/stable/) ([pypi](https://pypi.org/project/cli-surf/))
 
@@ -56,7 +56,13 @@ surf --help
 surf --location scripps_pier --forecast 4
 ```
 
-### Running the server and using via API
+### Hitting the public API
+
+```
+curl https://api.clisurf.com
+```
+
+### Running the server locally and using via API
 
 Start the server locally (see [Setup](#️-setup) below), then query it from your browser or CLI:
 
@@ -330,6 +336,7 @@ GPT_PROMPT="What are some good places to eat around this surf spot?"
 | Optional frontend | Streamlit |
 | Packaging | Poetry, pipx |
 | Containerization | Docker / Docker Compose |
+| Cloud | AWS (Lambda, ECR, API Gateway), CloudFlare (DNS resolver), GoDaddy (register domain name) |
 
 ---
 
