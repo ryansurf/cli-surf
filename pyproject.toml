@@ -67,8 +67,11 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 testpaths = 'tests'
 pythonpath = "."
-addopts = '-p no:warnings'  # disable pytest warnings
+addopts = '-p no:warnings -m "not integration"'  # disable pytest warnings; skip integration tests by default
 log_format = '%(name)s %(levelname)s: %(message)s'
+markers = [
+    "integration: tests that hit live external services (run with -m integration)",
+]
 
 # coverage settings
 [tool.coverage.run]
