@@ -66,13 +66,6 @@ clean:
 .PHONY: all
 all: format lint test
 
-.PHONY: lambda-zip
-lambda-zip:
-	poetry export -f requirements.txt --output requirements.txt --without-hashes
-	pip install -r requirements.txt -t ./package
-	cp -r src/ ./package/src/
-	cd package && zip -r ../terraform/lambda.zip . && cd ..
-
 ECR_REGION ?= us-west-1
 ECR_ACCOUNT_ID ?= $(shell aws sts get-caller-identity --query Account --output text)
 ECR_REPO = $(ECR_ACCOUNT_ID).dkr.ecr.$(ECR_REGION).amazonaws.com/cli-surf
