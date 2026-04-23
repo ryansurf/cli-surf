@@ -3,21 +3,20 @@ Functions that make API calls stored here
 """
 
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from functools import lru_cache
 from http import HTTPStatus
 from threading import Lock
 
 import numpy as np
-import openmeteo_requests
 import pandas as pd
 import requests
-import requests_cache
 from cachetools import TTLCache, cached
 from geopy.geocoders import Nominatim
-from retry_requests import retry
 
 from src import helper
+from src.open_meteo import openmeteo_client
 
 logger = logging.getLogger(__name__)
 
@@ -25,24 +24,17 @@ testing = 1
 
 # data expires after 600 seconds (10 min)
 _TTL = 600
-_ocean_cache = TTLCache(maxsize=300, ttl=_TTL)
-_uv_cache = TTLCache(maxsize=300, ttl=_TTL)
-uv_history_cache = TTLCache(maxsize=300, ttl=_TTL)
-ocean_history_cache = TTLCache(maxsize=300, ttl=_TTL)
-_wind_temp_cache = TTLCache(maxsize=300, ttl=_TTL)
-_rain_cache = TTLCache(maxsize=300, ttl=_TTL)
-forecast_cache = TTLCache(maxsize=300, ttl=_TTL)
-_hourlyforecast_cache = TTLCache(maxsize=300, ttl=_TTL)
+# max size = 300 items
+_MAXSIZE = 300
+_ocean_cache = TTLCache(maxsize=_MAXSIZE, ttl=_TTL)
+_uv_cache = TTLCache(maxsize=_MAXSIZE, ttl=_TTL)
+uv_history_cache = TTLCache(maxsize=_MAXSIZE, ttl=_TTL)
+ocean_history_cache = TTLCache(maxsize=_MAXSIZE, ttl=_TTL)
+_wind_temp_cache = TTLCache(maxsize=_MAXSIZE, ttl=_TTL)
+_rain_cache = TTLCache(maxsize=_MAXSIZE, ttl=_TTL)
+forecast_cache = TTLCache(maxsize=_MAXSIZE, ttl=_TTL)
+_hourlyforecast_cache = TTLCache(maxsize=_MAXSIZE, ttl=_TTL)
 _ocean_lock = Lock()
-
-
-def _create_openmeteo_client() -> openmeteo_requests.Client:
-    """Creates a cached, retry-enabled Open-Meteo API client."""
-    cache_session = requests_cache.CachedSession(
-        "/tmp/.cache", expire_after=3600
-    )
-    retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
-    return openmeteo_requests.Client(session=retry_session)
 
 
 @lru_cache(maxsize=128)
@@ -98,8 +90,6 @@ def get_uv(
     Get UV at coordinates (lat, long)
     Calling the API here: https://open-meteo.com/en/docs
     """
-    openmeteo = _create_openmeteo_client()
-
     url = "https://air-quality-api.open-meteo.com/v1/air-quality"
     params = {
         "latitude": lat,
@@ -108,7 +98,7 @@ def get_uv(
         "current": "uv_index",
     }
     try:
-        responses = openmeteo.weather_api(url, params=params)
+        responses = openmeteo_client.weather_api(url, params=params)
     except ValueError:
         return "No data"
 
@@ -146,8 +136,6 @@ def get_uv_history(
     API Documentation:
     https://open-meteo.com/en/docs/air-quality-api
     """
-    openmeteo = _create_openmeteo_client()
-
     # Calculate the date one year ago and the current hour
     one_year_ago = datetime.now() - timedelta(days=365)
     formatted_date_one_year_ago = one_year_ago.strftime("%Y-%m-%d")
@@ -169,7 +157,7 @@ def get_uv_history(
     if testing == 1:
         # Attempt to fetch the UV index data from the API
         try:
-            responses = openmeteo.weather_api(url, params=params)
+            responses = openmeteo_client.weather_api(url, params=params)
         except ValueError:
             return "No data"
 
@@ -198,8 +186,6 @@ def ocean_information(
     Get Ocean Data at coordinates
     API: https://open-meteo.com/en/docs/marine-weather-api
     """
-    openmeteo = _create_openmeteo_client()
-
     url = "https://marine-api.open-meteo.com/v1/marine"
     params = {
         "latitude": lat,
@@ -210,7 +196,7 @@ def ocean_information(
         "forecast_days": 3,
     }
     try:
-        responses = openmeteo.weather_api(url, params=params)
+        responses = openmeteo_client.weather_api(url, params=params)
     except ValueError:
         return "No data"
 
@@ -255,8 +241,6 @@ def ocean_information_history(
     API Documentation:
     https://open-meteo.com/en/docs/marine-weather-api
     """
-    openmeteo = _create_openmeteo_client()
-
     # Calculate the date and current hour one year ago
     one_year_ago = datetime.now() - timedelta(days=365)
     formatted_date_one_year_ago = one_year_ago.strftime("%Y-%m-%d")
@@ -278,7 +262,7 @@ def ocean_information_history(
     if testing == 1:
         # Attempt to fetch the UV index data from the API
         try:
-            responses = openmeteo.weather_api(url, params=params)
+            responses = openmeteo_client.weather_api(url, params=params)
 
         except ValueError:
             return "No data"
@@ -312,8 +296,6 @@ def current_wind_temp(
     """
     Gathers the wind and temperature data
     """
-    openmeteo = _create_openmeteo_client()
-
     url = "https://api.open-meteo.com/v1/forecast"
     params = {
         "latitude": lat,
@@ -322,7 +304,7 @@ def current_wind_temp(
         "temperature_unit": temp_unit,
         "wind_speed_unit": "mph",
     }
-    responses = openmeteo.weather_api(url, params=params)
+    responses = openmeteo_client.weather_api(url, params=params)
 
     response = responses[0]
 
@@ -345,15 +327,13 @@ def get_rain(lat: float, long: float) -> tuple[float, float]:
     Get rain data at coordinates (lat, long)
     Calling the API here: https://open-meteo.com/en/docs
     """
-    openmeteo = _create_openmeteo_client()
-
     url = "https://api.open-meteo.com/v1/forecast"
     params = {
         "latitude": lat,
         "longitude": long,
         "daily": ["rain_sum", "precipitation_probability_max"],
     }
-    responses = openmeteo.weather_api(url, params=params)
+    responses = openmeteo_client.weather_api(url, params=params)
 
     response = responses[0]
     # Process daily data. The order of variables needs to be the
@@ -374,8 +354,6 @@ def forecast(lat: float, long: float, decimal: int, days: int = 0) -> dict:
     Number of forecast days. Max is 7
     API: https://open-meteo.com/en/docs/marine-weather-api
     """
-    openmeteo = _create_openmeteo_client()
-
     # First URL is the marine API. Second is for general weather/UV index
     urls = (
         "https://marine-api.open-meteo.com/v1/marine",
@@ -413,8 +391,12 @@ def forecast(lat: float, long: float, decimal: int, days: int = 0) -> dict:
         "forecast_days": days,
     }
 
-    responses_marine = openmeteo.weather_api(urls[0], params=params_marine)
-    responses_general = openmeteo.weather_api(urls[1], params=params_general)
+    responses_marine = openmeteo_client.weather_api(
+        urls[0], params=params_marine
+    )
+    responses_general = openmeteo_client.weather_api(
+        urls[1], params=params_general
+    )
 
     response_marine = responses_marine[0]
     response_general = responses_general[0]
@@ -474,8 +456,6 @@ def get_hourly_forecast(
     """
     Gets hourly weather data
     """
-    openmeteo = _create_openmeteo_client()
-
     # The order of variables in hourly or daily is important
     # to assign them correctly below
     url = "https://api.open-meteo.com/v1/forecast"
@@ -489,7 +469,7 @@ def get_hourly_forecast(
         "forecast_days": days,
     }
 
-    responses = openmeteo.weather_api(url, params=params)
+    responses = openmeteo_client.weather_api(url, params=params)
     response = responses[0]
 
     hourly = response.Hourly()
@@ -524,43 +504,42 @@ def gather_data(lat: float | str, long: float | str, arguments: dict) -> dict:
     in a dictionary (ocean_data_dict)
     """
     lat, long = float(lat), float(long)
-    ocean_data = ocean_information(
-        lat, long, arguments["decimal"], arguments["unit"]
-    )
+    dec, unit = arguments["decimal"], arguments["unit"]
 
-    uv_index = get_uv(lat, long, arguments["decimal"], arguments["unit"])
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        futures = {
+            "ocean": executor.submit(ocean_information, lat, long, dec, unit),
+            "uv": executor.submit(get_uv, lat, long, dec, unit),
+            "hourly": executor.submit(get_hourly_forecast, lat, long),
+            "wind_temp": executor.submit(current_wind_temp, lat, long, dec),
+            "rain": executor.submit(get_rain, lat, long),
+            "forecast": executor.submit(forecast, lat, long, dec, 7),
+            "ocean_hist": executor.submit(
+                ocean_information_history, lat, long, dec, unit
+            ),
+            "uv_hist": executor.submit(get_uv_history, lat, long, dec, unit),
+        }
+        results = {k: f.result() for k, f in futures.items()}
 
-    hourly_dict = get_hourly_forecast(lat, long)
+    arguments["ocean_data"] = results["ocean"]
+    arguments["uv_index"] = results["uv"]
 
-    air_temp, wind_speed, wind_dir = current_wind_temp(
-        lat, long, arguments["decimal"]
-    )
-    rain_sum, precipitation_probability_max = get_rain(lat, long)
+    air_temp, wind_speed, wind_dir = results["wind_temp"]
+    rain_sum, precipitation_probability_max = results["rain"]
+    json_forecast = helper.forecast_to_json(results["forecast"], dec)
 
-    arguments["ocean_data"] = ocean_data
-    arguments["uv_index"] = uv_index
-    spot_forecast = forecast(lat, long, arguments["decimal"], 7)
-    json_forecast = helper.forecast_to_json(
-        spot_forecast, arguments["decimal"]
-    )
-
-    ocean_history = ocean_information_history(
-        lat, long, arguments["decimal"], arguments["unit"]
-    )
-    ocean_data_dict = {
+    return {
         "Lat": lat,
         "Long": long,
         "Location": arguments["city"],
-        "Height": ocean_data[0],
-        "Height one year ago": ocean_history[0],
-        "Swell Direction": ocean_data[1],
-        "Swell Direction one year ago": ocean_history[1],
-        "Period": ocean_data[2],
-        "Period one year ago": ocean_history[2],
-        "UV Index": uv_index,
-        "UV Index one year ago": (
-            get_uv_history(lat, long, arguments["decimal"], arguments["unit"])
-        ),
+        "Height": results["ocean"][0],
+        "Height one year ago": results["ocean_hist"][0],
+        "Swell Direction": results["ocean"][1],
+        "Swell Direction one year ago": results["ocean_hist"][1],
+        "Period": results["ocean"][2],
+        "Period one year ago": results["ocean_hist"][2],
+        "UV Index": results["uv"],
+        "UV Index one year ago": results["uv_hist"],
         "Air Temperature": air_temp,
         "Wind Speed": wind_speed,
         "Wind Direction": wind_dir,
@@ -568,10 +547,9 @@ def gather_data(lat: float | str, long: float | str, arguments: dict) -> dict:
         "Unit": arguments["unit"],
         "Rain Sum": rain_sum,
         "Precipitation Probability Max": precipitation_probability_max,
-        "Cloud Cover": hourly_dict["cloud_cover"],
-        "Visibility": hourly_dict["visibility"],
+        "Cloud Cover": results["hourly"]["cloud_cover"],
+        "Visibility": results["hourly"]["visibility"],
     }
-    return ocean_data_dict
 
 
 def separate_args_and_get_location(args: list) -> dict:
