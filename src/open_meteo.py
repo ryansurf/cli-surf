@@ -1,5 +1,5 @@
-import requests
 import openmeteo_requests
+import requests
 from retry_requests import retry
 
 
