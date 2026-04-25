@@ -10,10 +10,11 @@ from pathlib import Path
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, PlainTextResponse
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse
 from fastapi.templating import Jinja2Templates
 
 from src import cli
+from src.art import ansi_to_html
 from src.settings import ServerSettings
 
 logger = logging.getLogger(__name__)
@@ -63,7 +64,12 @@ def create_app(env):
         f = io.StringIO()
         with redirect_stdout(f):
             surf.run(args=passed_args)
-        return f.getvalue()
+        output = f.getvalue()
+
+        accept = request.headers.get("accept", "")
+        if "text/html" in accept:
+            return HTMLResponse(content=ansi_to_html(output))
+        return PlainTextResponse(output)
 
     return app
 

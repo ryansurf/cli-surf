@@ -18,51 +18,61 @@ def _make_chat_response(content):
     return response
 
 
-def test_simple_gpt_returns_model_content(mocker):
-    """simple_gpt returns the text content from the g4f response."""
+def test_free_gpt_returns_model_content(mocker):
+    """FreeGpt.call_llm returns the text content from the g4f response."""
     mock_client = Mock()
     mock_client.chat.completions.create.return_value = _make_chat_response(
         "Great surf day!"
     )
     mocker.patch("src.gpt.Client", return_value=mock_client)
 
-    result = gpt.simple_gpt("surf is 4ft", "what board should I ride?")
+    result = gpt.FreeGpt("gpt-3.5-turbo").call_llm(
+        "surf is 4ft", "what board should I ride?"
+    )
 
     assert result == "Great surf day!"
     mock_client.chat.completions.create.assert_called_once()
 
 
-def test_simple_gpt_returns_fallback_on_exception(mocker):
-    """simple_gpt returns the error string when the g4f client raises."""
-    mocker.patch("src.gpt.Client", side_effect=Exception("API down"))
+def test_free_gpt_returns_fallback_on_exception(mocker):
+    """FreeGpt.call_llm returns the error string when the client raises."""
+    mock_client = Mock()
+    mock_client.chat.completions.create.side_effect = Exception("API down")
+    mocker.patch("src.gpt.Client", return_value=mock_client)
 
-    result = gpt.simple_gpt("surf is 4ft", "what board?")
+    result = gpt.FreeGpt("gpt-3.5-turbo").call_llm(
+        "surf is 4ft", "what board?"
+    )
 
     assert result == "Unable to generate GPT response."
 
 
-def test_openai_gpt_returns_model_content(mocker):
-    """openai_gpt returns the text content from the OpenAI response."""
+def test_openai_llm_returns_model_content(mocker):
+    """OpenAILlm.call_llm returns the text content from the OpenAI response."""
     mock_client = Mock()
     mock_client.chat.completions.create.return_value = _make_chat_response(
         "Bring your longboard."
     )
     mocker.patch("src.gpt.OpenAI", return_value=mock_client)
 
-    result = gpt.openai_gpt(
-        "surf is 2ft", "recommend a board", "sk-testkey", "gpt-4"
+    result = gpt.OpenAILlm("sk-testkey", "gpt-4").call_llm(
+        "surf is 2ft", "recommend a board"
     )
 
     assert result == "Bring your longboard."
     mock_client.chat.completions.create.assert_called_once()
 
 
-def test_openai_gpt_returns_fallback_on_exception(mocker):
-    """openai_gpt returns the error string when the OpenAI client raises."""
-    mocker.patch("src.gpt.OpenAI", side_effect=Exception("quota exceeded"))
+def test_openai_llm_returns_fallback_on_exception(mocker):
+    """OpenAILlm.call_llm returns the error string when the client raises."""
+    mock_client = Mock()
+    mock_client.chat.completions.create.side_effect = Exception(
+        "quota exceeded"
+    )
+    mocker.patch("src.gpt.OpenAI", return_value=mock_client)
 
-    result = gpt.openai_gpt(
-        "surf is 2ft", "recommend a board", "sk-key", "gpt-4"
+    result = gpt.OpenAILlm("sk-key", "gpt-4").call_llm(
+        "surf is 2ft", "recommend a board"
     )
 
     assert result == "Unable to generate GPT response."

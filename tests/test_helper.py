@@ -426,7 +426,7 @@ def test_set_location_unpacks_dict():
 
 
 def test_print_gpt_uses_openai_when_key_is_long_enough(mocker):
-    """print_gpt calls openai_gpt when the API key is at least 5 chars."""
+    """print_gpt uses OpenAILlm when the API key is at least 5 chars."""
     surf_data = {
         "Location": "Santa Cruz",
         "Height": "3",
@@ -434,11 +434,11 @@ def test_print_gpt_uses_openai_when_key_is_long_enough(mocker):
         "Period": "12",
         "Unit": "ft",
     }
-    mock_openai = mocker.patch(
-        "src.helper.gpt.openai_gpt", return_value="openai response"
-    )
+    mock_llm = mocker.MagicMock()
+    mock_llm.call_llm.return_value = "openai response"
+    mocker.patch("src.helper.gpt.OpenAILlm", return_value=mock_llm)
     result = helper.print_gpt(
         surf_data, "any prompt", ("sk-validkey", "gpt-4")
     )
     assert result == "openai response"
-    mock_openai.assert_called_once()
+    mock_llm.call_llm.assert_called_once()
