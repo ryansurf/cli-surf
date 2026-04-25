@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 
 class Llm(ABC):
-
     def __init__(self, model):
         self.model = model
         self.client: Any = None
@@ -22,7 +21,9 @@ class Llm(ABC):
         try:
             response = self.client.chat.completions.create(
                 model=self.model,
-                messages=[{"role": "user", "content": surf_summary + gpt_prompt}],
+                messages=[
+                    {"role": "user", "content": surf_summary + gpt_prompt}
+                ],
             )
             return response.choices[0].message.content
         except Exception as e:

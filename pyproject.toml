@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cli-surf"
-version = "2.3.1"
+version = "2.4.0"
 description = "Command-line surf report tool"
 license = "MIT"
 authors = ["ryansurf <your@email.com>"] # TODO: email
