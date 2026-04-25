@@ -50,6 +50,7 @@ httpx = "^0.28.1"
 debugpy = "^1.8.20"
 cachetools = "^7.0.5"
 mangum = "^0.21.0"
+nest-asyncio = "^1.6.0"
 
 [tool.poetry.group.dev.dependencies]
 # command: `poetry add --group dev <package-name>`
