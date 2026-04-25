@@ -390,5 +390,5 @@ def print_gpt(surf_data, gpt_prompt, gpt_info):
     api_key, gpt_model = gpt_info
     MIN_KEY_LEN = 5
     if not api_key or len(api_key) < MIN_KEY_LEN:
-        return gpt.simple_gpt(summary, gpt_prompt)
-    return gpt.openai_gpt(summary, gpt_prompt, api_key, gpt_model)
+        return gpt.FreeGpt(gpt_model).call_llm(summary, gpt_prompt)
+    return gpt.OpenAILlm(api_key, gpt_model).call_llm(summary, gpt_prompt)
