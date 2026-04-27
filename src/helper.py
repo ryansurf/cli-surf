@@ -5,7 +5,8 @@ General helper functions
 import json
 import logging
 
-from src import api, art, gpt
+from src import api, art
+from src.gpt import get_llm_client
 
 logger = logging.getLogger(__name__)
 
@@ -294,7 +295,7 @@ def json_output(data_dict, print_output=True):
     return data_dict
 
 
-def print_outputs(ocean_data_dict, arguments, gpt_prompt, gpt_info):
+def print_outputs(ocean_data_dict, arguments):
     """
     Main printing function; calls all the other printing functions.
     """
@@ -322,7 +323,7 @@ def print_outputs(ocean_data_dict, arguments, gpt_prompt, gpt_info):
 
     gpt_response = None
     if arguments["gpt"]:
-        gpt_response = print_gpt(ocean_data_dict, gpt_prompt, gpt_info)
+        gpt_response = get_gpt_response(ocean_data_dict)
         print(gpt_response)
     return gpt_response
 
@@ -377,7 +378,7 @@ def forecast_to_json(forecast_data, decimal):
     return forecasts
 
 
-def print_gpt(surf_data, gpt_prompt, gpt_info):
+def get_gpt_response(surf_data):
     """
     Builds a surf summary and returns the GPT response.
     """
@@ -387,8 +388,8 @@ def print_gpt(surf_data, gpt_prompt, gpt_info):
         f"swell is {surf_data['Swell Direction']} degrees and the swell "
         f"period is {surf_data['Period']} seconds."
     )
-    api_key, gpt_model = gpt_info
-    MIN_KEY_LEN = 5
-    if not api_key or len(api_key) < MIN_KEY_LEN:
-        return gpt.FreeGpt(gpt_model).call_llm(summary, gpt_prompt)
-    return gpt.OpenAILlm(api_key, gpt_model).call_llm(summary, gpt_prompt)
+    try:
+        return get_llm_client().call_llm(summary)
+    except Exception as e:
+        logger.error("LLM request failed: %s", e)
+        return "Unable to generate GPT response."

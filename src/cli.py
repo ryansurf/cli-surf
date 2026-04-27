@@ -21,9 +21,6 @@ class SurfReport:
     """
 
     def __init__(self) -> None:
-        gpt_env = settings.GPTSettings()
-        self.gpt_prompt = gpt_env.GPT_PROMPT
-        self.gpt_info = (gpt_env.API_KEY, gpt_env.GPT_MODEL)
         self.db_handler = self._init_db()
 
     @staticmethod
@@ -60,6 +57,8 @@ class SurfReport:
         if lat is None or long is None:
             lat, long = loc_lat, loc_long
 
+        assert lat is not None
+        assert long is not None
         arguments = helper.arguments_dictionary(lat, long, city, args)
         ocean_data_dict = api.gather_data(lat, long, arguments)
 
@@ -74,12 +73,11 @@ class SurfReport:
             except Exception:
                 logger.warning("Failed to save report to database.")
 
-    def _render_output(self, ocean_data_dict, arguments):
+    @staticmethod
+    def _render_output(ocean_data_dict, arguments):
         """Renders JSON or human-readable output based on arguments."""
         if not arguments["json_output"]:
-            response = helper.print_outputs(
-                ocean_data_dict, arguments, self.gpt_prompt, self.gpt_info
-            )
+            response = helper.print_outputs(ocean_data_dict, arguments)
             return ocean_data_dict, response
         helper.json_output(ocean_data_dict)
         return ocean_data_dict
