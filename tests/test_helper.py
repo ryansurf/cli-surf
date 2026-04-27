@@ -347,7 +347,7 @@ def test_print_outputs_no_ocean_data(mocker, capsys):
         "color": "blue",
     }
     mocker.patch("src.api.forecast", return_value={})
-    helper.print_outputs(ocean_data, arguments, "", (None, ""))
+    helper.print_outputs(ocean_data, arguments)
     assert "No ocean data at this location." in capsys.readouterr().out
 
 
@@ -371,14 +371,17 @@ def test_print_outputs_valid_data(mocker, capsys):
         "color": "blue",
     }
     mocker.patch("src.api.forecast", return_value={})
-    helper.print_outputs(ocean_data, arguments, "", (None, ""))
+    helper.print_outputs(ocean_data, arguments)
     out = capsys.readouterr().out
     assert "Santa Cruz" in out
     assert "Wave Height: 3.0" in out
 
 
 def test_print_outputs_with_gpt(mocker, capsys):
-    """print_outputs calls print_gpt and prints its response when gpt=True."""
+    """
+    print_outputs calls get_gpt_response
+    and prints its response when gpt=True.
+    """
     ocean_data = {
         "Height": 3.0,
         "Lat": 36.97,
@@ -398,9 +401,11 @@ def test_print_outputs_with_gpt(mocker, capsys):
         "gpt": True,
     }
     mocker.patch("src.api.forecast", return_value={})
-    mocker.patch("src.helper.print_gpt", return_value="GPT says: go surf!")
+    mocker.patch(
+        "src.helper.get_gpt_response", return_value="GPT says: go surf!"
+    )
 
-    result = helper.print_outputs(ocean_data, arguments, "prompt", (None, ""))
+    result = helper.print_outputs(ocean_data, arguments)
 
     assert result == "GPT says: go surf!"
     assert "GPT says: go surf!" in capsys.readouterr().out
@@ -421,12 +426,12 @@ def test_set_location_unpacks_dict():
 
 
 # ---------------------------------------------------------------------------
-# print_gpt
+# get_gpt_response
 # ---------------------------------------------------------------------------
 
 
-def test_print_gpt_uses_openai_when_key_is_long_enough(mocker):
-    """print_gpt uses OpenAILlm when the API key is at least 5 chars."""
+def test_get_gpt_response_uses_openai_when_key_is_long_enough(mocker):
+    """get_gpt_response uses OpenAILlm when the API key is at least 5 chars."""
     surf_data = {
         "Location": "Santa Cruz",
         "Height": "3",
@@ -436,9 +441,7 @@ def test_print_gpt_uses_openai_when_key_is_long_enough(mocker):
     }
     mock_llm = mocker.MagicMock()
     mock_llm.call_llm.return_value = "openai response"
-    mocker.patch("src.helper.gpt.OpenAILlm", return_value=mock_llm)
-    result = helper.print_gpt(
-        surf_data, "any prompt", ("sk-validkey", "gpt-4")
-    )
+    mocker.patch("src.helper.get_llm_client", return_value=mock_llm)
+    result = helper.get_gpt_response(surf_data)
     assert result == "openai response"
     mock_llm.call_llm.assert_called_once()

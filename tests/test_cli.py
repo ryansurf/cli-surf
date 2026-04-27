@@ -67,14 +67,6 @@ def _mock_run_pipeline(mocker, arguments, ocean_data):
 # ---------------------------------------------------------------------------
 
 
-def test_init_stores_gpt_settings(mocker):
-    """SurfReport reads GPT prompt and model from settings on construction."""
-    _mock_settings(mocker, gpt_prompt="surf report", api_key="", model="gpt-4")
-    report = SurfReport()
-    assert report.gpt_prompt == "surf report"
-    assert report.gpt_info == ("", "gpt-4")
-
-
 def test_init_db_none_when_uri_empty(mocker):
     """db_handler is None when DB_URI is not configured."""
     _mock_settings(mocker, db_uri="")
