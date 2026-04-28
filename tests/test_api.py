@@ -275,21 +275,6 @@ def test_get_uv_history_invalid_coordinates(mock_create_client):
 
 
 @patch("src.api.openmeteo_client")
-@patch("src.api.testing", new=0)  # Set testing variable to 0
-def test_get_uv_history_api_response(mock_create_client):
-    """
-    Test how get_uv_history handles API response.
-
-    This test verifies that the function returns the expected values
-    when called with valid coordinates while patching the API call request.
-    """
-    uv_history_cache.clear()
-    result = get_uv_history(31.9505, 115.8605, 1)
-    expected_result = "0.6"
-    assert result == expected_result
-
-
-@patch("src.api.openmeteo_client")
 def test_ocean_information_history_basic_functionality(mock_create_client):
     """
     Test the basic functionality of the ocean_information_history function.
@@ -349,21 +334,6 @@ def test_ocean_information_history_response_format(mock_create_client):
     assert isinstance(waves, list)
     assert len(waves) > 0
     assert len(waves) == expected_wave_count
-
-
-@patch("src.api.openmeteo_client")
-@patch("src.api.testing", new=0)  # Set testing variable to 0
-def test_ocean_information_history(mock_create_client):
-    """
-    Test how ocean_information_history handles API response.
-
-    This test verifies that the function returns the expected values
-    when called with valid coordinates while patching the API call request.
-    """
-    ocean_history_cache.clear()
-    result = ocean_information_history(31.9505, 115.8605, 1)
-    expected_result = ["0.6", "0.6", "0.6"]
-    assert result == expected_result
 
 
 # ---------------------------------------------------------------------------

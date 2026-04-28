@@ -20,8 +20,6 @@ from src.open_meteo import openmeteo_client
 
 logger = logging.getLogger(__name__)
 
-testing = 1
-
 # data expires after 600 seconds (10 min)
 _TTL = 600
 # max size = 300 items
@@ -153,23 +151,18 @@ def get_uv_history(
         "timezone": "auto",
     }
 
-    # For testing purposes if testing equals 1 it will continue
-    if testing == 1:
-        # Attempt to fetch the UV index data from the API
-        try:
-            responses = openmeteo_client.weather_api(url, params=params)
-        except ValueError:
-            return "No data"
+    # Attempt to fetch the UV index data from the API
+    try:
+        responses = openmeteo_client.weather_api(url, params=params)
+    except ValueError:
+        return "No data"
 
-        # Process the first response (assuming a single location)
-        response = responses[0]
+    # Process the first response (assuming a single location)
+    response = responses[0]
 
-        # Extract hourly UV index values
-        hourly = response.Hourly()
-        hourly_uv_index = hourly.Variables(0).ValuesAsNumpy()
-
-    else:
-        hourly_uv_index = [0.5678] * 24
+    # Extract hourly UV index values
+    hourly = response.Hourly()
+    hourly_uv_index = hourly.Variables(0).ValuesAsNumpy()
 
     # Retrieve the UV index for the current hour from one year ago
     historical_uv_index = hourly_uv_index[current_hour]
@@ -258,28 +251,21 @@ def ocean_information_history(
         "end_date": formatted_date_one_year_ago,
     }
 
-    # For testing purposes if testing equals 1 it will continue
-    if testing == 1:
-        # Attempt to fetch the UV index data from the API
-        try:
-            responses = openmeteo_client.weather_api(url, params=params)
+    # Attempt to fetch the UV index data from the API
+    try:
+        responses = openmeteo_client.weather_api(url, params=params)
 
-        except ValueError:
-            return "No data"
+    except ValueError:
+        return "No data"
 
-        # Process the first response (assuming a single location)
-        response = responses[0]
+    # Process the first response (assuming a single location)
+    response = responses[0]
 
-        # Extract hourly values for the specified metrics
-        hourly = response.Hourly()
-        hourly_wave_height = hourly.Variables(0).ValuesAsNumpy()
-        hourly_wave_direction = hourly.Variables(1).ValuesAsNumpy()
-        hourly_wave_period = hourly.Variables(2).ValuesAsNumpy()
-
-    else:
-        hourly_wave_height = [0.5678] * 24
-        hourly_wave_direction = [0.5678] * 24
-        hourly_wave_period = [0.5678] * 24
+    # Extract hourly values for the specified metrics
+    hourly = response.Hourly()
+    hourly_wave_height = hourly.Variables(0).ValuesAsNumpy()
+    hourly_wave_direction = hourly.Variables(1).ValuesAsNumpy()
+    hourly_wave_period = hourly.Variables(2).ValuesAsNumpy()
 
     # Retrieve data for the current hour from one year ago
     return [
