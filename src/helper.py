@@ -11,7 +11,6 @@ from math import cos, pi
 from src import api, art
 from src.gpt import get_llm_client
 
-
 logger = logging.getLogger(__name__)
 
 MAX_FORECAST_DAYS = 7
@@ -245,7 +244,7 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
     ]
 
     for arg_key, data_key, label in mappings:
-        if arguments_dict[arg_key]:
+        if arguments_dict.get(arg_key) and data_key in ocean_data_dict:
             print(f"{label}{ocean_data_dict[data_key]}")
 
     if arguments_dict.get("show_tide") and ocean_data_dict.get("Tide"):
@@ -257,8 +256,13 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
             arrow = f"{color}{arrow}{art.colors['end']}"
         extreme = tide["next_extreme"]
         extreme_type = "High" if extreme["type"] == "H" else "Low"
-        extreme_time = datetime.fromisoformat(extreme["time"]).strftime("%H:%M UTC")
-        print(f"Tide: {tide['height_ft']} ft {arrow} | Next {extreme_type}: {extreme['height']:.2f} ft @ {extreme_time}")
+        extreme_time = datetime.fromisoformat(extreme["time"]).strftime(
+            "%H:%M UTC"
+        )
+        print(
+            f"Tide: {tide['height_ft']} ft {arrow} | "
+            f"Next {extreme_type}: {extreme['height']:.2f} ft @ {extreme_time}"
+        )
 
 
 def print_forecast(ocean, forecast):
@@ -411,15 +415,21 @@ def get_gpt_response(surf_data):
         tide = surf_data["Tide"]
         extreme = tide["next_extreme"]
         extreme_type = "high" if extreme["type"] == "H" else "low"
-        extreme_time = datetime.fromisoformat(extreme["time"]).strftime("%H:%M UTC")
+        extreme_time = datetime.fromisoformat(extreme["time"]).strftime(
+            "%H:%M UTC"
+        )
         tide_desc = (
-            f" The tide is currently {tide['direction']} at {tide['height_ft']} ft,"
-            f" with the next {extreme_type} tide of {extreme['height']:.2f} ft at {extreme_time}."
+            f" The tide is currently {tide['direction']} at"
+            f" {tide['height_ft']} ft, with the next {extreme_type} tide"
+            f" of {extreme['height']:.2f} ft at {extreme_time}."
         )
 
     sea_temp_desc = ""
     if surf_data.get("Sea Surface Temperature") is not None:
-        sea_temp_desc = f" The sea surface temperature is {surf_data['Sea Surface Temperature']} {unit_label}."
+        sea_temp_desc = (
+            f" The sea surface temperature is"
+            f" {surf_data['Sea Surface Temperature']} {unit_label}."
+        )
 
     summary = (
         f"Today at {surf_data['Location']}, the surf height is "
@@ -434,19 +444,22 @@ def get_gpt_response(surf_data):
         logger.error("LLM request failed: %s", e)
         return "Unable to generate GPT response."
 
+
 def current_tide(lat: float, long: float) -> dict:
     predictions = api.get_tide_data(lat, long)["predictions"]
 
     parsed = [
         {
-            "time": datetime.strptime(p["t"], "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc),
+            "time": datetime.strptime(p["t"], "%Y-%m-%d %H:%M").replace(
+                tzinfo=timezone.utc
+            ),
             "height": float(p["v"]),
             "type": p["type"],
         }
         for p in predictions
     ]
 
-    now = datetime.now(timezone.utc)   # ← tz-aware UTC
+    now = datetime.now(timezone.utc)  # ← tz-aware UTC
 
     prev = next_ = None
     for a, b in zip(parsed, parsed[1:]):
@@ -460,7 +473,8 @@ def current_tide(lat: float, long: float) -> dict:
     span = (next_["time"] - prev["time"]).total_seconds()
     elapsed = (now - prev["time"]).total_seconds()
     x = elapsed / span
-    height = prev["height"] + (next_["height"] - prev["height"]) * (1 - cos(pi * x)) / 2
+    delta = next_["height"] - prev["height"]
+    height = prev["height"] + delta * (1 - cos(pi * x)) / 2
 
     direction = "incoming" if next_["type"] == "H" else "outgoing"
 
@@ -473,7 +487,6 @@ def current_tide(lat: float, long: float) -> dict:
             "type": next_["type"],
         },
     }
-
 
 
 if __name__ == "__main__":

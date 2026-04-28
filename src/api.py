@@ -13,8 +13,8 @@ import numpy as np
 import pandas as pd
 import requests
 from cachetools import TTLCache, cached
-from geopy.geocoders import Nominatim
 from geopy.distance import great_circle
+from geopy.geocoders import Nominatim
 
 from src import helper
 from src.open_meteo import openmeteo_client
@@ -35,7 +35,6 @@ forecast_cache = TTLCache(maxsize=_MAXSIZE, ttl=_TTL)
 _hourlyforecast_cache = TTLCache(maxsize=_MAXSIZE, ttl=_TTL)
 _tide_cache = TTLCache(maxsize=_MAXSIZE, ttl=_TTL)
 _ocean_lock = Lock()
-
 
 
 @lru_cache(maxsize=128)
@@ -186,7 +185,12 @@ def ocean_information(
     params = {
         "latitude": lat,
         "longitude": long,
-        "current": ["wave_height", "wave_direction", "wave_period", "sea_surface_temperature"],
+        "current": [
+            "wave_height",
+            "wave_direction",
+            "wave_period",
+            "sea_surface_temperature",
+        ],
         "length_unit": unit,
         "timezone": "auto",
         "forecast_days": 3,
@@ -207,7 +211,12 @@ def ocean_information(
     current_wave_period = round(current.Variables(2).Value(), decimal)
     current_sea_surface_temperature = current.Variables(3).Value()
 
-    return [current_wave_height, current_wave_direction, current_wave_period, current_sea_surface_temperature]
+    return [
+        current_wave_height,
+        current_wave_direction,
+        current_wave_period,
+        current_sea_surface_temperature,
+    ]
 
 
 @cached(ocean_history_cache, lock=_ocean_lock)
@@ -486,26 +495,26 @@ def get_hourly_forecast(
 
     return curr_hour_data
 
+
 @cached(_tide_cache, lock=_ocean_lock)
 def get_tide_data(lat: float, long: float):
     """
     Fetches tide data for the given cords
     """
-    station_id, station_distance = nearest_station(lat, long)
+    station_id, _ = nearest_station(lat, long)
     begin = (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y%m%d")
-
 
     url = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
     params = {
         "station": station_id,
         "product": "predictions",
         "datum": "MLLW",
-        "interval": "hilo",        # high/low only; omit for 6-min intervals
-        "units": "english",      
+        "interval": "hilo",  # high/low only; omit for 6-min intervals
+        "units": "english",
         "time_zone": "gmt",
         "format": "json",
         "begin_date": begin,
-        "range": 72,   # hours
+        "range": 72,  # hours
     }
     r = requests.get(url, params=params, timeout=10)
     r.raise_for_status()
@@ -514,10 +523,13 @@ def get_tide_data(lat: float, long: float):
 
 @lru_cache(maxsize=1)
 def _get_stations():
-    url = "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json"
+    url = (
+        "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json"
+    )
     r = requests.get(url, params={"type": "tidepredictions"}, timeout=10)
     r.raise_for_status()
     return r.json()["stations"]
+
 
 def nearest_station(lat: float, long: float) -> tuple[str, float]:
     """

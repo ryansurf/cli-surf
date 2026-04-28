@@ -126,7 +126,12 @@ def test_ocean_information(mock_create_client):
     mock_var_3.Value.return_value = 20.0
 
     mock_current = MagicMock()
-    mock_current.Variables.side_effect = [mock_var_0, mock_var_1, mock_var_2, mock_var_3]
+    mock_current.Variables.side_effect = [
+        mock_var_0,
+        mock_var_1,
+        mock_var_2,
+        mock_var_3,
+    ]
 
     mock_response = MagicMock()
     mock_response.Current.return_value = mock_current
