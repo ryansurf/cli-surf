@@ -4,7 +4,7 @@ Functions that make API calls stored here
 
 import logging
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from functools import lru_cache
 from http import HTTPStatus
 from threading import Lock
@@ -13,14 +13,13 @@ import numpy as np
 import pandas as pd
 import requests
 from cachetools import TTLCache, cached
+from geopy.distance import great_circle
 from geopy.geocoders import Nominatim
 
 from src import helper
 from src.open_meteo import openmeteo_client
 
 logger = logging.getLogger(__name__)
-
-testing = 1
 
 # data expires after 600 seconds (10 min)
 _TTL = 600
@@ -34,6 +33,7 @@ _wind_temp_cache = TTLCache(maxsize=_MAXSIZE, ttl=_TTL)
 _rain_cache = TTLCache(maxsize=_MAXSIZE, ttl=_TTL)
 forecast_cache = TTLCache(maxsize=_MAXSIZE, ttl=_TTL)
 _hourlyforecast_cache = TTLCache(maxsize=_MAXSIZE, ttl=_TTL)
+_tide_cache = TTLCache(maxsize=_MAXSIZE, ttl=_TTL)
 _ocean_lock = Lock()
 
 
@@ -153,23 +153,18 @@ def get_uv_history(
         "timezone": "auto",
     }
 
-    # For testing purposes if testing equals 1 it will continue
-    if testing == 1:
-        # Attempt to fetch the UV index data from the API
-        try:
-            responses = openmeteo_client.weather_api(url, params=params)
-        except ValueError:
-            return "No data"
+    # Attempt to fetch the UV index data from the API
+    try:
+        responses = openmeteo_client.weather_api(url, params=params)
+    except ValueError:
+        return "No data"
 
-        # Process the first response (assuming a single location)
-        response = responses[0]
+    # Process the first response (assuming a single location)
+    response = responses[0]
 
-        # Extract hourly UV index values
-        hourly = response.Hourly()
-        hourly_uv_index = hourly.Variables(0).ValuesAsNumpy()
-
-    else:
-        hourly_uv_index = [0.5678] * 24
+    # Extract hourly UV index values
+    hourly = response.Hourly()
+    hourly_uv_index = hourly.Variables(0).ValuesAsNumpy()
 
     # Retrieve the UV index for the current hour from one year ago
     historical_uv_index = hourly_uv_index[current_hour]
@@ -190,7 +185,12 @@ def ocean_information(
     params = {
         "latitude": lat,
         "longitude": long,
-        "current": ["wave_height", "wave_direction", "wave_period"],
+        "current": [
+            "wave_height",
+            "wave_direction",
+            "wave_period",
+            "sea_surface_temperature",
+        ],
         "length_unit": unit,
         "timezone": "auto",
         "forecast_days": 3,
@@ -209,8 +209,14 @@ def ocean_information(
     current_wave_height = round(current.Variables(0).Value(), decimal)
     current_wave_direction = round(current.Variables(1).Value(), decimal)
     current_wave_period = round(current.Variables(2).Value(), decimal)
+    current_sea_surface_temperature = current.Variables(3).Value()
 
-    return [current_wave_height, current_wave_direction, current_wave_period]
+    return [
+        current_wave_height,
+        current_wave_direction,
+        current_wave_period,
+        current_sea_surface_temperature,
+    ]
 
 
 @cached(ocean_history_cache, lock=_ocean_lock)
@@ -258,28 +264,21 @@ def ocean_information_history(
         "end_date": formatted_date_one_year_ago,
     }
 
-    # For testing purposes if testing equals 1 it will continue
-    if testing == 1:
-        # Attempt to fetch the UV index data from the API
-        try:
-            responses = openmeteo_client.weather_api(url, params=params)
+    # Attempt to fetch the UV index data from the API
+    try:
+        responses = openmeteo_client.weather_api(url, params=params)
 
-        except ValueError:
-            return "No data"
+    except ValueError:
+        return "No data"
 
-        # Process the first response (assuming a single location)
-        response = responses[0]
+    # Process the first response (assuming a single location)
+    response = responses[0]
 
-        # Extract hourly values for the specified metrics
-        hourly = response.Hourly()
-        hourly_wave_height = hourly.Variables(0).ValuesAsNumpy()
-        hourly_wave_direction = hourly.Variables(1).ValuesAsNumpy()
-        hourly_wave_period = hourly.Variables(2).ValuesAsNumpy()
-
-    else:
-        hourly_wave_height = [0.5678] * 24
-        hourly_wave_direction = [0.5678] * 24
-        hourly_wave_period = [0.5678] * 24
+    # Extract hourly values for the specified metrics
+    hourly = response.Hourly()
+    hourly_wave_height = hourly.Variables(0).ValuesAsNumpy()
+    hourly_wave_direction = hourly.Variables(1).ValuesAsNumpy()
+    hourly_wave_period = hourly.Variables(2).ValuesAsNumpy()
 
     # Retrieve data for the current hour from one year ago
     return [
@@ -497,6 +496,72 @@ def get_hourly_forecast(
     return curr_hour_data
 
 
+@cached(_tide_cache, lock=_ocean_lock)
+def get_tide_data(lat: float, long: float):
+    """
+    Fetches tide data for the given cords
+    """
+    station_id, _ = nearest_station(lat, long)
+    begin = (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y%m%d")
+
+    url = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
+    params = {
+        "station": station_id,
+        "product": "predictions",
+        "datum": "MLLW",
+        "interval": "hilo",  # high/low only; omit for 6-min intervals
+        "units": "english",
+        "time_zone": "gmt",
+        "format": "json",
+        "begin_date": begin,
+        "range": 72,  # hours
+    }
+    r = requests.get(url, params=params, timeout=10)
+    r.raise_for_status()
+    return r.json()
+
+
+@lru_cache(maxsize=1)
+def _get_stations():
+    url = (
+        "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json"
+    )
+    r = requests.get(url, params={"type": "tidepredictions"}, timeout=10)
+    r.raise_for_status()
+    return r.json()["stations"]
+
+
+def nearest_station(lat: float, long: float) -> tuple[str, float]:
+    """
+    returns the id of the nearest NOAA station in respect to the given cords
+    """
+    min_station_distance = float("inf")
+    nearest_id = None
+    surf_spot_cords = (float(lat), float(long))
+
+    stations = _get_stations()
+
+    for station in stations:
+        station_cords = (float(station["lat"]), float(station["lng"]))
+        station_id = station["id"]
+        distance = great_circle(surf_spot_cords, station_cords).mi
+        if distance < min_station_distance:
+            min_station_distance = distance
+            nearest_id = station_id
+
+    if nearest_id is None:
+        raise RuntimeError("No stations returned")
+
+    return nearest_id, min_station_distance
+
+
+def _safe_current_tide(lat: float, long: float):
+    try:
+        return helper.current_tide(lat, long)
+    except Exception:
+        return None
+
+
 def gather_data(lat: float | str, long: float | str, arguments: dict) -> dict:
     """
     Calls APIs though python files,
@@ -506,7 +571,7 @@ def gather_data(lat: float | str, long: float | str, arguments: dict) -> dict:
     lat, long = float(lat), float(long)
     dec, unit = arguments["decimal"], arguments["unit"]
 
-    with ThreadPoolExecutor(max_workers=8) as executor:
+    with ThreadPoolExecutor(max_workers=9) as executor:
         futures = {
             "ocean": executor.submit(ocean_information, lat, long, dec, unit),
             "uv": executor.submit(get_uv, lat, long, dec, unit),
@@ -518,6 +583,7 @@ def gather_data(lat: float | str, long: float | str, arguments: dict) -> dict:
                 ocean_information_history, lat, long, dec, unit
             ),
             "uv_hist": executor.submit(get_uv_history, lat, long, dec, unit),
+            "tide": executor.submit(_safe_current_tide, lat, long),
         }
         results = {k: f.result() for k, f in futures.items()}
 
@@ -527,6 +593,12 @@ def gather_data(lat: float | str, long: float | str, arguments: dict) -> dict:
     air_temp, wind_speed, wind_dir = results["wind_temp"]
     rain_sum, precipitation_probability_max = results["rain"]
     json_forecast = helper.forecast_to_json(results["forecast"], dec)
+
+    sea_temp_c = results["ocean"][3]
+    if unit == "imperial":
+        sea_temp = round(sea_temp_c * 9 / 5 + 32, dec)
+    else:
+        sea_temp = round(sea_temp_c, dec)
 
     return {
         "Lat": lat,
@@ -549,6 +621,8 @@ def gather_data(lat: float | str, long: float | str, arguments: dict) -> dict:
         "Precipitation Probability Max": precipitation_probability_max,
         "Cloud Cover": results["hourly"]["cloud_cover"],
         "Visibility": results["hourly"]["visibility"],
+        "Tide": results["tide"],
+        "Sea Surface Temperature": sea_temp,
     }
 
 
@@ -570,3 +644,7 @@ def separate_args_and_get_location(args: list) -> dict:
 
 # Backward-compatible alias for the misspelled name
 seperate_args_and_get_location = separate_args_and_get_location
+
+
+if __name__ == "__main__":
+    print(get_tide_data(40.741895, -73.989308))

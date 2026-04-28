@@ -4,6 +4,9 @@ General helper functions
 
 import json
 import logging
+import sys
+from datetime import datetime, timezone
+from math import cos, pi
 
 from src import api, art
 from src.gpt import get_llm_client
@@ -35,6 +38,8 @@ DEFAULT_ARGUMENTS = {
     "gpt": False,
     "show_cloud_cover": False,
     "show_visibility": False,
+    "show_tide": True,
+    "show_sea_temp": True,
 }
 
 
@@ -113,6 +118,8 @@ def set_output_values(args, args_dict):  # noqa
         "scc": ("show_cloud_cover", True),
         "show_visibility": ("show_visibility", True),
         "sv": ("show_visibility", True),
+        "hide_tide": ("show_tide", False),
+        "ht": ("show_tide", False),
     }
 
     for arg in args:
@@ -232,11 +239,29 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
         ),
         ("show_cloud_cover", "Cloud Cover", "Cloud Cover: "),
         ("show_visibility", "Visibility", "Visibility: "),
+        ("show_sea_temp", "Sea Surface Temperature", "Sea Surface Temp: "),
     ]
 
     for arg_key, data_key, label in mappings:
-        if arguments_dict[arg_key]:
+        if arguments_dict.get(arg_key) and data_key in ocean_data_dict:
             print(f"{label}{ocean_data_dict[data_key]}")
+
+    if arguments_dict.get("show_tide") and ocean_data_dict.get("Tide"):
+        tide = ocean_data_dict["Tide"]
+        incoming = tide["direction"] == "incoming"
+        arrow = "↑" if incoming else "↓"
+        if sys.stdout.isatty():
+            color = art.colors["green"] if incoming else art.colors["red"]
+            arrow = f"{color}{arrow}{art.colors['end']}"
+        extreme = tide["next_extreme"]
+        extreme_type = "High" if extreme["type"] == "H" else "Low"
+        extreme_time = datetime.fromisoformat(extreme["time"]).strftime(
+            "%H:%M UTC"
+        )
+        print(
+            f"Tide: {tide['height_ft']} ft {arrow} | "
+            f"Next {extreme_type}: {extreme['height']:.2f} ft @ {extreme_time}"
+        )
 
 
 def print_forecast(ocean, forecast):
@@ -382,14 +407,82 @@ def get_gpt_response(surf_data):
     """
     Builds a surf summary and returns the GPT response.
     """
+    unit_label = "°F" if surf_data.get("Unit") == "imperial" else "°C"
+
+    tide_desc = ""
+    if surf_data.get("Tide"):
+        tide = surf_data["Tide"]
+        extreme = tide["next_extreme"]
+        extreme_type = "high" if extreme["type"] == "H" else "low"
+        extreme_time = datetime.fromisoformat(extreme["time"]).strftime(
+            "%H:%M UTC"
+        )
+        tide_desc = (
+            f" The tide is currently {tide['direction']} at"
+            f" {tide['height_ft']} ft, with the next {extreme_type} tide"
+            f" of {extreme['height']:.2f} ft at {extreme_time}."
+        )
+
+    sea_temp_desc = ""
+    if surf_data.get("Sea Surface Temperature") is not None:
+        sea_temp_desc = (
+            f" The sea surface temperature is"
+            f" {surf_data['Sea Surface Temperature']} {unit_label}."
+        )
+
     summary = (
         f"Today at {surf_data['Location']}, the surf height is "
         f"{surf_data['Height']} {surf_data['Unit']}, the direction of the "
         f"swell is {surf_data['Swell Direction']} degrees and the swell "
         f"period is {surf_data['Period']} seconds."
+        f"{sea_temp_desc}{tide_desc}"
     )
     try:
         return get_llm_client().call_llm(summary)
     except Exception as e:
         logger.error("LLM request failed: %s", e)
         return "Unable to generate GPT response."
+
+
+def current_tide(lat: float, long: float) -> dict:
+    predictions = api.get_tide_data(lat, long)["predictions"]
+
+    parsed = [
+        {
+            "time": datetime.strptime(p["t"], "%Y-%m-%d %H:%M").replace(
+                tzinfo=timezone.utc
+            ),
+            "height": float(p["v"]),
+            "type": p["type"],
+        }
+        for p in predictions
+    ]
+
+    now = datetime.now(timezone.utc)  # ← tz-aware UTC
+
+    prev = next_ = None
+    for a, b in zip(parsed, parsed[1:]):
+        if a["time"] <= now <= b["time"]:
+            prev, next_ = a, b
+            break
+
+    if not prev:
+        raise ValueError("Current time outside prediction window")
+
+    span = (next_["time"] - prev["time"]).total_seconds()
+    elapsed = (now - prev["time"]).total_seconds()
+    x = elapsed / span
+    delta = next_["height"] - prev["height"]
+    height = prev["height"] + delta * (1 - cos(pi * x)) / 2
+
+    direction = "incoming" if next_["type"] == "H" else "outgoing"
+
+    return {
+        "height_ft": round(height, 2),
+        "direction": direction,
+        "next_extreme": {
+            "time": next_["time"].isoformat(),
+            "height": next_["height"],
+            "type": next_["type"],
+        },
+    }

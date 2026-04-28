@@ -112,7 +112,7 @@ def test_get_uv(mock_create_client):
 
 @patch("src.api.openmeteo_client")
 def test_ocean_information(mock_create_client):
-    # fake each variable (height, direction, period)
+    # fake each variable (height, direction, period, sea surface temp)
     mock_var_0 = MagicMock()
     mock_var_0.Value.return_value = 3.5
 
@@ -122,9 +122,16 @@ def test_ocean_information(mock_create_client):
     mock_var_2 = MagicMock()
     mock_var_2.Value.return_value = 12.0
 
-    # Variables(0), Variables(1), Variables(2) return different mocks
+    mock_var_3 = MagicMock()
+    mock_var_3.Value.return_value = 20.0
+
     mock_current = MagicMock()
-    mock_current.Variables.side_effect = [mock_var_0, mock_var_1, mock_var_2]
+    mock_current.Variables.side_effect = [
+        mock_var_0,
+        mock_var_1,
+        mock_var_2,
+        mock_var_3,
+    ]
 
     mock_response = MagicMock()
     mock_response.Current.return_value = mock_current
@@ -133,7 +140,7 @@ def test_ocean_information(mock_create_client):
 
     result = ocean_information(31.41, -84.92, 2, "imperial")
 
-    assert result == [3.5, 180.0, 12.0]
+    assert result == [3.5, 180.0, 12.0, 20.0]
 
 
 @patch("src.api.openmeteo_client")
@@ -176,7 +183,7 @@ def test_forecast(mock_create_client):
     assert len(fc["wave_period_max"]) == FORECAST_LENGTH
 
 
-@patch("src.api.ocean_information", return_value=[3.5, 180.0, 12.0])
+@patch("src.api.ocean_information", return_value=[3.5, 180.0, 12.0, 20.0])
 @patch("src.api.get_uv", return_value=5.0)
 @patch(
     "src.api.get_hourly_forecast",
@@ -190,7 +197,9 @@ def test_forecast(mock_create_client):
 )
 @patch("src.api.get_uv_history", return_value="5.0")
 @patch("src.helper.forecast_to_json", return_value={})
+@patch("src.api._safe_current_tide", return_value=None)
 def test_gather_data(  # noqa: PLR0913, PLR0917
+    mock_tide,
     mock_ftj,
     mock_uv_hist,
     mock_ocean_hist,
@@ -275,21 +284,6 @@ def test_get_uv_history_invalid_coordinates(mock_create_client):
 
 
 @patch("src.api.openmeteo_client")
-@patch("src.api.testing", new=0)  # Set testing variable to 0
-def test_get_uv_history_api_response(mock_create_client):
-    """
-    Test how get_uv_history handles API response.
-
-    This test verifies that the function returns the expected values
-    when called with valid coordinates while patching the API call request.
-    """
-    uv_history_cache.clear()
-    result = get_uv_history(31.9505, 115.8605, 1)
-    expected_result = "0.6"
-    assert result == expected_result
-
-
-@patch("src.api.openmeteo_client")
 def test_ocean_information_history_basic_functionality(mock_create_client):
     """
     Test the basic functionality of the ocean_information_history function.
@@ -349,21 +343,6 @@ def test_ocean_information_history_response_format(mock_create_client):
     assert isinstance(waves, list)
     assert len(waves) > 0
     assert len(waves) == expected_wave_count
-
-
-@patch("src.api.openmeteo_client")
-@patch("src.api.testing", new=0)  # Set testing variable to 0
-def test_ocean_information_history(mock_create_client):
-    """
-    Test how ocean_information_history handles API response.
-
-    This test verifies that the function returns the expected values
-    when called with valid coordinates while patching the API call request.
-    """
-    ocean_history_cache.clear()
-    result = ocean_information_history(31.9505, 115.8605, 1)
-    expected_result = ["0.6", "0.6", "0.6"]
-    assert result == expected_result
 
 
 # ---------------------------------------------------------------------------

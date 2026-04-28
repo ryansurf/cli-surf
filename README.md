@@ -10,9 +10,11 @@
 **cli-surf** is a real-time ocean data and surf forecasting tool for the command line.
 
 - Live wave height, swell direction, period, UV index, wind, and more
+- Real-time tide level with direction indicator and next tide extreme (via NOAA)
+- Sea surface temperature
 - Forecasts up to 7 days out
 - Use as a CLI tool (`surf`) or query via HTTP API / browser
-- Optional GPT-powered surf reports
+- Optional GPT-powered surf reports (includes tide and sea temp context)
 - Supports metric and imperial units, custom colors, and JSON output
 
 Inspired by [wttr.in](https://github.com/chubin/wttr.in) · [Documentation](https://ryansurf.github.io/cli-surf/) · [Discord](https://discord.gg/He2UpxRuJP)
@@ -73,12 +75,14 @@ Location:  San Diego
 
       .-``'.
     .`   .`
-_.-'     '._ 
+_.-'     '._
 
 UV index:  6.4
 Wave Height:  3.9
 Wave Direction:  238.0
 Wave Period:  9.8
+Sea Surface Temp: 64.8
+Tide: 3.2 ft ↑ | Next High: 5.1 ft @ 14:30 UTC
 
 ```
 
@@ -123,6 +127,7 @@ curl localhost:8000/help
 | `hide_direction` | `hdir` | Hide swell direction |
 | `hide_period` | `hp` | Hide swell period |
 | `hide_uv` | `huv` | Hide UV index |
+| `hide_tide` | `ht` | Hide tide level and next extreme (shown by default, requires US coastal location) |
 | `show_air_temp` | `sat` | Show air temperature |
 | `show_wind_speed` | `sws` | Show wind speed |
 | `show_wind_direction` | `swd` | Show wind direction |
