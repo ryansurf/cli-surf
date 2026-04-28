@@ -14,7 +14,6 @@ from src.gpt import get_llm_client
 logger = logging.getLogger(__name__)
 
 MAX_FORECAST_DAYS = 7
-EARTH_RADIUS_MILES = 3956
 
 DEFAULT_ARGUMENTS = {
     "show_wave": True,
@@ -487,7 +486,3 @@ def current_tide(lat: float, long: float) -> dict:
             "type": next_["type"],
         },
     }
-
-
-if __name__ == "__main__":
-    print(current_tide(32.856132, -117.2175761))
