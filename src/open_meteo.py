@@ -26,7 +26,8 @@ def _get_thread_client() -> openmeteo_requests.Client:
 
 
 class _ResilientClient:
-    def weather_api(self, url, params=None):
+    @staticmethod
+    def weather_api(url, params=None):
         client = _get_thread_client()
         try:
             return client.weather_api(url, params=params)
