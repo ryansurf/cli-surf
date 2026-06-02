@@ -1,18 +1,39 @@
+import sqlite3
+import threading
+
 import openmeteo_requests
 import requests_cache
 from retry_requests import retry
 
+_CACHE_PATH = "/tmp/.cache"
+_thread_local = threading.local()
 
-def _create_client() -> openmeteo_requests.Client:
-    """Creates a cached, retry-enabled Open-Meteo API client."""
+
+def _build_client() -> openmeteo_requests.Client:
     backend = requests_cache.SQLiteCache(
-        "/tmp/.cache", use_memory=False, wal=True
+        _CACHE_PATH, use_memory=False, wal=True
     )
-    cache_session = requests_cache.CachedSession(
-        backend=backend, expire_after=3600
+    session = requests_cache.CachedSession(backend=backend, expire_after=3600)
+    return openmeteo_requests.Client(
+        session=retry(session, retries=5, backoff_factor=0.2)
     )
-    retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
-    return openmeteo_requests.Client(session=retry_session)
 
 
-openmeteo_client = _create_client()
+def _get_thread_client() -> openmeteo_requests.Client:
+    if not hasattr(_thread_local, "client"):
+        _thread_local.client = _build_client()
+    return _thread_local.client
+
+
+class _ResilientClient:
+    @staticmethod
+    def weather_api(url, params=None):
+        client = _get_thread_client()
+        try:
+            return client.weather_api(url, params=params)
+        except sqlite3.DatabaseError:
+            _thread_local.client = _build_client()
+            return _thread_local.client.weather_api(url, params=params)
+
+
+openmeteo_client = _ResilientClient()

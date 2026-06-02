@@ -106,6 +106,8 @@ def get_uv(
 
     # Current values. The order of variables needs to be the same as requested.
     current = response.Current()
+    if current is None:
+        return "No data"
     current_uv_index = round(current.Variables(0).Value(), decimal)
 
     return current_uv_index
@@ -206,6 +208,8 @@ def ocean_information(
 
     # Current values. The order of variables needs to be the same as requested.
     current = response.Current()
+    if current is None:
+        return [0, 0, 0, 0]
     current_wave_height = round(current.Variables(0).Value(), decimal)
     current_wave_direction = round(current.Variables(1).Value(), decimal)
     current_wave_period = round(current.Variables(2).Value(), decimal)
@@ -309,6 +313,8 @@ def current_wind_temp(
 
     # Current values. The order of variables needs to be the same as requested.
     current = response.Current()
+    if current is None:
+        return [0, 0, 0]
     current_temperature = round(current.Variables(0).Value(), decimal)
     current_wind_speed = round(current.Variables(1).Value(), decimal)
     current_wind_direction = round(current.Variables(2).Value(), decimal)
