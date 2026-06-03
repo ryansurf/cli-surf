@@ -209,7 +209,7 @@ def _print_mapped_data(mappings, arguments_dict, data_dict):
     if the argument is set.
     """
     for arg_key, data_key, label in mappings:
-        if arguments_dict.get(arg_key) and data_key in data_dict:
+        if arguments_dict[arg_key] and data_key in data_dict:
             print(f"{label}{data_dict[data_key]}")
 
 
