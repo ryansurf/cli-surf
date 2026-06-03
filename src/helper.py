@@ -203,6 +203,16 @@ def print_location(city, show_city):
         print("\n")
 
 
+def _print_mapped_data(mappings, arguments_dict, data_dict):
+    """
+    Helper function to print mapped data from a dictionary
+    if the argument is set.
+    """
+    for arg_key, data_key, label in mappings:
+        if arguments_dict.get(arg_key) and data_key in data_dict:
+            print(f"{label}{data_dict[data_key]}")
+
+
 def print_ocean_data(arguments_dict, ocean_data_dict):
     """
     Prints ocean data (height, wave direction, period, etc).
@@ -242,9 +252,7 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
         ("show_sea_temp", "Sea Surface Temperature", "Sea Surface Temp: "),
     ]
 
-    for arg_key, data_key, label in mappings:
-        if arguments_dict.get(arg_key) and data_key in ocean_data_dict:
-            print(f"{label}{ocean_data_dict[data_key]}")
+    _print_mapped_data(mappings, arguments_dict, ocean_data_dict)
 
     if arguments_dict.get("show_tide") and ocean_data_dict.get("Tide"):
         tide = ocean_data_dict["Tide"]
@@ -292,14 +300,18 @@ def print_forecast(ocean, forecast):
     ]
 
     for day in range(ocean["forecast_days"]):
-        for arg_key, data_key, label in mappings:
-            if ocean[arg_key]:
+        # Extract day's data into a temporary dictionary
+        day_data = {}
+        for _, data_key, _ in mappings:
+            if data_key in forecast:
                 try:
-                    data = forecast[data_key][day]
-                    formatted = round(float(data), ocean["decimal"])
-                    print(f"{label}{formatted}")
+                    raw = forecast[data_key][day]
+                    formatted = round(float(raw), ocean["decimal"])
                 except TypeError:
-                    print(f"{label}{forecast[data_key][day]}")
+                    formatted = forecast[data_key][day]
+                day_data[data_key] = formatted
+
+        _print_mapped_data(mappings, ocean, day_data)
         print("\n")
 
 
