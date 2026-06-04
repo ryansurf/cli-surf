@@ -280,9 +280,9 @@ def print_forecast(ocean, forecast):
     mappings = [
         ("show_date", "date", "Date: "),
         ("show_uv", "uv_index_max", "UV Index: "),
-        ("show_height", "wave_height_max", "Wave Height: "),
-        ("show_direction", "wave_direction_dominant", "Wave Direction: "),
-        ("show_period", "wave_period_max", "Wave Period: "),
+        ("show_height", "swell_wave_height_max", "Wave Height: "),
+        ("show_direction", "swell_wave_direction_dominant", "Wave Direction: "),
+        ("show_period", "swell_wave_period_max", "Wave Period: "),
         ("show_air_temp", "temperature_2m_max", "Air Temp Max: "),
         ("show_air_temp", "temperature_2m_min", "Air Temp Min: "),
         ("show_rain_sum", "rain_sum", "Rain Sum: "),
@@ -381,13 +381,13 @@ def forecast_to_json(forecast_data, decimal):
         forecast = {
             "date": str(date.date()),
             "surf height": round(
-                float(forecast_data["wave_height_max"][i]), decimal
+                float(forecast_data["swell_wave_height_max"][i]), decimal
             ),
             "swell direction": round(
-                float(forecast_data["wave_direction_dominant"][i]), decimal
+                float(forecast_data["swell_wave_direction_dominant"][i]), decimal
             ),
             "swell period": round(
-                float(forecast_data["wave_period_max"][i]), decimal
+                float(forecast_data["swell_wave_period_max"][i]), decimal
             ),
             "uv index": round(
                 float(forecast_data["uv_index_max"][i]), decimal

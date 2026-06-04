@@ -283,7 +283,7 @@ def test_print_forecast_renders_float_values(capsys):
         "show_wind_speed": False,
         "show_wind_direction": False,
     }
-    forecast = {"wave_height_max": [3.567]}
+    forecast = {"swell_wave_height_max": [3.567]}
     helper.print_forecast(ocean, forecast)
     assert "Wave Height: 3.6" in capsys.readouterr().out
 
