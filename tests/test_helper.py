@@ -253,6 +253,7 @@ def test_print_ocean_data_prints_enabled_fields(capsys):
         "show_precipitation_prob": False,
         "show_cloud_cover": False,
         "show_visibility": False,
+        "show_sea_temp": False,
     }
     ocean_data_dict = {"UV Index": 5, "Height": 3.5}
     helper.print_ocean_data(arguments_dict, ocean_data_dict)

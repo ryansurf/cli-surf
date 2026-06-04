@@ -2,6 +2,7 @@
 All ASCII art in this file
 """
 
+import codecs
 import logging
 import sys
 
@@ -72,7 +73,13 @@ def print_wave(show_wave, show_large_wave, color):
         color = "blue"
 
     if show_large_wave:
-        if sys.platform == "win32" and sys.stdout.encoding.lower() != "utf-8":
+        encoding = getattr(sys.stdout, "encoding", None) or ""
+        try:
+            is_utf8 = codecs.lookup(encoding).name == "utf-8"
+        except LookupError:
+            is_utf8 = False
+
+        if sys.platform == "win32" and not is_utf8:
             print(
                 colors[color]
                 + """
