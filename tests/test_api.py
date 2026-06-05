@@ -178,9 +178,9 @@ def test_forecast(mock_create_client):
 
     FORECAST_LENGTH = 7
 
-    assert len(fc["wave_height_max"]) == FORECAST_LENGTH
-    assert len(fc["wave_direction_dominant"]) == FORECAST_LENGTH
-    assert len(fc["wave_period_max"]) == FORECAST_LENGTH
+    assert len(fc["swell_wave_height_max"]) == FORECAST_LENGTH
+    assert len(fc["swell_wave_direction_dominant"]) == FORECAST_LENGTH
+    assert len(fc["swell_wave_period_max"]) == FORECAST_LENGTH
 
 
 @patch("src.api.ocean_information", return_value=[3.5, 180.0, 12.0, 20.0])

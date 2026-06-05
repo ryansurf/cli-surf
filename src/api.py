@@ -188,9 +188,9 @@ def ocean_information(
         "latitude": lat,
         "longitude": long,
         "current": [
-            "wave_height",
-            "wave_direction",
-            "wave_period",
+            "swell_wave_height",
+            "swell_wave_direction",
+            "swell_wave_period",
             "sea_surface_temperature",
         ],
         "length_unit": unit,
@@ -210,15 +210,15 @@ def ocean_information(
     current = response.Current()
     if current is None:
         return [0, 0, 0, 0]
-    current_wave_height = round(current.Variables(0).Value(), decimal)
-    current_wave_direction = round(current.Variables(1).Value(), decimal)
-    current_wave_period = round(current.Variables(2).Value(), decimal)
+    current_swell_wave_height = round(current.Variables(0).Value(), decimal)
+    current_swell_wave_direction = round(current.Variables(1).Value(), decimal)
+    current_swell_wave_period = round(current.Variables(2).Value(), decimal)
     current_sea_surface_temperature = current.Variables(3).Value()
 
     return [
-        current_wave_height,
-        current_wave_direction,
-        current_wave_period,
+        current_swell_wave_height,
+        current_swell_wave_direction,
+        current_swell_wave_period,
         current_sea_surface_temperature,
     ]
 
@@ -261,7 +261,7 @@ def ocean_information_history(
     params = {
         "latitude": lat,
         "longitude": long,
-        "hourly": ["wave_height", "wave_direction", "wave_period"],
+        "hourly": ["swell_wave_height", "swell_wave_direction", "swell_wave_period"],
         "length_unit": unit,
         "timezone": "auto",
         "start_date": formatted_date_one_year_ago,
@@ -280,15 +280,15 @@ def ocean_information_history(
 
     # Extract hourly values for the specified metrics
     hourly = response.Hourly()
-    hourly_wave_height = hourly.Variables(0).ValuesAsNumpy()
-    hourly_wave_direction = hourly.Variables(1).ValuesAsNumpy()
-    hourly_wave_period = hourly.Variables(2).ValuesAsNumpy()
+    hourly_swell_wave_height = hourly.Variables(0).ValuesAsNumpy()
+    hourly_swell_wave_direction = hourly.Variables(1).ValuesAsNumpy()
+    hourly_swell_wave_period = hourly.Variables(2).ValuesAsNumpy()
 
     # Retrieve data for the current hour from one year ago
     return [
-        f"{hourly_wave_height[current_hour]:.{decimal}f}",
-        f"{hourly_wave_direction[current_hour]:.{decimal}f}",
-        f"{hourly_wave_period[current_hour]:.{decimal}f}",
+        f"{hourly_swell_wave_height[current_hour]:.{decimal}f}",
+        f"{hourly_swell_wave_direction[current_hour]:.{decimal}f}",
+        f"{hourly_swell_wave_period[current_hour]:.{decimal}f}",
     ]
 
 
@@ -368,9 +368,9 @@ def forecast(lat: float, long: float, decimal: int, days: int = 0) -> dict:
         "latitude": lat,
         "longitude": long,
         "daily": [
-            "wave_height_max",
-            "wave_direction_dominant",
-            "wave_period_max",
+            "swell_wave_height_max",
+            "swell_wave_direction_dominant",
+            "swell_wave_period_max",
         ],
         "length_unit": "imperial",
         "timezone": "auto",
@@ -438,9 +438,9 @@ def forecast(lat: float, long: float, decimal: int, days: int = 0) -> dict:
 
     forecast_data = {
         "date": daily_data["date"],
-        "wave_height_max": marine_data[0],
-        "wave_direction_dominant": marine_data[1],
-        "wave_period_max": marine_data[2],
+        "swell_wave_height_max": marine_data[0],
+        "swell_wave_direction_dominant": marine_data[1],
+        "swell_wave_period_max": marine_data[2],
         "uv_index_max": general_data[0],
         "temperature_2m_max": general_data[1],
         "temperature_2m_min": general_data[2],
