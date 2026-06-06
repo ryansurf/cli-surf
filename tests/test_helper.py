@@ -253,6 +253,7 @@ def test_print_ocean_data_prints_enabled_fields(capsys):
         "show_precipitation_prob": False,
         "show_cloud_cover": False,
         "show_visibility": False,
+        "show_sea_temp": False,
     }
     ocean_data_dict = {"UV Index": 5, "Height": 3.5}
     helper.print_ocean_data(arguments_dict, ocean_data_dict)
@@ -282,7 +283,7 @@ def test_print_forecast_renders_float_values(capsys):
         "show_wind_speed": False,
         "show_wind_direction": False,
     }
-    forecast = {"wave_height_max": [3.567]}
+    forecast = {"swell_wave_height_max": [3.567]}
     helper.print_forecast(ocean, forecast)
     assert "Wave Height: 3.6" in capsys.readouterr().out
 

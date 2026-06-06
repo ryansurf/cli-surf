@@ -5,7 +5,12 @@ Tests for cli.py
 import logging
 from unittest.mock import Mock
 
-from src.cli import SurfReport, run
+from src.cli import (
+    SurfReport,
+    _build_args_string,  # noqa: PLC2701
+    cli_main,
+    run,
+)
 from src.helper import DEFAULT_ARGUMENTS
 
 _LAT = 10.0
@@ -190,3 +195,130 @@ def test_module_run_delegates_to_surf_report(mocker):
         lat=1.0, long=2.0, args=["placeholder", "json"]
     )
     assert result == {"ocean": "data"}
+
+
+def test_build_args_string():
+
+    class DummyNamespace:
+        def __init__(self, **kwargs):
+            self.location = kwargs.get("location", None)
+            self.forecast = kwargs.get("forecast", None)
+            self.decimal = kwargs.get("decimal", None)
+            self.color = kwargs.get("color", None)
+            self.metric = kwargs.get("metric", False)
+            self.imperial = kwargs.get("imperial", False)
+            self.json = kwargs.get("json", False)
+            self.gpt = kwargs.get("gpt", False)
+            self.hide_wave = kwargs.get("hide_wave", False)
+            self.hide_uv = kwargs.get("hide_uv", False)
+            self.hide_height = kwargs.get("hide_height", False)
+            self.hide_direction = kwargs.get("hide_direction", False)
+            self.hide_period = kwargs.get("hide_period", False)
+            self.hide_location = kwargs.get("hide_location", False)
+            self.hide_date = kwargs.get("hide_date", False)
+            self.show_large_wave = kwargs.get("show_large_wave", False)
+            self.show_past_uv = kwargs.get("show_past_uv", False)
+            self.show_height_history = kwargs.get("show_height_history", False)
+            self.show_direction_history = kwargs.get(
+                "show_direction_history", False
+            )
+            self.show_period_history = kwargs.get("show_period_history", False)
+            self.show_air_temp = kwargs.get("show_air_temp", False)
+            self.show_wind_speed = kwargs.get("show_wind_speed", False)
+            self.show_wind_direction = kwargs.get("show_wind_direction", False)
+            self.show_rain_sum = kwargs.get("show_rain_sum", False)
+            self.show_precipitation_prob = kwargs.get(
+                "show_precipitation_prob", False
+            )
+            self.show_cloud_cover = kwargs.get("show_cloud_cover", False)
+            self.show_visibility = kwargs.get("show_visibility", False)
+
+    ns = DummyNamespace(
+        location="San Francisco",
+        forecast=3,
+        decimal=2,
+        color="red",
+        metric=True,
+        json=True,
+        show_large_wave=True,
+    )
+    res = _build_args_string(ns)
+    assert "location=San_Francisco" in res
+    assert "forecast=3" in res
+    assert "decimal=2" in res
+    assert "color=red" in res
+    assert "metric" in res
+    assert "json" in res
+    assert "show_large_wave" in res
+
+    all_true_kwargs = {
+        "location": "A",
+        "forecast": 1,
+        "decimal": 0,
+        "color": "blue",
+        "metric": True,
+        "imperial": True,
+        "json": True,
+        "gpt": True,
+        "hide_wave": True,
+        "hide_uv": True,
+        "hide_height": True,
+        "hide_direction": True,
+        "hide_period": True,
+        "hide_location": True,
+        "hide_date": True,
+        "show_large_wave": True,
+        "show_past_uv": True,
+        "show_height_history": True,
+        "show_direction_history": True,
+        "show_period_history": True,
+        "show_air_temp": True,
+        "show_wind_speed": True,
+        "show_wind_direction": True,
+        "show_rain_sum": True,
+        "show_precipitation_prob": True,
+        "show_cloud_cover": True,
+        "show_visibility": True,
+    }
+    ns_all = DummyNamespace(**all_true_kwargs)
+    res_all = _build_args_string(ns_all)
+    for flag in all_true_kwargs.keys():
+        if flag == "location":
+            assert "location=A" in res_all
+        elif flag in {"forecast", "decimal", "color"}:
+            assert f"{flag}=" in res_all
+        else:
+            assert flag in res_all
+
+
+def test_cli_main(mocker):
+    mocker.patch(
+        "sys.argv",
+        [
+            "surf",
+            "--location",
+            "Santa Cruz",
+            "--forecast",
+            "3",
+            "--decimal",
+            "1",
+            "--color",
+            "blue",
+            "--metric",
+            "--json",
+            "--show-large-wave",
+        ],
+    )
+    mock_run = mocker.patch("src.cli.run")
+    cli_main()
+    mock_run.assert_called_once()
+    _, kwargs = mock_run.call_args
+    assert "args" in kwargs
+    args_str = kwargs["args"]
+    assert "location=Santa_Cruz" in args_str
+    assert "forecast=3" in args_str
+    assert "decimal=1" in args_str
+    assert "color=blue" in args_str
+    assert "metric" in args_str
+    assert "json" in args_str
+    assert "show_large_wave" in args_str

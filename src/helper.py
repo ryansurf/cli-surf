@@ -203,6 +203,16 @@ def print_location(city, show_city):
         print("\n")
 
 
+def _print_mapped_data(mappings, arguments_dict, data_dict):
+    """
+    Helper function to print mapped data from a dictionary
+    if the argument is set.
+    """
+    for arg_key, data_key, label in mappings:
+        if arguments_dict[arg_key] and data_key in data_dict:
+            print(f"{label}{data_dict[data_key]}")
+
+
 def print_ocean_data(arguments_dict, ocean_data_dict):
     """
     Prints ocean data (height, wave direction, period, etc).
@@ -242,9 +252,7 @@ def print_ocean_data(arguments_dict, ocean_data_dict):
         ("show_sea_temp", "Sea Surface Temperature", "Sea Surface Temp: "),
     ]
 
-    for arg_key, data_key, label in mappings:
-        if arguments_dict.get(arg_key) and data_key in ocean_data_dict:
-            print(f"{label}{ocean_data_dict[data_key]}")
+    _print_mapped_data(mappings, arguments_dict, ocean_data_dict)
 
     if arguments_dict.get("show_tide") and ocean_data_dict.get("Tide"):
         tide = ocean_data_dict["Tide"]
@@ -272,9 +280,13 @@ def print_forecast(ocean, forecast):
     mappings = [
         ("show_date", "date", "Date: "),
         ("show_uv", "uv_index_max", "UV Index: "),
-        ("show_height", "wave_height_max", "Wave Height: "),
-        ("show_direction", "wave_direction_dominant", "Wave Direction: "),
-        ("show_period", "wave_period_max", "Wave Period: "),
+        ("show_height", "swell_wave_height_max", "Wave Height: "),
+        (
+            "show_direction",
+            "swell_wave_direction_dominant",
+            "Wave Direction: ",
+        ),
+        ("show_period", "swell_wave_period_max", "Wave Period: "),
         ("show_air_temp", "temperature_2m_max", "Air Temp Max: "),
         ("show_air_temp", "temperature_2m_min", "Air Temp Min: "),
         ("show_rain_sum", "rain_sum", "Rain Sum: "),
@@ -292,14 +304,18 @@ def print_forecast(ocean, forecast):
     ]
 
     for day in range(ocean["forecast_days"]):
-        for arg_key, data_key, label in mappings:
-            if ocean[arg_key]:
+        # Extract day's data into a temporary dictionary
+        day_data = {}
+        for _, data_key, _ in mappings:
+            if data_key in forecast:
                 try:
-                    data = forecast[data_key][day]
-                    formatted = round(float(data), ocean["decimal"])
-                    print(f"{label}{formatted}")
+                    raw = forecast[data_key][day]
+                    formatted = round(float(raw), ocean["decimal"])
                 except TypeError:
-                    print(f"{label}{forecast[data_key][day]}")
+                    formatted = forecast[data_key][day]
+                day_data[data_key] = formatted
+
+        _print_mapped_data(mappings, ocean, day_data)
         print("\n")
 
 
@@ -369,13 +385,14 @@ def forecast_to_json(forecast_data, decimal):
         forecast = {
             "date": str(date.date()),
             "surf height": round(
-                float(forecast_data["wave_height_max"][i]), decimal
+                float(forecast_data["swell_wave_height_max"][i]), decimal
             ),
             "swell direction": round(
-                float(forecast_data["wave_direction_dominant"][i]), decimal
+                float(forecast_data["swell_wave_direction_dominant"][i]),
+                decimal,
             ),
             "swell period": round(
-                float(forecast_data["wave_period_max"][i]), decimal
+                float(forecast_data["swell_wave_period_max"][i]), decimal
             ),
             "uv index": round(
                 float(forecast_data["uv_index_max"][i]), decimal

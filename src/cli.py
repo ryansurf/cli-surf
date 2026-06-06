@@ -103,32 +103,30 @@ def _build_args_string(ns):
         tokens.append("metric")
     if ns.imperial:
         tokens.append("imperial")
-    flag_map = {
-        "json": "json",
-        "gpt": "gpt",
-        "hide_wave": "hide_wave",
-        "hide_uv": "hide_uv",
-        "hide_height": "hide_height",
-        "hide_direction": "hide_direction",
-        "hide_period": "hide_period",
-        "hide_location": "hide_location",
-        "hide_date": "hide_date",
-        "show_large_wave": "show_large_wave",
-        "show_past_uv": "show_past_uv",
-        "show_height_history": "show_height_history",
-        "show_direction_history": "show_direction_history",
-        "show_period_history": "show_period_history",
-        "show_air_temp": "show_air_temp",
-        "show_wind_speed": "show_wind_speed",
-        "show_wind_direction": "show_wind_direction",
-        "show_rain_sum": "show_rain_sum",
-        "show_precipitation_prob": "show_precipitation_prob",
-        "show_cloud_cover": "show_cloud_cover",
-        "show_visibility": "show_visibility",
-    }
-    for attr, token in flag_map.items():
-        if getattr(ns, attr, False):
-            tokens.append(token)
+    flags = [
+        "json",
+        "gpt",
+        "hide_wave",
+        "hide_uv",
+        "hide_height",
+        "hide_direction",
+        "hide_period",
+        "hide_location",
+        "hide_date",
+        "show_large_wave",
+        "show_past_uv",
+        "show_height_history",
+        "show_direction_history",
+        "show_period_history",
+        "show_air_temp",
+        "show_wind_speed",
+        "show_wind_direction",
+        "show_rain_sum",
+        "show_precipitation_prob",
+        "show_cloud_cover",
+        "show_visibility",
+    ]
+    tokens.extend([flag for flag in flags if getattr(ns, flag, False)])
     return ",".join(tokens)
 
 

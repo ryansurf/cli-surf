@@ -2,7 +2,9 @@
 All ASCII art in this file
 """
 
+import codecs
 import logging
+import sys
 
 logger = logging.getLogger(__name__)
 
@@ -71,9 +73,34 @@ def print_wave(show_wave, show_large_wave, color):
         color = "blue"
 
     if show_large_wave:
-        print(
-            colors[color]
-            + """
+        encoding = getattr(sys.stdout, "encoding", None) or ""
+        try:
+            is_utf8 = codecs.lookup(encoding).name == "utf-8"
+        except LookupError:
+            is_utf8 = False
+
+        if sys.platform == "win32" and not is_utf8:
+            print(
+                colors[color]
+                + r"""
+                             _
+                           _//_
+                         _///__`-.
+                       _////__    \
+                     _/////__      \
+                   _//////__        |
+                 _///////__         |
+               _////////__         /
+             _/////////__       .-'
+           _//////////__     .-'
+          ///////////_______/
+"""
+                + colors["end"]
+            )
+        else:
+            print(
+                colors[color]
+                + """
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣶⠾⠿⠿⠯⣷⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⣾⠛⠁⠀⠀⠀⠀⠀⠀⠈⢻⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⠿⠁⠀⠀⠀⢀⣤⣾⣟⣛⣛⣶⣬⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -84,8 +111,8 @@ def print_wave(show_wave, show_large_wave, color):
 ⢀⣄⣠⣶⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠓⠚⠋⠉⠀⠀⠀⠀⠀⠀⠈⠛⡛⡻⠿⠿⠙⠓⢒⣺⡿⠋⠁
 ⠉⠉⠉⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠁⠀
 """
-            + colors["end"]
-        )
+                + colors["end"]
+            )
     elif show_wave:
         print(
             colors[color]
