@@ -281,7 +281,11 @@ def print_forecast(ocean, forecast):
         ("show_date", "date", "Date: "),
         ("show_uv", "uv_index_max", "UV Index: "),
         ("show_height", "swell_wave_height_max", "Wave Height: "),
-        ("show_direction", "swell_wave_direction_dominant", "Wave Direction: "),
+        (
+            "show_direction",
+            "swell_wave_direction_dominant",
+            "Wave Direction: ",
+        ),
         ("show_period", "swell_wave_period_max", "Wave Period: "),
         ("show_air_temp", "temperature_2m_max", "Air Temp Max: "),
         ("show_air_temp", "temperature_2m_min", "Air Temp Min: "),
@@ -384,7 +388,8 @@ def forecast_to_json(forecast_data, decimal):
                 float(forecast_data["swell_wave_height_max"][i]), decimal
             ),
             "swell direction": round(
-                float(forecast_data["swell_wave_direction_dominant"][i]), decimal
+                float(forecast_data["swell_wave_direction_dominant"][i]),
+                decimal,
             ),
             "swell period": round(
                 float(forecast_data["swell_wave_period_max"][i]), decimal

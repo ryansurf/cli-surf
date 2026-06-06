@@ -5,7 +5,12 @@ Tests for cli.py
 import logging
 from unittest.mock import Mock
 
-from src.cli import SurfReport, run
+from src.cli import (
+    SurfReport,
+    _build_args_string,  # noqa: PLC2701
+    cli_main,
+    run,
+)
 from src.helper import DEFAULT_ARGUMENTS
 
 _LAT = 10.0
@@ -193,7 +198,7 @@ def test_module_run_delegates_to_surf_report(mocker):
 
 
 def test_build_args_string():
-    from src.cli import _build_args_string
+
     class DummyNamespace:
         def __init__(self, **kwargs):
             self.location = kwargs.get("location", None)
@@ -214,13 +219,17 @@ def test_build_args_string():
             self.show_large_wave = kwargs.get("show_large_wave", False)
             self.show_past_uv = kwargs.get("show_past_uv", False)
             self.show_height_history = kwargs.get("show_height_history", False)
-            self.show_direction_history = kwargs.get("show_direction_history", False)
+            self.show_direction_history = kwargs.get(
+                "show_direction_history", False
+            )
             self.show_period_history = kwargs.get("show_period_history", False)
             self.show_air_temp = kwargs.get("show_air_temp", False)
             self.show_wind_speed = kwargs.get("show_wind_speed", False)
             self.show_wind_direction = kwargs.get("show_wind_direction", False)
             self.show_rain_sum = kwargs.get("show_rain_sum", False)
-            self.show_precipitation_prob = kwargs.get("show_precipitation_prob", False)
+            self.show_precipitation_prob = kwargs.get(
+                "show_precipitation_prob", False
+            )
             self.show_cloud_cover = kwargs.get("show_cloud_cover", False)
             self.show_visibility = kwargs.get("show_visibility", False)
 
@@ -231,7 +240,7 @@ def test_build_args_string():
         color="red",
         metric=True,
         json=True,
-        show_large_wave=True
+        show_large_wave=True,
     )
     res = _build_args_string(ns)
     assert "location=San_Francisco" in res
@@ -276,24 +285,30 @@ def test_build_args_string():
     for flag in all_true_kwargs.keys():
         if flag == "location":
             assert "location=A" in res_all
-        elif flag in ("forecast", "decimal", "color"):
+        elif flag in {"forecast", "decimal", "color"}:
             assert f"{flag}=" in res_all
         else:
             assert flag in res_all
 
 
 def test_cli_main(mocker):
-    from src.cli import cli_main
-    mocker.patch("sys.argv", [
-        "surf",
-        "--location", "Santa Cruz",
-        "--forecast", "3",
-        "--decimal", "1",
-        "--color", "blue",
-        "--metric",
-        "--json",
-        "--show-large-wave"
-    ])
+    mocker.patch(
+        "sys.argv",
+        [
+            "surf",
+            "--location",
+            "Santa Cruz",
+            "--forecast",
+            "3",
+            "--decimal",
+            "1",
+            "--color",
+            "blue",
+            "--metric",
+            "--json",
+            "--show-large-wave",
+        ],
+    )
     mock_run = mocker.patch("src.cli.run")
     cli_main()
     mock_run.assert_called_once()
@@ -307,4 +322,3 @@ def test_cli_main(mocker):
     assert "metric" in args_str
     assert "json" in args_str
     assert "show_large_wave" in args_str
-

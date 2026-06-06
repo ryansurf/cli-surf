@@ -261,7 +261,11 @@ def ocean_information_history(
     params = {
         "latitude": lat,
         "longitude": long,
-        "hourly": ["swell_wave_height", "swell_wave_direction", "swell_wave_period"],
+        "hourly": [
+            "swell_wave_height",
+            "swell_wave_direction",
+            "swell_wave_period",
+        ],
         "length_unit": unit,
         "timezone": "auto",
         "start_date": formatted_date_one_year_ago,
